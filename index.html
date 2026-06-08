@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מזכיר חכם | Smart Reminders</title>
+<style>
+  /* System fonts - fully offline, no internet needed */
+  @font-face {
+    font-family: 'Heebo';
+    src: local('Arial Hebrew'), local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('sans-serif');
+  }
+
+  /* ── INLINE EDIT ── */
+  .item-card.editing { box-shadow: 0 0 0 3px rgba(59,130,246,0.35) !important; }
+  .edit-textarea {
+    width: 100%; min-height: 52px;
+    font-family: 'Arial Hebrew', Arial, sans-serif;
+    font-size: 15px; font-weight: 500;
+    color: var(--text-main); background: var(--white);
+    border: 1.5px solid var(--blue-bright);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px; outline: none;
+    resize: vertical; direction: auto; line-height: 1.5;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+  }
+  .edit-actions {
+    display: flex; gap: 7px; margin-top: 7px; flex-wrap: wrap; align-items: center;
+  }
+  .edit-save-btn {
+    background: var(--blue-main); color: #fff; border: none;
+    border-radius: var(--radius-sm); padding: 6px 14px;
+    font-size: 12px; font-weight: 700;
+    font-family: 'Arial Hebrew', Arial, sans-serif; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .edit-save-btn:hover { background: var(--blue-mid); }
+  .edit-cancel-btn {
+    background: none; border: 1.5px solid var(--gray-soft);
+    border-radius: var(--radius-sm); padding: 6px 12px;
+    font-size: 12px; color: var(--text-soft); cursor: pointer;
+    font-family: 'Arial Hebrew', Arial, sans-serif; transition: all 0.15s;
+  }
+  .edit-cancel-btn:hover { border-color: var(--text-soft); color: var(--text-main); }
+  .edit-priority-sel {
+    border: 1.5px solid var(--blue-pale); border-radius: var(--radius-sm);
+    padding: 6px 10px; font-size: 12px; background: var(--blue-ghost);
+    font-family: 'Arial Hebrew', Arial, sans-serif; color: var(--text-mid);
+    outline: none; cursor: pointer;
+  }
+  .edit-due-input {
+    border: 1.5px solid var(--blue-pale); border-radius: var(--radius-sm);
+    padding: 6px 8px; font-size: 11px; background: var(--blue-ghost);
+    font-family: 'Courier New', monospace; color: var(--text-mid); outline: none;
+  }
+
+  /* ── UX IMPROVEMENTS ── */
+  /* Smooth card transitions */
+  .item-card { transition: transform 0.15s, box-shadow 0.2s, opacity 0.25s, border-color 0.2s; }
+
+  /* Action buttons always visible on mobile, hover on desktop */
+  @media (hover: hover) {
+    .item-actions { opacity: 0; transition: opacity 0.15s; }
+    .item-card:hover .item-actions { opacity: 1; }
+  }
+
+  /* Edit pencil button */
+  .action-btn.edit-btn { font-size: 14px; }
+
+  /* Priority badge clickable hint */
+  .priority-badge { cursor: pointer; transition: transform 0.15s, opacity 0.15s; }
+  .priority-badge:hover { transform: scale(1.08); opacity: 0.8; }
+  .priority-badge:active { transform: scale(0.95); }
+
+  /* Confidence meter for priority detection */
+  .confidence-bar {
+    height: 3px; border-radius: 2px;
+    background: var(--blue-pale); overflow: hidden;
+    margin-top: 8px;
+  }
+  .confidence-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.4s ease, background 0.3s;
+  }
+  #preview-bar .conf-label {
+    font-size: 10px; color: var(--text-soft);
+    font-family: 'Courier New', monospace; margin-right: auto;
+  }
+
+  /* Swipe hint on mobile */
+  @media (max-width: 600px) {
+    .item-card { touch-action: pan-y; }
+    .item-actions { opacity: 1 !important; }
+  }
+
+  /* Done animation */
+  .item-card.just-done {
+    animation: doneFlash 0.4s ease;
+  }
+  @keyframes doneFlash {
+    0%   { background: #d1fae5; }
+    100% { background: inherit; }
+  }
+
+  /* Delete animation */
+  .item-card.removing {
+    animation: removeSlide 0.28s ease forwards;
+  }
+  @keyframes removeSlide {
+    to { opacity: 0; transform: translateX(60px); max-height: 0; padding: 0; margin: 0; }
+  }
+
+</style>
+<style>
+  :root {
+    --blue-darkest: #0a1628;
+    --blue-dark: #0d2244;
+    --blue-main: #1a3a6e;
+    --blue-mid: #2563b8;
+    --blue-bright: #3b82f6;
+    --blue-light: #93c5fd;
+    --blue-pale: #dbeafe;
+    --blue-ghost: #eff6ff;
+    --white: #ffffff;
+    --off-white: #f8faff;
+    --gray-soft: #e2eaf8;
+    --text-main: #0f1f3d;
+    --text-mid: #2d4a7a;
+    --text-soft: #6b8ab5;
+
+    --urgent-bg: #fff1f2;
+    --urgent-border: #fda4af;
+    --urgent-text: #be123c;
+    --urgent-badge: #e11d48;
+
+    --high-bg: #fff7ed;
+    --high-border: #fdba74;
+    --high-text: #c2410c;
+    --high-badge: #ea580c;
+
+    --normal-bg: #f0f9ff;
+    --normal-border: #7dd3fc;
+    --normal-text: #0369a1;
+    --normal-badge: #0284c7;
+
+    --low-bg: #f0fdf4;
+    --low-border: #86efac;
+    --low-text: #15803d;
+    --low-badge: #16a34a;
+
+    --done-bg: #f9fafb;
+    --done-border: #d1d5db;
+    --done-text: #9ca3af;
+
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(37,99,184,0.10);
+    --shadow-card: 0 2px 12px rgba(37,99,184,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: var(--off-white);
+    color: var(--text-main);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--blue-darkest) 0%, var(--blue-main) 60%, var(--blue-mid) 100%);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 32px rgba(10,22,40,0.28);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 18px 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.22);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .logo-text h1 {
+    font-size: 18px; font-weight: 800; color: #fff;
+    line-height: 1.1;
+  }
+  .logo-text span {
+    font-size: 11px; font-weight: 400; color: var(--blue-light);
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 0.5px;
+  }
+  .header-stats {
+    display: flex; gap: 10px;
+  }
+  .stat-pill {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stat-pill .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--blue-light);
+  }
+  .stat-pill .dot.urgent { background: #f87171; }
+  .lang-toggle {
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lang-toggle:hover { background: rgba(255,255,255,0.22); }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  /* ── INPUT BOX ── */
+  .input-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 2px solid var(--blue-pale);
+    box-shadow: var(--shadow);
+    padding: 22px;
+    margin-bottom: 28px;
+    transition: border-color 0.2s;
+  }
+  .input-section:focus-within { border-color: var(--blue-bright); }
+  .input-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .input-label span { font-size: 16px; }
+  .input-row {
+    display: flex; gap: 10px; align-items: flex-end;
+  }
+  textarea {
+    flex: 1;
+    min-height: 70px;
+    max-height: 160px;
+    resize: vertical;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 15px;
+    color: var(--text-main);
+    background: var(--blue-ghost);
+    border: 1px solid var(--blue-pale);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    direction: auto;
+    line-height: 1.55;
+  }
+  textarea:focus {
+    border-color: var(--blue-bright);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    background: #fff;
+  }
+  textarea::placeholder { color: var(--text-soft); font-style: italic; font-size: 13px; }
+  .btn-row {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .add-btn {
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-bright));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.28);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .add-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.35); }
+  .add-btn:active { transform: translateY(0); }
+
+  /* ── MIC BUTTON ── */
+  .mic-btn {
+    border: 2px solid var(--blue-pale);
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    white-space: nowrap;
+    color: var(--text-mid);
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .mic-btn:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+  .mic-btn.listening {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    border-color: #f87171;
+    color: #dc2626;
+    animation: micPulse 1s ease-in-out infinite;
+  }
+  @keyframes micPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.3); }
+    50%      { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
+  }
+  .mic-btn.unsupported { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── VOICE STATUS BAR ── */
+  #voice-status {
+    display: none;
+    align-items: center; gap: 10px;
+    background: linear-gradient(90deg, #fee2e2, #fff1f2);
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 13px; color: #dc2626; font-weight: 600;
+  }
+  .voice-wave {
+    display: flex; gap: 3px; align-items: center;
+  }
+  .voice-wave span {
+    width: 3px; height: 14px;
+    background: #dc2626; border-radius: 2px;
+    animation: wave 0.8s ease-in-out infinite;
+    display: block;
+  }
+  .voice-wave span:nth-child(2) { animation-delay: 0.1s; height: 20px; }
+  .voice-wave span:nth-child(3) { animation-delay: 0.2s; height: 12px; }
+  .voice-wave span:nth-child(4) { animation-delay: 0.3s; height: 18px; }
+  .voice-wave span:nth-child(5) { animation-delay: 0.15s; height: 10px; }
+  @keyframes wave {
+    0%,100% { transform: scaleY(0.5); opacity: 0.6; }
+    50%      { transform: scaleY(1);   opacity: 1; }
+  }
+  #voice-interim {
+    font-style: italic; color: var(--text-soft); font-weight: 400;
+    font-size: 12px; flex: 1;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .voice-lang-toggle {
+    background: rgba(220,38,38,0.1);
+    border: 1px solid #fca5a5;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px; color: #dc2626; cursor: pointer;
+    font-weight: 700;
+    transition: background 0.15s;
+  }
+  .voice-lang-toggle:hover { background: rgba(220,38,38,0.2); }
+
+  /* smart hint */
+  .hint-row {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .hint-chip {
+    font-size: 11px;
+    background: var(--blue-ghost);
+    border: 1px solid var(--blue-pale);
+    border-radius: 20px;
+    padding: 3px 10px;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .hint-chip:hover { background: var(--blue-pale); color: var(--blue-main); }
+  .hint-chip b { color: var(--blue-bright); font-weight: 700; }
+
+  /* ── DETECTED PREVIEW ── */
+  #preview-bar {
+    display: none;
+    background: var(--blue-ghost);
+    border: 1px dashed var(--blue-bright);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-mid);
+    display: none;
+    align-items: center; gap: 10px;
+    flex-wrap: wrap;
+  }
+  #preview-bar .detected-badge {
+    background: var(--blue-bright);
+    color: #fff;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* ── FILTERS ── */
+  .filter-row {
+    display: flex; gap: 8px; align-items: center;
+    margin-bottom: 18px; flex-wrap: wrap;
+  }
+  .filter-label { font-size: 12px; color: var(--text-soft); font-weight: 500; margin-left: 4px; }
+  .filter-btn {
+    border: 1.5px solid var(--gray-soft);
+    background: var(--white);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: 600;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .filter-btn:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+  .filter-btn.active { background: var(--blue-main); border-color: var(--blue-main); color: #fff; }
+  .filter-btn.urgent-f.active { background: var(--urgent-badge); border-color: var(--urgent-badge); }
+  .filter-btn.high-f.active { background: var(--high-badge); border-color: var(--high-badge); }
+  .filter-btn.done-f.active { background: #6b7280; border-color: #6b7280; }
+
+  .sort-select {
+    border: 1.5px solid var(--gray-soft);
+    background: var(--white);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    color: var(--text-mid);
+    cursor: pointer;
+    outline: none;
+    margin-right: auto;
+  }
+
+  /* ── CARDS ── */
+  #items-container {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+
+  .item-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gray-soft);
+    box-shadow: var(--shadow-card);
+    padding: 16px 18px;
+    display: flex; gap: 14px; align-items: flex-start;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.3s;
+    animation: slideIn 0.28s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .item-card:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(37,99,184,0.14); }
+
+  /* colored left stripe */
+  .item-card::before {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .item-card.urgent::before { background: var(--urgent-badge); }
+  .item-card.high::before   { background: var(--high-badge); }
+  .item-card.normal::before { background: var(--normal-badge); }
+  .item-card.low::before    { background: var(--low-badge); }
+  .item-card.done::before   { background: #d1d5db; }
+
+  /* priority coloring */
+  .item-card.urgent { border-color: var(--urgent-border); background: var(--urgent-bg); }
+  .item-card.high   { border-color: var(--high-border);   background: var(--high-bg); }
+  .item-card.normal { border-color: var(--normal-border); background: var(--normal-bg); }
+  .item-card.low    { border-color: var(--low-border);    background: var(--low-bg); }
+  .item-card.done   { border-color: var(--done-border);   background: var(--done-bg); opacity: 0.65; }
+
+  /* checkbox */
+  .check-wrap {
+    padding-top: 2px; flex-shrink: 0;
+  }
+  .check-wrap input[type=checkbox] { display: none; }
+  .custom-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    transition: all 0.2s;
+    background: #fff;
+  }
+  .item-card.urgent .custom-check { border-color: var(--urgent-badge); }
+  .item-card.high   .custom-check { border-color: var(--high-badge); }
+  .item-card.normal .custom-check { border-color: var(--normal-badge); }
+  .item-card.low    .custom-check { border-color: var(--low-badge); }
+  .custom-check:hover { transform: scale(1.12); }
+  .custom-check.checked { background: var(--low-badge); border-color: var(--low-badge); color: #fff; }
+  .item-card.urgent .custom-check.checked { background: #6b7280; border-color: #6b7280; }
+
+  .item-body { flex: 1; min-width: 0; }
+  .item-top {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;
+  }
+  .priority-badge {
+    font-size: 10px; font-weight: 800;
+    border-radius: 20px;
+    padding: 2px 9px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'Courier New', Courier, monospace;
+    flex-shrink: 0;
+  }
+  .item-card.urgent .priority-badge { background: var(--urgent-badge); color: #fff; }
+  .item-card.high   .priority-badge { background: var(--high-badge); color: #fff; }
+  .item-card.normal .priority-badge { background: var(--normal-badge); color: #fff; }
+  .item-card.low    .priority-badge { background: var(--low-badge); color: #fff; }
+  .item-card.done   .priority-badge { background: #9ca3af; color: #fff; }
+
+  .category-badge {
+    font-size: 10px;
+    border-radius: 20px;
+    padding: 2px 9px;
+    background: rgba(0,0,0,0.06);
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+
+  .item-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-main);
+    line-height: 1.5;
+    direction: auto;
+    word-break: break-word;
+  }
+  .item-card.done .item-text {
+    text-decoration: line-through;
+    color: var(--done-text);
+  }
+
+  .item-meta {
+    display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap;
+    align-items: center;
+  }
+  .meta-chip {
+    font-size: 11px;
+    color: var(--text-soft);
+    display: flex; align-items: center; gap: 4px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .meta-chip .icon { font-size: 12px; }
+
+  .due-chip {
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .due-chip.overdue  { background: #fee2e2; color: #dc2626; }
+  .due-chip.today    { background: #fef9c3; color: #b45309; }
+  .due-chip.upcoming { background: #dbeafe; color: #1d4ed8; }
+  .due-chip.future   { background: #f3f4f6; color: #6b7280; }
+
+  /* actions */
+  .item-actions {
+    display: flex; flex-direction: column; gap: 5px; align-items: center; flex-shrink: 0;
+  }
+  .action-btn {
+    background: none; border: none;
+    font-size: 16px; cursor: pointer;
+    padding: 4px; border-radius: 6px;
+    opacity: 0.5; transition: opacity 0.15s, background 0.15s;
+    line-height: 1;
+  }
+  .action-btn:hover { opacity: 1; background: rgba(0,0,0,0.06); }
+
+  /* ── EMPTY STATE ── */
+  #empty-state {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-soft);
+  }
+  #empty-state .empty-icon { font-size: 48px; margin-bottom: 14px; opacity: 0.5; }
+  #empty-state h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--text-mid); }
+  #empty-state p { font-size: 13px; }
+
+  /* ── NOTIFICATION BANNER ── */
+  #notif-banner {
+    display: none;
+    position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+    background: var(--blue-darkest);
+    color: #fff;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 13px;
+    z-index: 999;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    max-width: 340px; width: 90%;
+    text-align: center;
+    animation: bannerIn 0.3s ease;
+    display: none;
+  }
+  @keyframes bannerIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* ── DATE PICKER ROW ── */
+  .date-row {
+    display: flex; gap: 10px; align-items: center;
+    margin-top: 10px; flex-wrap: wrap;
+  }
+  .date-row label {
+    font-size: 12px; color: var(--text-soft); font-weight: 600;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .date-row input[type=datetime-local] {
+    border: 1px solid var(--blue-pale);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: var(--text-main);
+    background: var(--blue-ghost);
+    outline: none;
+  }
+  .date-row input:focus { border-color: var(--blue-bright); }
+
+  .notif-toggle {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-soft); cursor: pointer;
+    margin-right: auto;
+  }
+  .toggle-switch {
+    width: 32px; height: 17px;
+    background: #ccc; border-radius: 20px;
+    position: relative; transition: background 0.2s;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px; right: 2px;
+    width: 13px; height: 13px;
+    background: #fff; border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle-switch.on { background: var(--blue-bright); }
+  .toggle-switch.on::after { transform: translateX(-15px); }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px; margin-top: 4px;
+  }
+  .section-header h2 {
+    font-size: 15px; font-weight: 700; color: var(--text-mid);
+  }
+  .count-pill {
+    background: var(--blue-main); color: #fff;
+    border-radius: 20px; padding: 2px 10px;
+    font-size: 11px; font-weight: 700;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .clear-done-btn {
+    margin-right: auto;
+    background: none; border: 1px solid var(--gray-soft);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 11px; font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    color: var(--text-soft); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .clear-done-btn:hover { border-color: #f87171; color: #dc2626; }
+
+  @media (max-width: 600px) {
+    .header-inner { padding: 14px 16px 12px; }
+    main { padding: 18px 14px 40px; }
+    .header-stats { display: none; }
+    .input-row { flex-direction: column; }
+    .add-btn { width: 100%; justify-content: center; }
+  }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    display: flex; gap: 0;
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--blue-pale);
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-card);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 13px 10px;
+    border: none; background: none;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    border-left: 1.5px solid var(--blue-pale);
+  }
+  .tab-btn:last-child { border-left: none; }
+  .tab-btn:hover { background: var(--blue-ghost); color: var(--blue-main); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--blue-main), var(--blue-mid));
+    color: #fff;
+  }
+
+  /* ── SUMMARY PANEL ── */
+  .summary-panel { display: none; }
+  .summary-panel.active { display: block; }
+  .reminders-panel { display: block; }
+  .reminders-panel.hidden { display: none; }
+
+  .summary-input-box {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 2px solid var(--blue-pale);
+    box-shadow: var(--shadow);
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  .summary-input-box:focus-within { border-color: var(--blue-bright); }
+  .summary-textarea {
+    width: 100%; min-height: 140px; max-height: 320px;
+    resize: vertical;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px;
+    color: var(--text-main); background: var(--blue-ghost);
+    border: 1px solid var(--blue-pale); border-radius: var(--radius-sm);
+    padding: 12px 14px; outline: none; direction: auto; line-height: 1.6;
+    transition: border-color 0.2s;
+  }
+  .summary-textarea:focus { border-color: var(--blue-bright); background: #fff; }
+  .summary-textarea::placeholder { color: var(--text-soft); font-style: italic; font-size: 13px; }
+  .summary-actions {
+    display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center;
+  }
+  .sum-btn {
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-bright));
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 11px 20px; font-size: 14px; font-weight: 700;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.28);
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .sum-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(59,130,246,0.35); }
+  .sum-btn.secondary {
+    background: var(--white); color: var(--blue-main);
+    border: 1.5px solid var(--blue-pale); box-shadow: none;
+  }
+  .sum-btn.secondary:hover { border-color: var(--blue-bright); }
+  .sum-mic-btn {
+    border: 2px solid var(--blue-pale); background: var(--white);
+    border-radius: var(--radius-sm); padding: 11px 16px;
+    font-size: 13px; font-weight: 600; font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    color: var(--text-mid); cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sum-mic-btn:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+  .sum-mic-btn.listening {
+    background: #fee2e2; border-color: #f87171; color: #dc2626;
+    animation: micPulse 1s ease-in-out infinite;
+  }
+  .char-count {
+    margin-right: auto; font-size: 11px; color: var(--text-soft);
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  /* Results */
+  .summary-results {
+    display: none;
+    flex-direction: column; gap: 16px;
+  }
+  .summary-results.show { display: flex; }
+
+  .result-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--blue-pale);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+  }
+  .result-card-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 18px;
+    background: linear-gradient(90deg, var(--blue-ghost), #fff);
+    border-bottom: 1px solid var(--blue-pale);
+    font-size: 14px; font-weight: 700; color: var(--blue-main);
+  }
+  .result-card-header .badge-count {
+    background: var(--blue-main); color: #fff;
+    border-radius: 20px; padding: 1px 9px;
+    font-size: 11px; font-family: 'Courier New', Courier, monospace;
+  }
+  .result-card-body { padding: 14px 18px; }
+
+  .summary-text {
+    font-size: 14px; line-height: 1.7; color: var(--text-main);
+    direction: auto;
+  }
+
+  .task-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--blue-ghost);
+    font-size: 13px; color: var(--text-main);
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-item .task-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .task-item .task-body { flex: 1; }
+  .task-item .task-who {
+    font-size: 11px; color: var(--text-soft); font-weight: 600;
+    font-family: 'Courier New', Courier, monospace;
+    background: var(--blue-ghost); border-radius: 20px;
+    padding: 1px 8px; margin-right: 6px;
+  }
+  .task-item .add-to-list {
+    background: none; border: 1px solid var(--blue-pale);
+    border-radius: 20px; padding: 2px 10px;
+    font-size: 11px; color: var(--blue-mid); cursor: pointer;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-weight: 600;
+    transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .task-item .add-to-list:hover { background: var(--blue-main); color: #fff; border-color: var(--blue-main); }
+  .task-item .add-to-list.added { background: var(--low-badge); color: #fff; border-color: var(--low-badge); }
+
+  .point-item {
+    display: flex; gap: 8px; padding: 6px 0;
+    border-bottom: 1px solid var(--blue-ghost);
+    font-size: 13px; color: var(--text-main); line-height: 1.5;
+  }
+  .point-item:last-child { border-bottom: none; }
+  .point-item::before { content: '•'; color: var(--blue-bright); font-weight: 900; flex-shrink: 0; }
+
+  .participant-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--blue-ghost); border: 1px solid var(--blue-pale);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; font-weight: 600; color: var(--blue-main);
+    margin: 3px;
+  }
+
+  .export-all-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--blue-darkest), var(--blue-main));
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 13px; font-size: 14px; font-weight: 700;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(10,22,40,0.25);
+  }
+  .export-all-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10,22,40,0.3); }
+
+
+  /* ── TOOLBAR (search + export) ── */
+  .toolbar {
+    display: flex; gap: 10px; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .search-wrap {
+    flex: 1; min-width: 180px;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    border: 1.5px solid var(--blue-pale);
+    background: var(--white);
+    border-radius: 20px;
+    padding: 8px 36px 8px 14px;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 13px; color: var(--text-main);
+    outline: none; transition: border-color 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--blue-bright); }
+  .search-wrap input::placeholder { color: var(--text-soft); }
+  .search-icon {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 14px; pointer-events: none;
+  }
+  .search-clear {
+    position: absolute; left: 32px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; font-size: 14px; cursor: pointer;
+    color: var(--text-soft); display: none; padding: 0 2px;
+  }
+  .search-clear.show { display: block; }
+  .toolbar-btn {
+    border: 1.5px solid var(--blue-pale);
+    background: var(--white); border-radius: 20px;
+    padding: 8px 14px; font-size: 12px; font-weight: 600;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: var(--text-mid);
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px; white-space: nowrap;
+  }
+  .toolbar-btn:hover { border-color: var(--blue-bright); color: var(--blue-bright); background: var(--blue-ghost); }
+  .toolbar-btn.active { background: var(--blue-main); border-color: var(--blue-main); color: #fff; }
+
+  /* ── CUSTOM TAGS ── */
+  .tag-manager {
+    background: var(--white); border-radius: var(--radius);
+    border: 1.5px solid var(--blue-pale); padding: 16px 18px;
+    margin-bottom: 16px; display: none;
+    box-shadow: var(--shadow-card);
+    animation: slideIn 0.2s ease;
+  }
+  .tag-manager.open { display: block; }
+  .tag-manager h3 { font-size: 13px; font-weight: 700; color: var(--text-mid); margin-bottom: 10px; }
+  .tag-list { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; min-height: 28px; }
+  .tag-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 20px; padding: 4px 10px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.15s;
+  }
+  .tag-chip:hover { opacity: 0.8; }
+  .tag-chip .tag-del { font-size: 11px; opacity: 0.7; }
+  .tag-add-row { display: flex; gap: 8px; align-items: center; }
+  .tag-add-row input {
+    flex: 1; border: 1.5px solid var(--blue-pale); border-radius: var(--radius-sm);
+    padding: 7px 10px; font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 13px;
+    outline: none; background: var(--blue-ghost);
+  }
+  .tag-add-row input:focus { border-color: var(--blue-bright); }
+  .tag-color-pick { display: flex; gap: 5px; }
+  .color-dot {
+    width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.15s;
+  }
+  .color-dot:hover { transform: scale(1.2); }
+  .color-dot.selected { border-color: var(--text-main); }
+  .tag-save-btn {
+    background: var(--blue-main); color: #fff; border: none;
+    border-radius: var(--radius-sm); padding: 7px 14px;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .tag-save-btn:hover { background: var(--blue-mid); }
+
+  .item-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+  .item-tag {
+    font-size: 10px; font-weight: 700; border-radius: 20px;
+    padding: 1px 8px; opacity: 0.9;
+  }
+
+  /* tag filter chips in filter row */
+  .tag-filter-chip {
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 11px; font-weight: 700; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.15s;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  }
+  .tag-filter-chip:hover { opacity: 0.8; }
+  .tag-filter-chip.selected { box-shadow: 0 0 0 2px var(--text-main); }
+
+  /* ── EXPORT MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,22,40,0.55); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--white); border-radius: var(--radius);
+    padding: 28px; max-width: 420px; width: 90%;
+    box-shadow: 0 20px 60px rgba(10,22,40,0.3);
+    animation: slideIn 0.25s ease;
+  }
+  .modal-box h2 { font-size: 17px; font-weight: 800; color: var(--text-main); margin-bottom: 18px; display: flex; gap: 8px; align-items: center; }
+  .export-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .export-opt {
+    display: flex; align-items: center; gap: 12px;
+    border: 1.5px solid var(--blue-pale); border-radius: var(--radius-sm);
+    padding: 13px 16px; cursor: pointer; transition: all 0.15s;
+    background: var(--blue-ghost);
+  }
+  .export-opt:hover { border-color: var(--blue-bright); background: var(--blue-pale); }
+  .export-opt .eicon { font-size: 24px; }
+  .export-opt .etitle { font-size: 14px; font-weight: 700; color: var(--text-main); }
+  .export-opt .esub { font-size: 11px; color: var(--text-soft); margin-top: 1px; }
+  .modal-close {
+    width: 100%; border: 1.5px solid var(--gray-soft); background: none;
+    border-radius: var(--radius-sm); padding: 10px;
+    font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px;
+    color: var(--text-soft); cursor: pointer; transition: all 0.15s;
+  }
+  .modal-close:hover { border-color: var(--text-soft); color: var(--text-main); }
+
+  /* search highlight */
+  mark { background: #fef08a; border-radius: 2px; padding: 0 1px; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">📋</div>
+      <div class="logo-text">
+        <h1 id="app-title">מזכיר חכם</h1>
+        <span id="app-sub">Smart Reminder · offline</span>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill"><span class="dot urgent"></span><span id="stat-urgent">0</span> <span id="stat-urgent-lbl">דחוף</span></div>
+      <div class="stat-pill"><span class="dot"></span><span id="stat-total">0</span> <span id="stat-total-lbl">פריטים</span></div>
+    </div>
+    <button class="lang-toggle" onclick="toggleLang()" id="lang-btn">EN</button>
+  </div>
+</header>
+
+<div id="notif-banner"></div>
+
+<main>
+
+  <!-- Tabs -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" id="tab-reminders" onclick="switchTab('reminders')">
+      <span>📋</span><span id="tab-rem-lbl">תזכורות</span>
+    </button>
+    <button class="tab-btn" id="tab-summary" onclick="switchTab('summary')">
+      <span>🗒️</span><span id="tab-sum-lbl">סיכום שיחה</span>
+    </button>
+  </div>
+
+  <!-- Summary Panel -->
+  <div class="summary-panel" id="summary-panel">
+    <div class="summary-input-box">
+      <div class="input-label"><span>🗒️</span> <span id="sum-input-lbl">הדבק תמליל שיחה או הכתב בדיבור</span></div>
+      <textarea class="summary-textarea" id="sum-textarea"
+        placeholder="הדבק כאן את תמליל השיחה, הפגישה, או דבר ישירות..."
+        oninput="updateCharCount(this)"></textarea>
+      <div class="summary-actions">
+        <button class="sum-btn" onclick="analyzeMeeting()">
+          <span>🔍</span><span id="sum-analyze-lbl">נתח שיחה</span>
+        </button>
+        <button class="sum-mic-btn" id="sum-mic-btn" onclick="toggleSumVoice()">
+          <span id="sum-mic-icon">🎤</span><span id="sum-mic-lbl">הכתב בדיבור</span>
+        </button>
+        <button class="sum-btn secondary" onclick="clearSummary()">
+          <span>🗑️</span><span id="sum-clear-lbl">נקה</span>
+        </button>
+        <span class="char-count" id="char-count">0 תווים</span>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="summary-results" id="summary-results">
+      <!-- Summary text -->
+      <div class="result-card" id="res-summary">
+        <div class="result-card-header">
+          <span>📝</span><span id="res-sum-title">סיכום</span>
+        </div>
+        <div class="result-card-body">
+          <div class="summary-text" id="res-sum-body"></div>
+        </div>
+      </div>
+
+      <!-- Participants -->
+      <div class="result-card" id="res-participants" style="display:none">
+        <div class="result-card-header">
+          <span>👥</span><span id="res-part-title">משתתפים</span>
+          <span class="badge-count" id="res-part-count">0</span>
+        </div>
+        <div class="result-card-body" id="res-part-body"></div>
+      </div>
+
+      <!-- Key points -->
+      <div class="result-card" id="res-points" style="display:none">
+        <div class="result-card-header">
+          <span>💡</span><span id="res-points-title">נקודות מפתח</span>
+          <span class="badge-count" id="res-points-count">0</span>
+        </div>
+        <div class="result-card-body" id="res-points-body"></div>
+      </div>
+
+      <!-- Action items -->
+      <div class="result-card" id="res-tasks" style="display:none">
+        <div class="result-card-header">
+          <span>✅</span><span id="res-tasks-title">משימות שזוהו</span>
+          <span class="badge-count" id="res-tasks-count">0</span>
+        </div>
+        <div class="result-card-body" id="res-tasks-body"></div>
+      </div>
+
+      <!-- Export all -->
+      <button class="export-all-btn" id="export-all-btn" onclick="exportAllTasks()" style="display:none">
+        <span>➕</span><span id="export-all-lbl">ייצא את כל המשימות לרשימה</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Reminders Panel -->
+  <div class="reminders-panel" id="reminders-panel">
+  <!-- Input -->
+  <div class="input-section">
+    <div class="input-label"><span>✍️</span> <span id="input-lbl">הכתב תזכורת, הערה או משימה</span></div>
+    <div class="input-row">
+      <textarea id="main-input" placeholder="לדוגמה: לא לשכוח לשלוח את הדוח עד מחר בבוקר, זה דחוף!" oninput="analyzeInputhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Jn2e5OMuyv7kOp3dLAtugOP6JVo6xBfBkNFsHdEp-Tg&e=lue)" onkeydown="handleKey(event)"></textarea>
+      <div class="btn-row">
+        <button class="add-btn" onclick="addItem()"><span>➕</span><span id="add-lbl">הוסף</span></button>
+        <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="הכתבה קולית">
+          <span id="mic-icon">🎤</span><span id="mic-lbl">דיבור</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Voice status -->
+    <div id="voice-status" style="display:none; align-items:center; gap:10px; background:linear-gradient(90deg,#fee2e2,#fff1f2); border:1px solid #fca5a5; border-radius:var(--radius-sm); padding:10px 14px; margin-top:10px; font-size:13px; color:#dc2626; font-weight:600;">
+      <div class="voice-wave"><span></span><span></span><span></span><span></span><span></span></div>
+      <span id="voice-status-lbl">מאזין...</span>
+      <span id="voice-interim" style="font-style:italic;color:var(--text-soft);font-weight:400;font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+      <button class="voice-lang-toggle" id="voice-lang-btn" onclick="switchVoiceLang()">עב</button>
+    </div>
+
+    <!-- Preview bar -->
+    <div id="preview-bar" style="display:none; margin-top:12px; background:var(--blue-ghost); border:1px dashed var(--blue-bright); border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; color:var(--text-mid); display:none; flex-wrap:wrap; gap:8px; align-items:center;">
+      <span id="prev-icon">🔍</span>
+      <span id="prev-priority-badge" style="background:var(--blue-bright);color:#fff;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;"></span>
+      <span id="prev-category-badge" style="font-size:11px;background:rgba(0,0,0,0.06);border-radius:20px;padding:2px 9px;color:var(--text-soft);font-weight:600;"></span>
+      <span id="prev-date-badge" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-soft);"></span>
+    </div>
+
+    <!-- Date row -->
+    <div class="date-row">
+      <label>📅 <span id="due-lbl">מועד אחרון</span>: <input type="datetime-local" id="due-date"></label>
+      <label class="notif-toggle" onclick="toggleNotif()">
+        <span class="toggle-switch" id="notif-toggle"></span>
+        <span id="notif-lbl">תזכורת</span>
+      </label>
+    </div>
+
+    <!-- Hints -->
+    <div class="hint-row" id="hint-row">
+      <span class="hint-chip" onclick="appendHint('דחוף!')"><b>דחוף!</b></span>
+      <span class="hint-chip" onclick="appendHint('לא לשכוח')"><b>לא לשכוח</b></span>
+      <span class="hint-chip" onclick="appendHint('בהקדם')"><b>בהקדם</b></span>
+      <span class="hint-chip" onclick="appendHint('מישהו צריך')"><b>משימה לאחר</b></span>
+      <span class="hint-chip" onclick="appendHint('urgent!')"><b>urgent!</b></span>
+      <span class="hint-chip" onclick="appendHint("don't forget")"><b>don't forget</b></span>
+    </div>
+  </div>
+
+
+  <!-- Toolbar: search + export + tags -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="חיפוש..." oninput="onSearchhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Jn2e5OMuyv7kOp3dLAtugOP6JVo6xBfBkNFsHdEp-Tg&e=lue)">
+      <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+    </div>
+    <button class="toolbar-btn" id="tags-toggle-btn" onclick="toggleTagManager()">🏷️ <span id="tags-lbl">תגיות</span></button>
+    <button class="toolbar-btn" onclick="openExportModal()">📤 <span id="export-lbl">ייצוא</span></button>
+  </div>
+
+  <!-- Tag Manager -->
+  <div class="tag-manager" id="tag-manager">
+    <h3 id="tag-mgr-title">🏷️ ניהול תגיות</h3>
+    <div class="tag-list" id="tag-list-display"></div>
+    <div class="tag-add-row">
+      <input type="text" id="new-tag-input" placeholder="שם תגית..." maxlength="20">
+      <div class="tag-color-pick" id="color-pick"></div>
+      <button class="tag-save-btn" onclick="saveNewTag()">➕</button>
+    </div>
+  </div>
+
+  <!-- Tag filter row (dynamic) -->
+  <div id="tag-filter-row" style="display:none; gap:6px; flex-wrap:wrap; margin-bottom:12px; align-items:center;"></div>
+
+  <!-- Filters -->
+  <div class="filter-row">
+    <span class="filter-label" id="filter-lbl">סינון:</span>
+    <button class="filter-btn active" id="f-all" onclick="setFilter('all',this)">📋 <span id="f-all-lbl">הכל</span></button>
+    <button class="filter-btn urgent-f" id="f-urgent" onclick="setFilter('urgent',this)">🔴 <span id="f-urgent-lbl">דחוף</span></button>
+    <button class="filter-btn high-f" id="f-high" onclick="setFilter('high',this)">🟠 <span id="f-high-lbl">גבוה</span></button>
+    <button class="filter-btn" id="f-normal" onclick="setFilter('normal',this)">🔵 <span id="f-normal-lbl">רגיל</span></button>
+    <button class="filter-btn" id="f-low" onclick="setFilter('low',this)">🟢 <span id="f-low-lbl">נמוך</span></button>
+    <button class="filter-btn done-f" id="f-done" onclick="setFilter('done',this)">✅ <span id="f-done-lbl">הושלם</span></button>
+    <select class="sort-select" id="sort-sel" onchange="render()">
+      <option value="priority" id="sort-priority">מיון: עדיפות</option>
+      <option value="date" id="sort-date">מיון: תאריך</option>
+      <option value="added" id="sort-added">מיון: חדשות</option>
+    </select>
+  </div>
+
+  <!-- Section header -->
+  <div class="section-header">
+    <h2 id="section-title">משימות פעילות</h2>
+    <span class="count-pill" id="count-pill">0</span>
+    <button class="clear-done-btn" onclick="clearDone()" id="clear-done-lbl">נקה הושלם</button>
+  </div>
+
+  <!-- Cards -->
+  <div id="items-container"></div>
+  <div id="empty-state">
+    <div class="empty-icon">📭</div>
+    <h3 id="empty-h">אין פריטים</h3>
+    <p id="empty-p">הוסף תזכורת, הערה או משימה למעלה</p>
+  </div>
+  </div><!-- /reminders-panel -->
+</main>
+
+<script>
+// ── STATE ──
+let items = JSON.parse(localStorage.getItem('smartReminders_v2') || '[]');
+let lang = localStorage.getItem('smartReminders_lang') || 'he';
+let currentFilter = 'all';
+let notifEnabled = false;
+let analysisResult = { priority: 'normal', category: 'general', dueText: '' };
+
+// ── TRANSLATIONS ──
+const T = {
+  he: {
+    appTitle: 'מזכיר חכם', appSub: 'Smart Reminder · offline',
+    inputLbl: 'הכתב תזכורת, הערה או משימה',
+    addLbl: 'הוסף', dueLbl: 'מועד אחרון', notifLbl: 'תזכורת',
+    filterLbl: 'סינון:', fAll: 'הכל', fUrgent: 'דחוף', fHigh: 'גבוה',
+    fNormal: 'רגיל', fLow: 'נמוך', fDone: 'הושלם',
+    sTitle: 'משימות פעילות', clearDone: 'נקה הושלם',
+    emptyH: 'אין פריטים', emptyP: 'הוסף תזכורת, הערה או משימה למעלה',
+    statUrgent: 'דחוף', statTotal: 'פריטים',
+    sortPriority: 'מיון: עדיפות', sortDate: 'מיון: תאריך', sortAdded: 'מיון: חדשות',
+    priorities: { urgent:'דחוף', high:'גבוה', normal:'רגיל', low:'נמוך', done:'הושלם' },
+    categories: { task:'משימה', reminder:'תזכורת', note:'הערה', meeting:'פגישה', general:'כללי' },
+    overdue: 'באיחור', today: 'היום', tomorrow: 'מחר', in:'בעוד', days:'ימים',
+    deleteConfirm: 'למחוק פריט זה?',
+    notifGranted: '🔔 התראות מופעלות!', notifDenied: '❌ ההתראות נחסמו בדפדפן',
+    placeholder: 'לדוגמה: לא לשכוח לשלוח את הדוח עד מחר בבוקר, זה דחוף!',
+    langBtn: 'EN'
+  },
+  en: {
+    appTitle: 'Smart Reminder', appSub: 'מזכיר חכם · offline',
+    inputLbl: 'Type a reminder, note or task',
+    addLbl: 'Add', dueLbl: 'Due date', notifLbl: 'Remind me',
+    filterLbl: 'Filter:', fAll: 'All', fUrgent: 'Urgent', fHigh: 'High',
+    fNormal: 'Normal', fLow: 'Low', fDone: 'Done',
+    sTitle: 'Active Items', clearDone: 'Clear Done',
+    emptyH: 'No items yet', emptyP: 'Add a reminder, note or task above',
+    statUrgent: 'urgent', statTotal: 'items',
+    sortPriority: 'Sort: Priority', sortDate: 'Sort: Date', sortAdded: 'Sort: Newest',
+    priorities: { urgent:'URGENT', high:'HIGH', normal:'NORMAL', low:'LOW', done:'DONE' },
+    categories: { task:'Task', reminder:'Reminder', note:'Note', meeting:'Meeting', general:'General' },
+    overdue: 'Overdue', today: 'Today', tomorrow: 'Tomorrow', in:'in', days:'days',
+    deleteConfirm: 'Delete this item?',
+    notifGranted: '🔔 Notifications enabled!', notifDenied: '❌ Notifications blocked by browser',
+    placeholder: 'e.g. Don\'t forget to send the report by tomorrow morning, urgent!',
+    langBtn: 'עב'
+  }
+};
+
+function t(key, sub) {
+  const tr = T[lang];
+  if (sub) return (tr[key] || {})[sub] || key;
+  return tr[key] || key;
+}
+
+// ── PRIORITY KEYWORDS ──
+const URGENT_PATTERNS = [
+  /דחוף/i, /מיידי/i, /עכשיו/i, /הכי חשוב/i, /חייב לעשות/i,
+  /urgent/i, /asap/i, /immediately/i, /critical/i, /emergency/i,
+  /must do/i, /right now/i, /time.?sensitive/i
+];
+const HIGH_PATTERNS = [
+  /חשוב/i, /בהקדם/i, /לא לשכוח/i, /don.?t forget/i, /important/i,
+  /high priority/i, /soon/i, /במהרה/i, /היום/i, /today/i
+];
+const LOW_PATTERNS = [
+  /לא דחוף/i, /כשיהיה זמן/i, /בזמן פנוי/i, /not urgent/i, /whenever/i,
+  /someday/i, /low priority/i, /נמוך/i
+];
+
+const CATEGORY_PATTERNS = {
+  task:     [/לעשות/i, /לסיים/i, /לשלוח/i, /לכתוב/i, /do/i, /send/i, /finish/i, /complete/i, /task/i, /משימה/i],
+  reminder: [/לא לשכוח/i, /לזכור/i, /תזכורת/i, /don.?t forget/i, /remember/i, /remind/i],
+  meeting:  [/פגישה/i, /שיחה/i, /זום/i, /meeting/i, /call/i, /zoom/i, /teams/i],
+  note:     [/הערה/i, /לרשום/i, /note/i, /write down/i, /memo/i]
+};
+
+// ── DATE EXTRACTION ──
+function extractDate(text) {
+  const now = new Date();
+
+  // patterns
+  const patterns = [
+    { re: /מחר/i,     fn: () => { const d = new Date(now); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; } },
+    { re: /tomorrow/i,fn: () => { const d = new Date(now); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; } },
+    { re: /היום/i,    fn: () => { const d = new Date(now); d.setHours(17,0,0,0); return d; } },
+    { re: /today/i,   fn: () => { const d = new Date(now); d.setHours(17,0,0,0); return d; } },
+    { re: /בעוד\s+(\d+)\s*ימ/i, fn: (m) => { const d = new Date(now); d.setDate(d.getDate()+parseInt(m[1])); d.setHours(9,0,0,0); return d; } },
+    { re: /in\s+(\d+)\s*day/i,  fn: (m) => { const d = new Date(now); d.setDate(d.getDate()+parseInt(m[1])); d.setHours(9,0,0,0); return d; } },
+    { re: /בשבוע הבא/i, fn: () => { const d = new Date(now); d.setDate(d.getDate()+7); d.setHours(9,0,0,0); return d; } },
+    { re: /next week/i, fn: () => { const d = new Date(now); d.setDate(d.getDate()+7); d.setHours(9,0,0,0); return d; } },
+    { re: /(\d{1,2})[\/\-\.](\d{1,2})(?:[\/\-\.](\d{2,4}))?/, fn: (m) => {
+        const d = new Date();
+        d.setMonth(parseInt(m[2])-1); d.setDate(parseInt(m[1]));
+        if (m[3]) d.setFullYear(parseInt(m[3].length===2 ? '20'+m[3] : m[3]));
+        d.setHours(9,0,0,0); return d;
+    }},
+  ];
+
+  // time patterns
+  const timeRe = /(\d{1,2})[:\.](\d{2})/;
+  const timeSuffix = /(\d{1,2})\s*(בבוקר|בצהריים|אחה"צ|בערב|AM|PM)/i;
+
+  for (const p of patterns) {
+    const m = text.match(https://urldefense.proofpoint.com/v2/url?u=http-3A__p.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=J__VCK9zY207M8oXq4HD8twdx5d3oGrA_LRYWUyNu44&e=);
+    if (m) {
+      const d = p.fn(m);
+      const tm = text.match(timeRe);
+      if (tm) { d.setHours(parseInt(tm[1]), parseInt(tm[2]), 0, 0); }
+      const ts = text.match(timeSuffix);
+      if (ts && !tm) {
+        const h = parseInt(ts[1]);
+        if (/בבוקר|AM/i.test(ts[2])) d.setHours(h,0,0,0);
+        else if (/בצהריים/i.test(ts[2])) d.setHours(12,0,0,0);
+        else if (/אחה"צ|PM/i.test(ts[2])) d.setHours(h<12?h+12:h,0,0,0);
+        else if (/בערב/i.test(ts[2]))https://urldefense.proofpoint.com/v2/url?u=http-3A__d.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=LMLgIHb2Yt5TCvAhsy50hd-_RpsgiaRMKuK1wYs7AmQ&e=tHours(h<12?h+12:h,0,0,0);
+      }
+      return d;
+    }
+  }
+  return null;
+}
+
+function analyzeInput(text) {
+  if (!text.trim()) { hidePrev(); return; }
+
+  // ── SMART PRIORITY: score-based ──
+  let scores = { urgent: 0, high: 0, normal: 0, low: 0 };
+
+  // keyword scoring
+  URGENT_PATTERNS.forEach(r => { if (r.test(text)) scores.urgent += 3; });
+  HIGH_PATTERNS.forEach(r => { if (r.test(text)) scores.high += 2; });
+  LOW_PATTERNS.forEach(r => { if (r.test(text)) scores.low += 2; });
+
+  // context boosters
+  if (/[!]{2,}/.test(text)) scores.urgent += 2;           // multiple exclamation marks
+  if (/[A-Z]{3,}/.test(text)) scores.high += 1;            // SHOUTING
+  if (/מחר|tomorrow/i.test(text)) scores.high += 1;        // tomorrow date context
+  if (/היום|today/i.test(text)) scores.urgent += 1;        // today = more urgent
+  if (/לא לשכוח|don.t forget/i.test(text)) scores.high += 1;
+  if (/בוס|מנהל|לקוח|boss|manager|client/i.test(text)) scores.high += 1; // stakeholder
+  if (/כסף|תשלום|חשבונית|payment|invoice/i.test(text)) scores.high += 1;
+  if (/חירום|emergency|אמבולנס/i.test(text)) scores.urgent += 5;
+  if (/כשיהיה זמן|someday|whenever|אחרי/i.test(text)) scores.low += 2;
+
+  // pick highest score
+  let priority = 'normal';
+  const maxScore = Math.max(scores.urgent, scores.high, scores.low);
+  if (maxScore > 0) {
+    if (scores.urgent === maxScore) priority = 'urgent';
+    else if (scores.high === maxScore) priority = 'high';
+    else if (scores.low === maxScore) priority = 'low';
+  }
+
+  // confidence: 0–100
+  const totalSignals = Object.values(scores).reduce((a,b)=>a+b,0);
+  const confidence = Math.min(100, Math.round((maxScore / Math.max(1, totalSignals)) * 100 + (maxScore * 10)));
+
+  let category = 'general';
+  for (const [cat, pats] of Object.entries(CATEGORY_PATTERNS)) {
+    if (pats.some(r => r.test(text))) { category = cat; break; }
+  }
+
+  const date = extractDate(text);
+  analysisResult = { priority, category, date, confidence };
+
+  if (date && !document.getElementById('due-date').value) {
+    document.getElementById('due-date').value = toLocalInputDate(date);
+  }
+
+  showPrev(priority, category, date, confidence);
+}
+
+function toLocalInputDate(d) {
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function showPrev(priority, category, date, confidence) {
+  const bar = document.getElementById('preview-bar');
+  bar.style.display = 'flex';
+  const pColor = priority==='urgent'?'var(--urgent-badge)':priority==='high'?'var(--high-badge)':priority==='low'?'var(--low-badge)':'var(--normal-badge)';
+  document.getElementById('prev-priority-badge').textContent = t('priorities', priority);
+  document.getElementById('prev-priority-badge').style.background = pColor;
+  document.getElementById('prev-category-badge').textContent = t('categories', category);
+  document.getElementById('prev-date-badge').textContent = date ? '📅 '+formatDate(date) : '';
+  document.getElementById('prev-icon').textContent = priority==='urgent'?'🚨':priority==='high'?'⚠️':priority==='low'?'🟢':'🔍';
+  // confidence bar
+  let confEl = document.getElementById('prev-confidence');
+  if (!confEl) {
+    const extra = document.createElement('div');
+    extra.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:2px;';
+    extra.innerHTML = '<div class="confidence-bar"><div class="confidence-fill" id="prev-confidence"></div></div><span id="prev-conf-label" class="conf-label"></span>';
+    bar.appendChild(extra);
+    confEl = document.getElementById('prev-confidence');
+  }
+  const pct = confidence || 0;
+  const fillColor = priority==='urgent'?'#e11d48':priority==='high'?'#ea580c':priority==='low'?'#16a34a':'#0284c7';
+  confEl.style.width = pct + '%';
+  confEl.style.background = fillColor;
+  const confLabel = document.getElementById('prev-conf-label');
+  if (confLabel) confLabel.textContent = (lang==='he'?'ביטחון: ':'Confidence: ') + pct + '%';
+}
+function hidePrev() { document.getElementById('preview-bar').style.display = 'none'; }
+
+// ── ADD ITEM ──
+function addItem() {
+  const inp = document.getElementById('main-input');
+  const text = inp.value.trim();
+  if (!text) { shakeInput(); return; }
+
+  analyzeInput(text);
+
+  const dueDateVal = document.getElementById('due-date').value;
+  const dueDate = dueDateVal ? new Date(dueDateVal) : (analysisResult.date || null);
+
+  const item = {
+    id: Date.now(),
+    text,
+    priority: analysisResult.priority,
+    category: analysisResult.category,
+    done: false,
+    createdAt: new Date().toISOString(),
+    dueDate: dueDate ? dueDate.toISOString() : null,
+    notify: notifEnabled
+  };
+
+  items.unshift(item);
+  save();
+  inp.value = '';
+  document.getElementById('due-date').value = '';
+  hidePrev();
+  analysisResult = { priority:'normal', category:'general', date:null };
+
+  if (notifEnabled && dueDate) scheduleNotif(item);
+
+  render();
+  showBanner(item.priority === 'urgent' ? '🚨 פריט דחוף נוסף!' : '✅ נוסף בהצלחה');
+}
+
+function shakeInput() {
+  const inp = document.getElementById('main-input');
+  inp.style.animation = 'none';
+  inp.style.borderColor = 'var(--urgent-badge)';
+  setTimeout(() => { inp.style.borderColor = ''; }, 1000);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) addItem();
+}
+
+// ── NOTIFICATIONS ──
+function toggleNotif() {
+  notifEnabled = !notifEnabled;
+  const el = document.getElementById('notif-toggle');
+  el.classList.toggle('on', notifEnabled);
+  if (notifEnabled && 'Notification' in window) {
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') showBanner(t('notifGranted'));
+      else { showBanner(t('notifDenied')); notifEnabled = false; el.classList.remove('on'); }
+    });
+  }
+}
+
+function scheduleNotif(item) {
+  if (!item.dueDate || Notification.permission !== 'granted') return;
+  const ms = new Date(item.dueDate) - Date.now() - 15*60*1000; // 15 min before
+  if (ms > 0) {
+    setTimeout(() => {
+      new Notification('⏰ ' + (lang==='he'?'תזכורת':'Reminder'), {
+        body: item.text.substring(0,80),
+        icon: 'data:image/svg+xml,<svg xmlns="https://urldefense.proofpoint.com/v2/url?u=http-3A__www.w3.org_2000_svg&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=ZgbMyvpH_ncBCcYXKqrOXJXYF9Ffr7KiJPjNljqidEQ&e=" viewBox="0 0 32 32"><text y="26" font-size="28">📋</text></svg>'
+      });
+    }, ms);
+  }
+}
+
+// ── RENDER ──
+function render() {
+  const container = document.getElementById('items-container');
+  const emptyState = document.getElementById('empty-state');
+  const sortBy = document.getElementById('sort-sel').value;
+
+  let filtered = [...items];
+  if (currentFilter === 'done') filtered = filtered.filter(i => i.done);
+  else if (currentFilter !== 'all') filtered = filtered.filter(i => !i.done && i.priority === currentFilter);
+  else filtered = filtered.filter(i => !i.done);
+  // search filter
+  if (searchQuery) filtered = filtered.filter(i => i.text.toLowerCase().includes(searchQuery));
+  // tag filter
+  if (selectedTagFilter) filtered = filtered.filter(i => (i.tags||[]).includes(selectedTagFilter));
+
+  // sort
+  const PMAP = { urgent:0, high:1, normal:2, low:3 };
+  if (sortBy === 'priority') filtered.sort((a,b) => (PMAP[a.priority]||2)-(PMAP[b.priority]||2));
+  else if (sortBy === 'date') filtered.sort((a,b) => {
+    if (!a.dueDate && !b.dueDate) return 0;
+    if (!a.dueDate) return 1; if (!b.dueDate) return -1;
+    return new Date(a.dueDate)-new Date(b.dueDate);
+  });
+  else filtered.sort((a,b) => https://urldefense.proofpoint.com/v2/url?u=http-3A__b.id-2Da.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=92kzt4W-q5dlyYdMw0ZwElyBC7566abt4aDS7b3zSTE&e=);
+
+  if (!filtered.length) {
+    container.innerHTML = '';
+    emptyState.style.display = 'block';
+  } else {
+    emptyState.style.display = 'none';
+    container.innerHTML = filtered.map(cardHTML).join('');
+  }
+
+  // stats
+  document.getElementById('stat-urgent').textContent = items.filter(i=>!i.done&&i.priority==='urgent').length;
+  document.getElementById('stat-total').textContent = items.filter(i=>!i.done).length;
+  document.getElementById('count-pill').textContent = filtered.length;
+}
+
+function cardHTML(item) {
+  const cls = item.done ? 'done' : item.priority;
+  const checkCls = item.done ? 'checked' : '';
+  const checkIcon = item.done ? '✓' : '';
+  const prLabel = t('priorities', item.done ? 'done' : item.priority);
+  const catLabel = t('categories', item.category);
+
+  let dueBadge = '';
+  if (item.dueDate) {
+    const due = new Date(item.dueDate);
+    const now = new Date();
+    const diffMs = due - now;
+    const diffDays = Math.ceil(diffMs / 86400000);
+    let cls2='future', label='';
+    if (diffMs < 0) { cls2='overdue'; label=t('overdue'); }
+    else if (diffDays === 0) { cls2='today'; label=t('today'); }
+    else if (diffDays === 1) { cls2='tomorrow'; label=t('tomorrow'); }
+    else if (diffDays <= 7) { cls2='upcoming'; label=`${t('in')} ${diffDays} ${t('days')}`; }
+    else { cls2='future'; label=formatDate(due); }
+    dueBadge = `<span class="due-chip ${cls2}">📅 ${label}</span>`;
+  }
+
+  const added = new Date(item.createdAt).toLocaleDateString(lang==='he'?'he-IL':'en-US',{day:'2-digit',month:'2-digit'});
+
+  return `
+  <div class="item-card ${cls}" id="card-$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=}">
+    <div class="check-wrap">
+      <div class="custom-check ${checkCls}" onclick="toggleDone($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cgLEGcpt0WFX-fsos5NPa7L6zQajLQbGmPmLFU-3cAU&e=ne?'בטל':'סמן כהושלם'}">${checkIcon}</div>
+    </div>
+    <div class="item-body">
+      <div class="item-top">
+        <span class="priority-badge" onclick="changePriority($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="${lang==='he'?'לחץ לשינוי עדיפות':'Click to change priority'}">${prLabel}</span>
+        <span class="category-badge">${catLabel}</span>
+        ${dueBadge}
+      </div>
+      <div class="item-text">${highlight(item.text, searchQuery)}</div>
+      ${tagsHTML(item)}
+      <div class="item-meta">
+        <span class="meta-chip"><span class="icon">🕐</span>${added}</span>
+        ${item.notify ? '<span class="meta-chip"><span class="icon">🔔</span></span>' : ''}
+      </div>
+    </div>
+    <div class="item-actions">
+      <button class="action-btn edit-btn" onclick="editItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="${lang==='he'?'ערוך':'Edit'}">✏️</button>
+      <button class="action-btn" onclick="deleteItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="${lang==='he'?'מחק':'Delete'}">🗑️</button>
+    </div>
+  </div>`;
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString(lang==='he'?'he-IL':'en-US',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+
+// ── INLINE EDIT ──
+function editItem(id) {
+  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Ljue5kftp1enelkURuHydg16VkVKB0cuDzVFP4mVI6g&e= === id);
+  if (!item) return;
+  const card = document.getElementById('card-' + id);
+  if (!card) return;
+
+  card.classList.add('editing');
+  const body = card.querySelector('.item-body');
+  const dueVal = item.dueDate ? toLocalInputDate(new Date(item.dueDate)) : '';
+
+  body.innerHTML = `
+    <textarea class="edit-textarea" id="edit-ta-${id}" onkeydown="editKey(event,${id})">${item.text.replace(/</g,'&lt;')}</textarea>
+    <div class="edit-actions">
+      <button class="edit-save-btn" onclick="saveEdit(${id})">${lang==='he'?'💾 שמור':'💾 Save'}</button>
+      <button class="edit-cancel-btn" onclick="cancelEdit(${id})">${lang==='he'?'ביטול':'Cancel'}</button>
+      <select class="edit-priority-sel" id="edit-pr-${id}">
+        <option value="urgent" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='urgent'?'selected':''}>${t('priorities','urgent')}</option>
+        <option value="high"   $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='high'?'selected':''}>${t('priorities','high')}</option>
+        <option value="normal" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='normal'?'selected':''}>${t('priorities','normal')}</option>
+        <option value="low"    $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='low'?'selected':''}>${t('priorities','low')}</option>
+      </select>
+      <input type="datetime-local" class="edit-due-input" id="edit-due-${id}" value="${dueVal}">
+    </div>`;
+
+  const ta = document.getElementById('edit-ta-' + id);
+  if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+}
+
+function editKey(e, id) {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveEdit(id); }
+  if (e.key === 'Escape') cancelEdit(id);
+}
+
+function saveEdit(id) {
+  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Ljue5kftp1enelkURuHydg16VkVKB0cuDzVFP4mVI6g&e= === id);
+  if (!item) return;
+  const ta = document.getElementById('edit-ta-' + id);
+  const pr = document.getElementById('edit-pr-' + id);
+  const due = document.getElementById('edit-due-' + id);
+  if (!ta) return;
+  const newText = ta.value.trim();
+  if (!newText) return;
+  item.text = newText;
+  if (pr) item.priority = pr.value;
+  if (due) item.dueDate = due.value ? new Date(due.value).toISOString() : null;
+  item.editedAt = new Date().toISOString();
+  save();
+  render();
+  showBanner(lang==='he' ? '✅ נשמר!' : '✅ Saved!');
+}
+
+function cancelEdit(id) {
+  render(); // just re-render to restore original card
+}
+
+
+// ── ACTIONS ──
+function toggleDone(id) {
+  const item = items.find(i=>i.id===id);
+  if (!item) return;
+  item.done = !item.done;
+  save();
+  if (item.done) {
+    const card = document.getElementById('card-' + id);
+    if (card) { card.classList.add('just-done'); setTimeout(render, 350); }
+    else render();
+  } else { render(); }
+}
+
+function deleteItem(id) {
+  const card = document.getElementById('card-' + id);
+  if (card) {
+    card.classList.add('removing');
+    setTimeout(() => { items = items.filter(i=>i.id!==id); save(); render(); }, 260);
+  } else {
+    items = items.filter(i=>i.id!==id); save(); render();
+  }
+}
+
+function changePriority(id) {
+  const item = items.find(i=>i.id===id);
+  if (!item) return;
+  const order = ['urgent','high','normal','low'];
+  const idx = order.indexOf(item.priority);
+  item.priority = order[(idx+1)%order.length];
+  save(); render();
+}
+
+function clearDone() {
+  items = items.filter(i=>!i.done);
+  save(); render();
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// ── LANG ──
+function toggleLang() {
+  lang = lang==='he'?'en':'he';
+  localStorage.setItem('smartReminders_lang', lang);
+  applyLang();
+  render();
+}
+
+function applyLang() {
+  const isHe = lang==='he';
+  document.documentElement.lang = lang;
+  document.getElementById('app-title').textContent = t('appTitle');
+  document.getElementById('app-sub').textContent = t('appSub');
+  document.getElementById('input-lbl').textContent = t('inputLbl');
+  document.getElementById('add-lbl').textContent = t('addLbl');
+  document.getElementById('due-lbl').textContent = t('dueLbl');
+  document.getElementById('notif-lbl').textContent = t('notifLbl');
+  document.getElementById('filter-lbl').textContent = t('filterLbl');
+  document.getElementById('f-all-lbl').textContent = t('fAll');
+  document.getElementById('f-urgent-lbl').textContent = t('fUrgent');
+  document.getElementById('f-high-lbl').textContent = t('fHigh');
+  document.getElementById('f-normal-lbl').textContent = t('fNormal');
+  document.getElementById('f-low-lbl').textContent = t('fLow');
+  document.getElementById('f-done-lbl').textContent = t('fDone');
+  document.getElementById('section-title').textContent = t('sTitle');
+  document.getElementById('clear-done-lbl').textContent = t('clearDone');
+  document.getElementById('empty-h').textContent = t('emptyH');
+  document.getElementById('empty-p').textContent = t('emptyP');
+  document.getElementById('stat-urgent-lbl').textContent = t('statUrgent');
+  document.getElementById('stat-total-lbl').textContent = t('statTotal');
+  document.getElementById('sort-priority').textContent = t('sortPriority');
+  document.getElementById('sort-date').textContent = t('sortDate');
+  document.getElementById('sort-added').textContent = t('sortAdded');
+  document.getElementById('lang-btn').textContent = t('langBtn');
+  document.getElementById('main-input').placeholder = t('placeholder');
+  // update mic label if not listening
+  if (!isListening) {
+    document.getElementById('mic-lbl').textContent = lang==='he' ? 'דיבור' : 'Speak';
+  }
+
+  // hints
+  const hintRow = document.getElementById('hint-row');
+  if (isHe) {
+    hintRow.innerHTML = `
+      <span class="hint-chip" onclick="appendHint('דחוף!')"><b>דחוף!</b></span>
+      <span class="hint-chip" onclick="appendHint('לא לשכוח')"><b>לא לשכוח</b></span>
+      <span class="hint-chip" onclick="appendHint('בהקדם')"><b>בהקדם</b></span>
+      <span class="hint-chip" onclick="appendHint('משימה לאחר')"><b>משימה לאחר</b></span>
+      <span class="hint-chip" onclick="appendHint('urgent!')"><b>urgent!</b></span>
+      <span class="hint-chip" onclick="appendHint(&quot;don\'t forget&quot;)"><b>don't forget</b></span>`;
+  } else {
+    hintRow.innerHTML = `
+      <span class="hint-chip" onclick="appendHint('urgent!')"><b>urgent!</b></span>
+      <span class="hint-chip" onclick="appendHint(&quot;don\'t forget&quot;)"><b>don't forget</b></span>
+      <span class="hint-chip" onclick="appendHint('ASAP')"><b>ASAP</b></span>
+      <span class="hint-chip" onclick="appendHint('important')"><b>important</b></span>
+      <span class="hint-chip" onclick="appendHint('דחוף!')"><b>דחוף</b></span>
+      <span class="hint-chip" onclick="appendHint('לא לשכוח')"><b>לא לשכוח</b></span>`;
+  }
+}
+
+// ── HELPERS ──
+function appendHint(txt) {
+  const inp = document.getElementById('main-input');
+  inp.value += (inp.value && !inp.value.endsWith(' ') ? ' ' : '') + txt;
+  inp.focus();
+  analyzeInput(inp.value);
+}
+
+function save() {
+  localStorage.setItem('smartReminders_v2', JSON.stringify(items));
+}
+
+let bannerTimer;
+function showBanner(msg) {
+  const b = document.getElementById('notif-banner');
+  b.textContent = msg;
+  b.style.display = 'block';
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(() => { b.style.display='none'; }, 2200);
+}
+
+// ── CHECK OVERDUE PERIODICALLY ──
+function checkOverdue() {
+  const now = new Date();
+  items.forEach(item => {
+    if (item.done || !item.dueDate || item._alerted) return;
+    const due = new Date(item.dueDate);
+    if (due < now && due > new Date(now - 60000)) {
+      item._alerted = true;
+      showBanner('⏰ ' + item.text.substring(0,40) + (lang==='he'?' — הגיע המועד!':" — Due now!"));
+    }
+  });
+}
+
+
+// ── VOICE DICTATION ──
+let recognition = null;
+let isListening = false;
+let voiceLang = 'he-IL'; // default Hebrew
+
+function initSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    document.getElementById('mic-btn').classList.add('unsupported');
+    document.getElementById('mic-btn').title = 'זיהוי דיבור לא נתמך בדפדפן זה';
+    return null;
+  }
+  const rec = new SpeechRecognition();
+  rec.lang = voiceLang;
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = () => {
+    isListening = true;
+    updateMicUI(true);
+  };
+
+  rec.onresult = (e) => {
+    let interim = '';
+    let final = '';
+    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bconsttranscript-3De.results-5Bi-5D-5B0-5D.transcript-3Bif-28e.results-5Bi-5D.isFinal-29final-2B-3Dtranscript-2B-27-27-3Belseinterim-2B-3Dtranscript-3B-7D__showinterimtextinpreviewdocument.getElementById-28-27voice-2Dinterim-27-29.textContent-3Dinterim-3B__appendfinaltotextareaif-28final.trim-28-29-29-7Bconstinp-3Ddocument.getElementById-28-27main-2Dinput-27-29-3Binp.value-2B-3D-28inp.value-26-26-21inp.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BanalyzeInput-28inp.value-29-3Bdocument.getElementById-28-27voice-2Dinterim-27-29.textContent-3D-27-27-3B-7D-7D-3Brec.onerror-3D-28e-29-3D&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=W7uZUcNH2W44S63dAWjFcV7pKjopYSQZLRWV35oMWxw&e=> {
+    console.warn('Speech error:', e.error);
+    if (e.error === 'not-allowed') {
+      showBanner(lang==='he' ? '❌ גישה למיקרופון נדחתה' : '❌ Microphone access denied');
+    } else if (e.error === 'no-speech') {
+      // just restart silently
+    }
+    stopVoice();
+  };
+
+  rec.onend = () => {
+    if (isListening) {
+      // auto-restart if still supposed to be listening
+      try { rec.start(); } catch(e) {}
+    } else {
+      updateMicUI(false);
+    }
+  };
+
+  return rec;
+}
+
+function toggleVoice() {
+  const btn = document.getElementById('mic-btn');
+  if (btn.classList.contains('unsupported')) return;
+  if (isListening) stopVoice();
+  else startVoice();
+}
+
+function startVoice() {
+  if (!recognition) recognition = initSpeechRecognition();
+  if (!recognition) return;
+  recognition.lang = voiceLang;
+  try {
+    recognition.start();
+    document.getElementById('voice-status').style.display = 'flex';
+    updateVoiceStatusLabel();
+  } catch(e) { console.warn(e); }
+}
+
+function stopVoice() {
+  isListening = false;
+  if (recognition) try { recognition.stop(); } catch(e) {}
+  updateMicUI(false);
+  document.getElementById('voice-status').style.display = 'none';
+  document.getElementById('voice-interim').textContent = '';
+}
+
+function updateMicUI(listening) {
+  const btn = document.getElementById('mic-btn');
+  const icon = document.getElementById('mic-icon');
+  const lbl  = document.getElementById('mic-lbl');
+  if (listening) {
+    btn.classList.add('listening');
+    icon.textContent = '⏹️';
+    lbl.textContent = lang==='he' ? 'עצור' : 'Stop';
+  } else {
+    btn.classList.remove('listening');
+    icon.textContent = '🎤';
+    lbl.textContent = lang==='he' ? 'דיבור' : 'Speak';
+  }
+}
+
+function switchVoiceLang() {
+  voiceLang = voiceLang === 'he-IL' ? 'en-US' : 'he-IL';
+  const btn = document.getElementById('voice-lang-btn');
+  btn.textContent = voiceLang === 'he-IL' ? 'עב' : 'EN';
+  if (recognition) recognition.lang = voiceLang;
+  updateVoiceStatusLabel();
+}
+
+function updateVoiceStatusLabel() {
+  const lbl = document.getElementById('voice-status-lbl');
+  lbl.textContent = voiceLang === 'he-IL'
+    ? (lang==='he' ? 'מאזין בעברית...' : 'Listening in Hebrew...')
+    : (lang==='he' ? 'מאזין באנגלית...' : 'Listening in English...');
+}
+
+// check support on load
+window.addEventListener('DOMContentLoaded', () => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    const btn = document.getElementById('mic-btn');
+    if (btn) { btn.classList.add('unsupported'); btn.title = 'לא נתמך בדפדפן זה'; }
+  }
+});
+
+
+// ── SUMMARY ENGINE ──
+let summaryTasks = [];
+let sumListening = false;
+let sumRecognition = null;
+
+function switchTab(tab) {
+  const isRem = tab === 'reminders';
+  document.getElementById('tab-reminders').classList.toggle('active', isRem);
+  document.getElementById('tab-summary').classList.toggle('active', !isRem);
+  document.getElementById('reminders-panel').classList.toggle('hidden', !isRem);
+  document.getElementById('summary-panel').classList.toggle('active', !isRem);
+  if (isRem && sumListening) stopSumVoice();
+}
+
+function updateCharCount(el) {
+  const n = el.value.length;
+  document.getElementById('char-count').textContent = n.toLocaleString() + (lang==='he' ? ' תווים' : ' chars');
+}
+
+function clearSummary() {
+  document.getElementById('sum-textarea').value = '';
+  document.getElementById('char-count').textContent = lang==='he' ? '0 תווים' : '0 chars';
+  document.getElementById('summary-results').classList.remove('show');
+  summaryTasks = [];
+}
+
+// ── OFFLINE MEETING ANALYZER ──
+function analyzeMeeting() {
+  const text = document.getElementById('sum-textarea').value.trim();
+  if (!text) { showBanner(lang==='he' ? '⚠️ אנא הכנס טקסט לניתוח' : '⚠️ Please enter text to analyze'); return; }
+
+  const sentences = text.split(/[.!?\n]+/).map(s=>s.trim()).filter(s=>s.length > 4);
+
+  // ── Participants detection ──
+  const participantPatterns = [
+    /^([א-ת]{2,10}(?:\s[א-ת]{2,10})?)\s*:/,   // Hebrew: "שם:"
+    /^([A-Z][a-z]{1,12}(?:\s[A-Z][a-z]{1,12})?)\s*:/,  // English: "Name:"
+    /(?:אמר|אמרה|הציע|הציעה|דיווח|שאל|שאלה)\s+([א-ת]{2,10})/,
+    /([A-Z][a-z]{2,12})\s+(?:said|mentioned|suggested|asked|noted)/,
+  ];
+
+  const participantSet = new Set();
+  sentences.forEach(s => {
+    participantPatterns.forEach(re => {
+      const m = s.match(re);
+      if (m && m[1] && m[1].length > 1) participantSet.add(m[1]);
+    });
+  });
+  const participants = [...participantSet].slice(0, 12);
+
+  // ── Action items detection ──
+  const actionPatterns = [
+    { re: /(?:צריך|יש לו|עליו|אני אטפל|נטפל|יטפל|יבדוק|נבדוק|לבדוק|לשלוח|לעדכן|לסיים|להכין|לתאם|לדאוג)\s+(.{8,80})/i, who: null },
+    { re: /(?:Action|TODO|Task|Follow.?up|will|should|needs to|must)\s*:?\s*(.{8,80})/i, who: null },
+    { re: /([א-ת]{2,10})\s+(?:יבדוק|ישלח|יעדכן|יסיים|יכין|יתאם|ידאג)\s+(.{6,70})/i, who: 1, task: 2 },
+    { re: /([A-Z][a-z]{2,12})\s+(?:will|should|needs to|must)\s+(.{6,70})/i, who: 1, task: 2 },
+    { re: /(?:הוחלט|סוכם|נסכם|agreed|decided|resolved)\s*:?\s*(.{8,80})/i, who: null },
+    { re: /(?:לא לשכוח|don't forget|remember to)\s+(.{6,70})/i, who: null },
+  ];
+
+  const tasks = [];
+  sentences.forEach(s => {
+    actionPatterns.forEach(p => {
+      const m = s.match(https://urldefense.proofpoint.com/v2/url?u=http-3A__p.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=J__VCK9zY207M8oXq4HD8twdx5d3oGrA_LRYWUyNu44&e=);
+      if (m) {
+        const taskText = p.task ? m[p.task] : m[1];
+        const who = p.who ? m[p.who] : null;
+        if (taskText && taskText.length > 5 && !tasks.find(t=>t.text===taskText.trim())) {
+          tasks.push({ text: taskText.trim(), who, priority: detectPriority(s) });
+        }
+      }
+    });
+  });
+
+  // ── Key points (non-task sentences) ──
+  const keywordPoints = [
+    /(?:הוחלט|סוכם|חשוב|בעיה|בעיית|הצעה|מסקנה|כי|לכן|לפיכך)/i,
+    /(?:decided|agreed|important|issue|problem|proposal|conclusion|therefore|because)/i,
+    /(?:תקציב|עלות|לוח זמנים|deadline|budget|cost|schedule|milestone)/i,
+  ];
+
+  const keyPoints = [];
+  sentences.forEach(s => {
+    if (s.length < 15) return;
+    if https://urldefense.proofpoint.com/v2/url?u=http-3A__-28tasks.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=SohDaJyapavMQ5nP8zoy5rdr-cUu_UiIcY96kKRZzVQ&e=nd(t => s.includes(t.text))) return;
+    if (keywordPoints.some(re => re.test(s))) {
+      keyPoints.push(s.replace(/^[א-ת]{2,10}\s*:\s*/, '').replace(/^[A-Z][a-z]+\s*:\s*/, '').trim());
+    }
+  });
+
+  // ── Brief summary ──
+  const wordCount = text.split(/\s+/).length;
+  const sentCount = sentences.length;
+  const firstSentences = sentences.slice(0, 3).join('. ');
+  const summaryText = lang === 'he'
+    ? `השיחה מכילה ${wordCount.toLocaleString()} מילים ו-${sentCount} משפטים. ${firstSentences ? firstSentences + '.' : ''}`
+    : `The conversation contains ${wordCount.toLocaleString()} words and ${sentCount} sentences. ${firstSentences ? firstSentences + '.' : ''}`;
+
+  summaryTasks = tasks;
+  renderSummaryResults({ summaryText, participants, keyPoints, tasks });
+}
+
+function detectPriority(sentence) {
+  if (URGENT_PATTERNS.some(r => r.test(sentence))) return 'urgent';
+  if (HIGH_PATTERNS.some(r => r.test(sentence))) return 'high';
+  return 'normal';
+}
+
+function renderSummaryResults({ summaryText, participants, keyPoints, tasks }) {
+  const res = document.getElementById('summary-results');
+  res.classList.add('show');
+
+  // Summary text
+  document.getElementById('res-sum-body').textContent = summaryText;
+
+  // Participants
+  const partCard = document.getElementById('res-participants');
+  if (participants.length) {
+    partCard.style.display = '';
+    document.getElementById('res-part-count').textContent = participants.length;
+    document.getElementById('res-part-body').innerHTML =
+      participants.map(p => `<span class="participant-chip">👤 ${p}</span>`).join('');
+  } else { partCard.style.display = 'none'; }
+
+  // Key points
+  const pointsCard = document.getElementById('res-points');
+  if (keyPoints.length) {
+    pointsCard.style.display = '';
+    document.getElementById('res-points-count').textContent = keyPoints.length;
+    document.getElementById('res-points-body').innerHTML =
+      keyPoints.slice(0,8).map(p => `<div class="point-item">${p}</div>`).join('');
+  } else { pointsCard.style.display = 'none'; }
+
+  // Tasks
+  const tasksCard = document.getElementById('res-tasks');
+  const exportBtn = document.getElementById('export-all-btn');
+  if (tasks.length) {
+    tasksCard.style.display = '';
+    exportBtn.style.display = '';
+    document.getElementById('res-tasks-count').textContent = tasks.length;
+    document.getElementById('res-tasks-body').innerHTML =
+      tasks.map((t,i) => `
+        <div class="task-item" id="stask-${i}">
+          <span class="task-icon">${t.priority==='urgent'?'🔴':t.priority==='high'?'🟠':'🔵'}</span>
+          <span class="task-body">
+            ${t.who ? `<span class="task-who">${t.who}</span>` : ''}${t.text}
+          </span>
+          <button class="add-to-list" onclick="addSummaryTask(${i})" id="stask-btn-${i}">
+            ${lang==='he'?'+ הוסף':'+ Add'}
+          </button>
+        </div>`).join('');
+  } else {
+    tasksCard.style.display = 'none';
+    exportBtn.style.display = 'none';
+  }
+
+  showBanner(lang==='he' ? '✅ הניתוח הושלם!' : '✅ Analysis complete!');
+}
+
+function addSummaryTask(idx) {
+  const t = summaryTasks[idx];
+  if (!t) return;
+  const item = {
+    id: Date.now() + idx,
+    text: (t.who ? t.who + ': ' : '') + t.text,
+    priority: t.priority || 'normal',
+    category: 'task',
+    done: false,
+    createdAt: new Date().toISOString(),
+    dueDate: null,
+    notify: false
+  };
+  items.unshift(item);
+  save();
+  const btn = document.getElementById('stask-btn-' + idx);
+  if (btn) { btn.textContent = lang==='he' ? '✓ נוסף' : '✓ Added'; btn.classList.add('added'); btn.disabled = true; }
+  showBanner(lang==='he' ? '✅ משימה נוספה לרשימה!' : '✅ Task added to list!');
+}
+
+function exportAllTasks() {
+  if (!summaryTasks.length) return;
+  summaryTasks.forEach((t, i) => {
+    if (document.getElementById('stask-btn-'+i)?.classList.contains('added')) return;
+    const item = {
+      id: Date.now() + i + Math.random(),
+      text: (t.who ? t.who + ': ' : '') + t.text,
+      priority: t.priority || 'normal',
+      category: 'task',
+      done: false,
+      createdAt: new Date().toISOString(),
+      dueDate: null,
+      notify: false
+    };
+    items.unshift(item);
+    const btn = document.getElementById('stask-btn-'+i);
+    if (btn) { btn.textContent = lang==='he'?'✓ נוסף':'✓ Added'; btn.classList.add('added'); btn.disabled=true; }
+  });
+  save();
+  showBanner(lang==='he' ? `✅ ${summaryTasks.length} משימות נוספו!` : `✅ ${summaryTasks.length} tasks added!`);
+}
+
+// ── SUMMARY VOICE ──
+function toggleSumVoice() {
+  if (sumListening) stopSumVoice(); else startSumVoice();
+}
+
+function startSumVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) { showBanner(lang==='he'?'❌ לא נתמך בדפדפן':'❌ Not supported'); return; }
+  sumRecognition = new SpeechRecognition();
+  sumRecognition.lang = voiceLang;
+  sumRecognition.continuous = true;
+  sumRecognition.interimResults = true;
+  sumRecognition.onstart = () => { sumListening = true; updateSumMicUI(true); };
+  sumRecognition.onresult = (e) => {
+    let final = '';
+    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bif-28e.results-5Bi-5D.isFinal-29final-2B-3De.results-5Bi-5D-5B0-5D.transcript-2B-27-27-3B-7Dif-28final.trim-28-29-29-7Bconstta-3Ddocument.getElementById-28-27sum-2Dtextarea-27-29-3Bta.value-2B-3D-28ta.value-26-26-21ta.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BupdateCharCount-28ta-29-3B-7D-7D-3BsumRecognition.onerror-3D-28-29-3D&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Gl7saMRk4K_l7byhfBv2pTGic0A2v736ETkRTN7lB_4&e=> stopSumVoice();
+  sumRecognition.onend = () => { if (sumListening) try { sumRecognition.start(); } catch(e){} };
+  try { sumRecognition.start(); } catch(e) {}
+}
+
+function stopSumVoice() {
+  sumListening = false;
+  if (sumRecognition) try { sumRecognition.stop(); } catch(e) {}
+  updateSumMicUI(false);
+}
+
+function updateSumMicUI(on) {
+  const btn = document.getElementById('sum-mic-btn');
+  document.getElementById('sum-mic-icon').textContent = on ? '⏹️' : '🎤';
+  document.getElementById('sum-mic-lbl').textContent = on
+    ? (lang==='he' ? 'עצור' : 'Stop')
+    : (lang==='he' ? 'הכתב בדיבור' : 'Dictate');
+  btn.classList.toggle('listening', on);
+}
+
+
+// ══════════════════════════════════════════
+// FEATURE 1: SEARCH
+// ══════════════════════════════════════════
+let searchQuery = '';
+
+function onSearch(val) {
+  searchQuery = val.trim().toLowerCase();
+  document.getElementById('search-clear').classList.toggle('show', searchQuery.length > 0);
+  render();
+}
+
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  onSearch('');
+}
+
+function highlight(text, query) {
+  if (!query) return escHtml(text);
+  const escaped = escHtml(text);
+  const re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return escaped.replace(re, '<mark>$1</mark>');
+}
+
+// ══════════════════════════════════════════
+// FEATURE 2: CUSTOM TAGS
+// ══════════════════════════════════════════
+let tags = JSON.parse(localStorage.getItem('smartTags_v1') || '[]');
+let selectedTagFilter = null;
+let currentTagColor = '#3b82f6';
+
+const TAG_COLORS = [
+  '#3b82f6','#e11d48','#ea580c','#16a34a','#9333ea','#0891b2','#b45309','#64748b'
+];
+
+function initTagUI() {
+  const pick = document.getElementById('color-pick');
+  pick.innerHTML = TAG_COLORS.map(c =>
+    `<div class="color-dot${c===currentTagColor?' selected':''}" style="background:${c}" onclick="selectColor('${c}')"></div>`
+  ).join('');
+  renderTagList();
+  renderTagFilterRow();
+}
+
+function selectColor(c) {
+  currentTagColor = c;
+  document.querySelectorAll('.color-dot').forEach(d => {
+    d.classList.toggle('selected', d.style.background === c || d.style.backgroundColor === c);
+  });
+}
+
+function toggleTagManager() {
+  const el = document.getElementById('tag-manager');
+  el.classList.toggle('open');
+  if (el.classList.contains('open')) initTagUI();
+}
+
+function saveNewTag() {
+  const inp = document.getElementById('new-tag-input');
+  const name = inp.value.trim();
+  if (!name || tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e= === name)) return;
+  tags.push({ id: Date.now(), name, color: currentTagColor });
+  localStorage.setItem('smartTags_v1', JSON.stringify(tags));
+  inp.value = '';
+  renderTagList();
+  renderTagFilterRow();
+}
+
+function deleteTag(id) {
+  tags = tags.filter(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=g63rNmRL0WE5Zgrd0_YkoXngIVAVPd9_vm6k2GppwS4&e= !== id);
+  // remove from items
+  items.forEach(item => { if (item.tags) item.tags = item.tags.filter(tid => tid !== id); });
+  localStorage.setItem('smartTags_v1', JSON.stringify(tags));
+  save();
+  renderTagList();
+  renderTagFilterRow();
+  render();
+}
+
+function renderTagList() {
+  const el = document.getElementById('tag-list-display');
+  if (!el) return;
+  if (!tags.length) { el.innerHTML = '<span style="font-size:12px;color:var(--text-soft)">אין תגיות עדיין</span>'; return; }
+  el.innerHTML = tags.map(t =>
+    `<span class="tag-chip" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}">
+      ${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}
+      <span class="tag-del" onclick="deleteTag($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=4WCoSfV76WTyANFPGBrSBd6aVbt8c_QrI05aL0Tba58&e=})">✕</span>
+    </span>`
+  ).join('');
+}
+
+function renderTagFilterRow() {
+  const row = document.getElementById('tag-filter-row');
+  if (!row) return;
+  if (!tags.length) { row.style.display = 'none'; return; }
+  row.style.display = 'flex';
+  row.innerHTML = '<span style="font-size:12px;color:var(--text-soft);font-weight:600">תגיות:</span>' +
+    tags.map(t =>
+      `<span class="tag-filter-chip${selectedTagFilter===t.id?' selected':''}"
+        style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}"
+        onclick="toggleTagFilter($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=4WCoSfV76WTyANFPGBrSBd6aVbt8c_QrI05aL0Tba58&e=})">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}</span>`
+    ).join('');
+}
+
+function toggleTagFilter(id) {
+  selectedTagFilter = (selectedTagFilter === id) ? null : id;
+  renderTagFilterRow();
+  render();
+}
+
+function addTagToItem(itemId, tagId) {
+  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Ljue5kftp1enelkURuHydg16VkVKB0cuDzVFP4mVI6g&e= === itemId);
+  if (!item) return;
+  if (!item.tags) item.tags = [];
+  if (!item.tags.includes(tagId)) item.tags.push(tagId);
+  save(); render();
+}
+
+// Patch cardHTML to show tags + tag selector
+function tagsHTML(item) {
+  if (!tags.length) return '';
+  const itemTags = (item.tags || []).map(tid => tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=g63rNmRL0WE5Zgrd0_YkoXngIVAVPd9_vm6k2GppwS4&e= === tid)).filter(Boolean);
+  const available = tags.filter(t => !(item.tags || []).includes(https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=g63rNmRL0WE5Zgrd0_YkoXngIVAVPd9_vm6k2GppwS4&e=));
+  const chips = itemTags.map(t =>
+    `<span class="item-tag" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}22;color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor};border:1px solid $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}</span>`
+  ).join('');
+  const addSelect = available.length
+    ? `<select onchange="addTagToItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=},parseInthttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Jn2e5OMuyv7kOp3dLAtugOP6JVo6xBfBkNFsHdEp-Tg&e=lue))" style="font-size:11px;border:1px solid var(--blue-pale);border-radius:20px;padding:1px 6px;background:var(--blue-ghost);color:var(--text-soft);cursor:pointer;max-width:90px;">
+        <option value="">+ תגית</option>
+        ${available.map(t=>`<option value="$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=4WCoSfV76WTyANFPGBrSBd6aVbt8c_QrI05aL0Tba58&e=}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}</option>`).join('')}
+       </select>`
+    : '';
+  return chips || addSelect ? `<div class="item-tags">${chips}${addSelect}</div>` : '';
+}
+
+// ══════════════════════════════════════════
+// FEATURE 3: EXPORT / IMPORT
+// ══════════════════════════════════════════
+function openExportModal() {
+  document.getElementById('export-modal').classList.add('open');
+}
+function closeExportModal(e) {
+  if (!e || e.target === document.getElementById('export-modal'))
+    document.getElementById('export-modal').classList.remove('open');
+}
+
+function exportJSON() {
+  const data = { items, tags, exportedAt: new Date().toISOString(), version: 2 };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = 'smart-reminders-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  closeExportModal();
+  showBanner(lang==='he' ? '💾 JSON יוצא בהצלחה!' : '💾 JSON exported!');
+}
+
+function importJSON() {
+  document.getElementById('import-file-input').click();
+}
+function handleImport(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.items) { items = data.items; save(); }
+      if (data.tags) { tags = data.tags; localStorage.setItem('smartTags_v1', JSON.stringify(tags)); }
+      render(); renderTagFilterRow();
+      showBanner(lang==='he' ? '📂 יובא בהצלחה!' : '📂 Imported!');
+      closeExportModal();
+    } catch { showBanner(lang==='he' ? '❌ קובץ לא תקין' : '❌ Invalid file'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function exportCSV() {
+  const headers = lang==='he'
+    ? ['טקסט','עדיפות','קטגוריה','תאריך יעד','סטטוס','נוצר']
+    : ['Text','Priority','Category','Due Date','Status','Created'];
+  const rows = items.map(i => [
+    '"' + i.text.replace(/"/g,'""') + '"',
+    i.priority, i.category,
+    i.dueDate ? new Date(i.dueDate).toLocaleString() : '',
+    i.done ? (lang==='he'?'הושלם':'Done') : (lang==='he'?'פעיל':'Active'),
+    new Date(i.createdAt).toLocaleString()
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const bom = '\uFEFF'; // UTF-8 BOM for Excel
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = 'smart-reminders-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+  closeExportModal();
+  showBanner(lang==='he' ? '📊 CSV יוצא!' : '📊 CSV exported!');
+}
+
+function exportPDF() {
+  closeExportModal();
+  const active = items.filter(i => !i.done);
+  const done = items.filter(i => i.done);
+  const PMAP = { urgent:0, high:1, normal:2, low:3 };
+  active.sort((a,b) => (PMAP[a.priority]||2) - (PMAP[b.priority]||2));
+
+  const priorityColor = { urgent:'#e11d48', high:'#ea580c', normal:'#0284c7', low:'#16a34a' };
+  const priorityLabel = { urgent: t('priorities','urgent'), high: t('priorities','high'), normal: t('priorities','normal'), low: t('priorities','low') };
+
+  const itemsHTML = [...active, ...done].map(item => `
+    <div class="pitem $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cgLEGcpt0WFX-fsos5NPa7L6zQajLQbGmPmLFU-3cAU&e=ne?'pdone':''}">
+      <div class="pbadge" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cgLEGcpt0WFX-fsos5NPa7L6zQajLQbGmPmLFU-3cAU&e=ne?'#9ca3af':priorityColorhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=6ldQ5xQpYjGr4Xt4Orbvx4I9KMM9bkUT9gW3uaRmIcM&e=iority]}">${item.done ? t('priorities','done') : priorityLabel[item.priority]}</div>
+      <div class="ptext">${item.text}</div>
+      <div class="pmeta">
+        ${item.dueDate ? '📅 ' + new Date(item.dueDate).toLocaleString() : ''}
+        · ${new Date(item.createdAt).toLocaleDateString()}
+        ${(item.tags||[]).map(tid=>{ const tag=tags.find(t=>t.id===tid); return tag?`<span style="color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Btag.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=1bXHPv4NgNZrUu9VGbPyi6BfngsGA1jIwSiLbqghO_U&e=lor}">#${https://urldefense.proofpoint.com/v2/url?u=http-3A__tag.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=sPld6LKYV1ljX0IYHMnkUf1qw9V75geXpZAl4YgwT-g&e=}</span>`:''; }).join(' ')}
+      </div>
+    </div>`).join('');
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html dir="rtl" lang="${lang}"><head>
+    <meta charset="UTF-8">
+    <title>${t('appTitle')} - ${new Date().toLocaleDateString()}</title>
+    
+    <style>
+      body { font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; background:#fff; color:#0f1f3d; margin:0; padding:28px 32px; direction:rtl; }
+      h1 { font-size:22px; font-weight:800; color:#0a1628; border-bottom:3px solid #3b82f6; padding-bottom:10px; margin-bottom:6px; }
+      .meta { font-size:12px; color:#6b8ab5; margin-bottom:24px; }
+      .pitem { border:1px solid #e2eaf8; border-radius:10px; padding:12px 16px; margin-bottom:10px; display:flex; flex-direction:column; gap:4px; break-inside:avoid; }
+      .pitem.pdone { opacity:0.5; }
+      .pbadge { display:inline-block; color:#fff; border-radius:20px; padding:2px 10px; font-size:10px; font-weight:800; width:fit-content; font-family:monospace; }
+      .ptext { font-size:14px; font-weight:600; margin-top:4px; }
+      .pitem.pdone .ptext { text-decoration:line-through; }
+      .pmeta { font-size:11px; color:#6b8ab5; }
+      .stats { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+      .stat { background:#eff6ff; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:700; color:#1a3a6e; }
+      @media print { body { padding:16px; } button { display:none; } }
+    </style>
+  </head><body>
+    <h1>📋 ${t('appTitle')}</h1>
+    <div class="meta">${new Date().toLocaleString()} · ${items.length} ${lang==='he'?'פריטים':'items'}</div>
+    <div class="stats">
+      <div class="stat">🔴 ${lang==='he'?'דחוף':'Urgent'}: ${items.filter(i=>i.priority==='urgent'&&!i.done).length}</div>
+      <div class="stat">🟠 ${lang==='he'?'גבוה':'High'}: ${items.filter(i=>i.priority==='high'&&!i.done).length}</div>
+      <div class="stat">✅ ${lang==='he'?'הושלמו':'Done'}: ${done.length}</div>
+      <div class="stat">📋 ${lang==='he'?'סה"כ':'Total'}: ${items.length}</div>
+    </div>
+    ${itemsHTML}
+    <script>window.onload=()=>window.print()<\/script>
+  </body></html>`);
+  win.document.close();
+}
+
+
+// ── INIT ──
+applyLang();
+initTagUI();
+render();
+setInterval(checkOverdue, 30000);
+checkOverdue();
+</script>
+
+<!-- Export Modal -->
+<div class="modal-overlay" id="export-modal" onclick="closeExportModal(event)">
+  <div class="modal-box">
+    <h2>📤 <span id="export-modal-title">ייצוא נתונים</span></h2>
+    <div class="export-options">
+      <div class="export-opt" onclick="exportPDF()">
+        <span class="eicon">🖨️</span>
+        <div>
+          <div class="etitle" id="exp-pdf-title">PDF / הדפסה</div>
+          <div class="esub" id="exp-pdf-sub">פתח תצוגת הדפסה מעוצבת</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="exportJSON()">
+        <span class="eicon">💾</span>
+        <div>
+          <div class="etitle" id="exp-json-title">ייצוא JSON</div>
+          <div class="esub" id="exp-json-sub">גיבוי כל הנתונים</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="importJSON()">
+        <span class="eicon">📂</span>
+        <div>
+          <div class="etitle" id="exp-import-title">ייבוא JSON</div>
+          <div class="esub" id="exp-import-sub">שחזור מגיבוי</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="exportCSV()">
+        <span class="eicon">📊</span>
+        <div>
+          <div class="etitle" id="exp-csv-title">ייצוא CSV</div>
+          <div class="esub" id="exp-csv-sub">פתח ב-Excel</div>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close" onclick="closeExportModal()">✕ <span id="modal-close-lbl">סגור</span></button>
+  </div>
+</div>
+<input type="file" id="import-file-input" accept=".json" style="display:none" onchange="handleImport(event)">
+
+</body>
+</html>
+
