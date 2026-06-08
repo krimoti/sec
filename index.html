@@ -1139,7 +1139,7 @@
   <div class="input-section">
     <div class="input-label"><span>✍️</span> <span id="input-lbl">הכתב תזכורת, הערה או משימה</span></div>
     <div class="input-row">
-      <textarea id="main-input" placeholder="לדוגמה: לא לשכוח לשלוח את הדוח עד מחר בבוקר, זה דחוף!" oninput="analyzeInputhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Jn2e5OMuyv7kOp3dLAtugOP6JVo6xBfBkNFsHdEp-Tg&e=lue)" onkeydown="handleKey(event)"></textarea>
+      <textarea id="main-input" placeholder="לדוגמה: לא לשכוח לשלוח את הדוח עד מחר בבוקר, זה דחוף!" oninput="analyzeInputhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=WIkqcGhBBsESju8QusZcjAgFntXa42vRMZXOqJ1gpnI&e=lue)" onkeydown="handleKey(event)"></textarea>
       <div class="btn-row">
         <button class="add-btn" onclick="addItem()"><span>➕</span><span id="add-lbl">הוסף</span></button>
         <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="הכתבה קולית">
@@ -1189,7 +1189,7 @@
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input type="text" id="search-input" placeholder="חיפוש..." oninput="onSearchhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Jn2e5OMuyv7kOp3dLAtugOP6JVo6xBfBkNFsHdEp-Tg&e=lue)">
+      <input type="text" id="search-input" placeholder="חיפוש..." oninput="onSearchhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=WIkqcGhBBsESju8QusZcjAgFntXa42vRMZXOqJ1gpnI&e=lue)">
       <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
     </div>
     <button class="toolbar-btn" id="tags-toggle-btn" onclick="toggleTagManager()">🏷️ <span id="tags-lbl">תגיות</span></button>
@@ -1346,7 +1346,7 @@ function extractDate(text) {
   const timeSuffix = /(\d{1,2})\s*(בבוקר|בצהריים|אחה"צ|בערב|AM|PM)/i;
 
   for (const p of patterns) {
-    const m = text.match(https://urldefense.proofpoint.com/v2/url?u=http-3A__p.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=J__VCK9zY207M8oXq4HD8twdx5d3oGrA_LRYWUyNu44&e=);
+    const m = text.match(https://urldefense.proofpoint.com/v2/url?u=http-3A__p.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=1suNUGz32_ECeewrBmy5fp2rBycpotEWaLQlHh2MSZo&e=);
     if (m) {
       const d = p.fn(m);
       const tm = text.match(timeRe);
@@ -1357,7 +1357,7 @@ function extractDate(text) {
         if (/בבוקר|AM/i.test(ts[2])) d.setHours(h,0,0,0);
         else if (/בצהריים/i.test(ts[2])) d.setHours(12,0,0,0);
         else if (/אחה"צ|PM/i.test(ts[2])) d.setHours(h<12?h+12:h,0,0,0);
-        else if (/בערב/i.test(ts[2]))https://urldefense.proofpoint.com/v2/url?u=http-3A__d.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=LMLgIHb2Yt5TCvAhsy50hd-_RpsgiaRMKuK1wYs7AmQ&e=tHours(h<12?h+12:h,0,0,0);
+        else if (/בערב/i.test(ts[2]))https://urldefense.proofpoint.com/v2/url?u=http-3A__d.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=dtl1YEHtwyRxKiFYOZBTLH0-xHPYcdQXjVyDa-I4YSY&e=tHours(h<12?h+12:h,0,0,0);
       }
       return d;
     }
@@ -1513,7 +1513,7 @@ function scheduleNotif(item) {
     setTimeout(() => {
       new Notification('⏰ ' + (lang==='he'?'תזכורת':'Reminder'), {
         body: item.text.substring(0,80),
-        icon: 'data:image/svg+xml,<svg xmlns="https://urldefense.proofpoint.com/v2/url?u=http-3A__www.w3.org_2000_svg&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=ZgbMyvpH_ncBCcYXKqrOXJXYF9Ffr7KiJPjNljqidEQ&e=" viewBox="0 0 32 32"><text y="26" font-size="28">📋</text></svg>'
+        icon: 'data:image/svg+xml,<svg xmlns="https://urldefense.proofpoint.com/v2/url?u=http-3A__www.w3.org_2000_svg&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=T9j4rPd6AZX-NnNXLoluFa-YPWzp3Uk4-g02DP-vGwQ&e=" viewBox="0 0 32 32"><text y="26" font-size="28">📋</text></svg>'
       });
     }, ms);
   }
@@ -1542,7 +1542,7 @@ function render() {
     if (!a.dueDate) return 1; if (!b.dueDate) return -1;
     return new Date(a.dueDate)-new Date(b.dueDate);
   });
-  else filtered.sort((a,b) => https://urldefense.proofpoint.com/v2/url?u=http-3A__b.id-2Da.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=92kzt4W-q5dlyYdMw0ZwElyBC7566abt4aDS7b3zSTE&e=);
+  else filtered.sort((a,b) => https://urldefense.proofpoint.com/v2/url?u=http-3A__b.id-2Da.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=TOfwfwdycw7IFsc1VwwGoxDrm04YVh1eE2y6A5vHIIg&e=);
 
   if (!filtered.length) {
     container.innerHTML = '';
@@ -1583,13 +1583,13 @@ function cardHTML(item) {
   const added = new Date(item.createdAt).toLocaleDateString(lang==='he'?'he-IL':'en-US',{day:'2-digit',month:'2-digit'});
 
   return `
-  <div class="item-card ${cls}" id="card-$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=}">
+  <div class="item-card ${cls}" id="card-$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=bMznCjewFVGVJ1S8knCei3t5fMzyci2xyBJzz3r8cF4&e=}">
     <div class="check-wrap">
-      <div class="custom-check ${checkCls}" onclick="toggleDone($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cgLEGcpt0WFX-fsos5NPa7L6zQajLQbGmPmLFU-3cAU&e=ne?'בטל':'סמן כהושלם'}">${checkIcon}</div>
+      <div class="custom-check ${checkCls}" onclick="toggleDone($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=bMznCjewFVGVJ1S8knCei3t5fMzyci2xyBJzz3r8cF4&e=})" title="$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=7EnZJWRdUXa0WbfajkdDreoi2lMvMiD8NG8bIfZrZhs&e=ne?'בטל':'סמן כהושלם'}">${checkIcon}</div>
     </div>
     <div class="item-body">
       <div class="item-top">
-        <span class="priority-badge" onclick="changePriority($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="${lang==='he'?'לחץ לשינוי עדיפות':'Click to change priority'}">${prLabel}</span>
+        <span class="priority-badge" onclick="changePriority($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=bMznCjewFVGVJ1S8knCei3t5fMzyci2xyBJzz3r8cF4&e=})" title="${lang==='he'?'לחץ לשינוי עדיפות':'Click to change priority'}">${prLabel}</span>
         <span class="category-badge">${catLabel}</span>
         ${dueBadge}
       </div>
@@ -1601,8 +1601,8 @@ function cardHTML(item) {
       </div>
     </div>
     <div class="item-actions">
-      <button class="action-btn edit-btn" onclick="editItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="${lang==='he'?'ערוך':'Edit'}">✏️</button>
-      <button class="action-btn" onclick="deleteItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=})" title="${lang==='he'?'מחק':'Delete'}">🗑️</button>
+      <button class="action-btn edit-btn" onclick="editItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=bMznCjewFVGVJ1S8knCei3t5fMzyci2xyBJzz3r8cF4&e=})" title="${lang==='he'?'ערוך':'Edit'}">✏️</button>
+      <button class="action-btn" onclick="deleteItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=bMznCjewFVGVJ1S8knCei3t5fMzyci2xyBJzz3r8cF4&e=})" title="${lang==='he'?'מחק':'Delete'}">🗑️</button>
     </div>
   </div>`;
 }
@@ -1618,7 +1618,7 @@ function escHtml(s) {
 
 // ── INLINE EDIT ──
 function editItem(id) {
-  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Ljue5kftp1enelkURuHydg16VkVKB0cuDzVFP4mVI6g&e= === id);
+  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Q7u6BPXLNBVN-HpuvoXTwnqKW3jPGxSvjignxTqZcm8&e= === id);
   if (!item) return;
   const card = document.getElementById('card-' + id);
   if (!card) return;
@@ -1633,10 +1633,10 @@ function editItem(id) {
       <button class="edit-save-btn" onclick="saveEdit(${id})">${lang==='he'?'💾 שמור':'💾 Save'}</button>
       <button class="edit-cancel-btn" onclick="cancelEdit(${id})">${lang==='he'?'ביטול':'Cancel'}</button>
       <select class="edit-priority-sel" id="edit-pr-${id}">
-        <option value="urgent" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='urgent'?'selected':''}>${t('priorities','urgent')}</option>
-        <option value="high"   $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='high'?'selected':''}>${t('priorities','high')}</option>
-        <option value="normal" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='normal'?'selected':''}>${t('priorities','normal')}</option>
-        <option value="low"    $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=waNOihtIOEMldHmwT7THyu5IMuBoxKmpwDglRI0s0ts&e=iority==='low'?'selected':''}>${t('priorities','low')}</option>
+        <option value="urgent" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=up_zrmozaIiy7l7EGtOBpi_Ay-n0j1H7Iek0y4m0HxU&e=iority==='urgent'?'selected':''}>${t('priorities','urgent')}</option>
+        <option value="high"   $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=up_zrmozaIiy7l7EGtOBpi_Ay-n0j1H7Iek0y4m0HxU&e=iority==='high'?'selected':''}>${t('priorities','high')}</option>
+        <option value="normal" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=up_zrmozaIiy7l7EGtOBpi_Ay-n0j1H7Iek0y4m0HxU&e=iority==='normal'?'selected':''}>${t('priorities','normal')}</option>
+        <option value="low"    $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=up_zrmozaIiy7l7EGtOBpi_Ay-n0j1H7Iek0y4m0HxU&e=iority==='low'?'selected':''}>${t('priorities','low')}</option>
       </select>
       <input type="datetime-local" class="edit-due-input" id="edit-due-${id}" value="${dueVal}">
     </div>`;
@@ -1651,7 +1651,7 @@ function editKey(e, id) {
 }
 
 function saveEdit(id) {
-  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Ljue5kftp1enelkURuHydg16VkVKB0cuDzVFP4mVI6g&e= === id);
+  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Q7u6BPXLNBVN-HpuvoXTwnqKW3jPGxSvjignxTqZcm8&e= === id);
   if (!item) return;
   const ta = document.getElementById('edit-ta-' + id);
   const pr = document.getElementById('edit-pr-' + id);
@@ -1839,7 +1839,7 @@ function initSpeechRecognition() {
   rec.onresult = (e) => {
     let interim = '';
     let final = '';
-    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bconsttranscript-3De.results-5Bi-5D-5B0-5D.transcript-3Bif-28e.results-5Bi-5D.isFinal-29final-2B-3Dtranscript-2B-27-27-3Belseinterim-2B-3Dtranscript-3B-7D__showinterimtextinpreviewdocument.getElementById-28-27voice-2Dinterim-27-29.textContent-3Dinterim-3B__appendfinaltotextareaif-28final.trim-28-29-29-7Bconstinp-3Ddocument.getElementById-28-27main-2Dinput-27-29-3Binp.value-2B-3D-28inp.value-26-26-21inp.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BanalyzeInput-28inp.value-29-3Bdocument.getElementById-28-27voice-2Dinterim-27-29.textContent-3D-27-27-3B-7D-7D-3Brec.onerror-3D-28e-29-3D&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=W7uZUcNH2W44S63dAWjFcV7pKjopYSQZLRWV35oMWxw&e=> {
+    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bconsttranscript-3De.results-5Bi-5D-5B0-5D.transcript-3Bif-28e.results-5Bi-5D.isFinal-29final-2B-3Dtranscript-2B-27-27-3Belseinterim-2B-3Dtranscript-3B-7D__showinterimtextinpreviewdocument.getElementById-28-27voice-2Dinterim-27-29.textContent-3Dinterim-3B__appendfinaltotextareaif-28final.trim-28-29-29-7Bconstinp-3Ddocument.getElementById-28-27main-2Dinput-27-29-3Binp.value-2B-3D-28inp.value-26-26-21inp.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BanalyzeInput-28inp.value-29-3Bdocument.getElementById-28-27voice-2Dinterim-27-29.textContent-3D-27-27-3B-7D-7D-3Brec.onerror-3D-28e-29-3D&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=vZPzQ9DbrHvXpgGr-iMsc2w-RqBCKz_yGx9aBwTwvKg&e=> {
     console.warn('Speech error:', e.error);
     if (e.error === 'not-allowed') {
       showBanner(lang==='he' ? '❌ גישה למיקרופון נדחתה' : '❌ Microphone access denied');
@@ -1990,7 +1990,7 @@ function analyzeMeeting() {
   const tasks = [];
   sentences.forEach(s => {
     actionPatterns.forEach(p => {
-      const m = s.match(https://urldefense.proofpoint.com/v2/url?u=http-3A__p.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=J__VCK9zY207M8oXq4HD8twdx5d3oGrA_LRYWUyNu44&e=);
+      const m = s.match(https://urldefense.proofpoint.com/v2/url?u=http-3A__p.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=1suNUGz32_ECeewrBmy5fp2rBycpotEWaLQlHh2MSZo&e=);
       if (m) {
         const taskText = p.task ? m[p.task] : m[1];
         const who = p.who ? m[p.who] : null;
@@ -2011,7 +2011,7 @@ function analyzeMeeting() {
   const keyPoints = [];
   sentences.forEach(s => {
     if (s.length < 15) return;
-    if https://urldefense.proofpoint.com/v2/url?u=http-3A__-28tasks.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=SohDaJyapavMQ5nP8zoy5rdr-cUu_UiIcY96kKRZzVQ&e=nd(t => s.includes(t.text))) return;
+    if https://urldefense.proofpoint.com/v2/url?u=http-3A__-28tasks.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=HHSY1dlCYvC-gz3KV_HmQrVsJwZvIgrY5eLLst_xCEI&e=nd(t => s.includes(t.text))) return;
     if (keywordPoints.some(re => re.test(s))) {
       keyPoints.push(s.replace(/^[א-ת]{2,10}\s*:\s*/, '').replace(/^[A-Z][a-z]+\s*:\s*/, '').trim());
     }
@@ -2143,7 +2143,7 @@ function startSumVoice() {
   sumRecognition.onstart = () => { sumListening = true; updateSumMicUI(true); };
   sumRecognition.onresult = (e) => {
     let final = '';
-    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bif-28e.results-5Bi-5D.isFinal-29final-2B-3De.results-5Bi-5D-5B0-5D.transcript-2B-27-27-3B-7Dif-28final.trim-28-29-29-7Bconstta-3Ddocument.getElementById-28-27sum-2Dtextarea-27-29-3Bta.value-2B-3D-28ta.value-26-26-21ta.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BupdateCharCount-28ta-29-3B-7D-7D-3BsumRecognition.onerror-3D-28-29-3D&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Gl7saMRk4K_l7byhfBv2pTGic0A2v736ETkRTN7lB_4&e=> stopSumVoice();
+    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bif-28e.results-5Bi-5D.isFinal-29final-2B-3De.results-5Bi-5D-5B0-5D.transcript-2B-27-27-3B-7Dif-28final.trim-28-29-29-7Bconstta-3Ddocument.getElementById-28-27sum-2Dtextarea-27-29-3Bta.value-2B-3D-28ta.value-26-26-21ta.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BupdateCharCount-28ta-29-3B-7D-7D-3BsumRecognition.onerror-3D-28-29-3D&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=aJITG5jRzKeYWcHAQkB20tN0f3YjIF0dcFY_JZWSQ9E&e=> stopSumVoice();
   sumRecognition.onend = () => { if (sumListening) try { sumRecognition.start(); } catch(e){} };
   try { sumRecognition.start(); } catch(e) {}
 }
@@ -2223,7 +2223,7 @@ function toggleTagManager() {
 function saveNewTag() {
   const inp = document.getElementById('new-tag-input');
   const name = inp.value.trim();
-  if (!name || tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e= === name)) return;
+  if (!name || tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=ETbKsHRM25bjXfTFEJRt_S2WKb-_ny8J_9Mml7nTD_Y&e= === name)) return;
   tags.push({ id: Date.now(), name, color: currentTagColor });
   localStorage.setItem('smartTags_v1', JSON.stringify(tags));
   inp.value = '';
@@ -2232,7 +2232,7 @@ function saveNewTag() {
 }
 
 function deleteTag(id) {
-  tags = tags.filter(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=g63rNmRL0WE5Zgrd0_YkoXngIVAVPd9_vm6k2GppwS4&e= !== id);
+  tags = tags.filter(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=lHJggY7GoLMuKTSjihBiaOy8n24x7PDxhGZFWeGMSwg&e= !== id);
   // remove from items
   items.forEach(item => { if (item.tags) item.tags = item.tags.filter(tid => tid !== id); });
   localStorage.setItem('smartTags_v1', JSON.stringify(tags));
@@ -2247,9 +2247,9 @@ function renderTagList() {
   if (!el) return;
   if (!tags.length) { el.innerHTML = '<span style="font-size:12px;color:var(--text-soft)">אין תגיות עדיין</span>'; return; }
   el.innerHTML = tags.map(t =>
-    `<span class="tag-chip" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}">
-      ${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}
-      <span class="tag-del" onclick="deleteTag($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=4WCoSfV76WTyANFPGBrSBd6aVbt8c_QrI05aL0Tba58&e=})">✕</span>
+    `<span class="tag-chip" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor}">
+      ${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=ETbKsHRM25bjXfTFEJRt_S2WKb-_ny8J_9Mml7nTD_Y&e=}
+      <span class="tag-del" onclick="deleteTag($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=O-QW8r-yQushMVl1sr_RBjwKR6UV6FB_oP91cDNHVFE&e=})">✕</span>
     </span>`
   ).join('');
 }
@@ -2262,8 +2262,8 @@ function renderTagFilterRow() {
   row.innerHTML = '<span style="font-size:12px;color:var(--text-soft);font-weight:600">תגיות:</span>' +
     tags.map(t =>
       `<span class="tag-filter-chip${selectedTagFilter===t.id?' selected':''}"
-        style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}"
-        onclick="toggleTagFilter($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=4WCoSfV76WTyANFPGBrSBd6aVbt8c_QrI05aL0Tba58&e=})">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}</span>`
+        style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor}"
+        onclick="toggleTagFilter($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=O-QW8r-yQushMVl1sr_RBjwKR6UV6FB_oP91cDNHVFE&e=})">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=ETbKsHRM25bjXfTFEJRt_S2WKb-_ny8J_9Mml7nTD_Y&e=}</span>`
     ).join('');
 }
 
@@ -2274,7 +2274,7 @@ function toggleTagFilter(id) {
 }
 
 function addTagToItem(itemId, tagId) {
-  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Ljue5kftp1enelkURuHydg16VkVKB0cuDzVFP4mVI6g&e= === itemId);
+  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Q7u6BPXLNBVN-HpuvoXTwnqKW3jPGxSvjignxTqZcm8&e= === itemId);
   if (!item) return;
   if (!item.tags) item.tags = [];
   if (!item.tags.includes(tagId)) item.tags.push(tagId);
@@ -2284,15 +2284,15 @@ function addTagToItem(itemId, tagId) {
 // Patch cardHTML to show tags + tag selector
 function tagsHTML(item) {
   if (!tags.length) return '';
-  const itemTags = (item.tags || []).map(tid => tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=g63rNmRL0WE5Zgrd0_YkoXngIVAVPd9_vm6k2GppwS4&e= === tid)).filter(Boolean);
-  const available = tags.filter(t => !(item.tags || []).includes(https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=g63rNmRL0WE5Zgrd0_YkoXngIVAVPd9_vm6k2GppwS4&e=));
+  const itemTags = (item.tags || []).map(tid => tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=lHJggY7GoLMuKTSjihBiaOy8n24x7PDxhGZFWeGMSwg&e= === tid)).filter(Boolean);
+  const available = tags.filter(t => !(item.tags || []).includes(https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=lHJggY7GoLMuKTSjihBiaOy8n24x7PDxhGZFWeGMSwg&e=));
   const chips = itemTags.map(t =>
-    `<span class="item-tag" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}22;color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor};border:1px solid $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=VHKQnByuN7eIcx99R_CePja4Jwg8YBioNcRIfcfS0Bc&e=lor}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}</span>`
+    `<span class="item-tag" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor}22;color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor};border:1px solid $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=Vcdnq1aPtEDNhKF2JIleiirphCYAC0FInlMvhTDyvTs&e=lor}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=ETbKsHRM25bjXfTFEJRt_S2WKb-_ny8J_9Mml7nTD_Y&e=}</span>`
   ).join('');
   const addSelect = available.length
-    ? `<select onchange="addTagToItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cH6weGju68rr3THXQLOHH5E1GRMGWyMNup_ea5zerIE&e=},parseInthttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=Jn2e5OMuyv7kOp3dLAtugOP6JVo6xBfBkNFsHdEp-Tg&e=lue))" style="font-size:11px;border:1px solid var(--blue-pale);border-radius:20px;padding:1px 6px;background:var(--blue-ghost);color:var(--text-soft);cursor:pointer;max-width:90px;">
+    ? `<select onchange="addTagToItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=bMznCjewFVGVJ1S8knCei3t5fMzyci2xyBJzz3r8cF4&e=},parseInthttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=WIkqcGhBBsESju8QusZcjAgFntXa42vRMZXOqJ1gpnI&e=lue))" style="font-size:11px;border:1px solid var(--blue-pale);border-radius:20px;padding:1px 6px;background:var(--blue-ghost);color:var(--text-soft);cursor:pointer;max-width:90px;">
         <option value="">+ תגית</option>
-        ${available.map(t=>`<option value="$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=4WCoSfV76WTyANFPGBrSBd6aVbt8c_QrI05aL0Tba58&e=}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=TMIUaNNdfYh2YnaaQFecUBhoEQYl_75bh5c2o6vMmcE&e=}</option>`).join('')}
+        ${available.map(t=>`<option value="$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=O-QW8r-yQushMVl1sr_RBjwKR6UV6FB_oP91cDNHVFE&e=}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=ETbKsHRM25bjXfTFEJRt_S2WKb-_ny8J_9Mml7nTD_Y&e=}</option>`).join('')}
        </select>`
     : '';
   return chips || addSelect ? `<div class="item-tags">${chips}${addSelect}</div>` : '';
@@ -2373,13 +2373,13 @@ function exportPDF() {
   const priorityLabel = { urgent: t('priorities','urgent'), high: t('priorities','high'), normal: t('priorities','normal'), low: t('priorities','low') };
 
   const itemsHTML = [...active, ...done].map(item => `
-    <div class="pitem $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cgLEGcpt0WFX-fsos5NPa7L6zQajLQbGmPmLFU-3cAU&e=ne?'pdone':''}">
-      <div class="pbadge" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=cgLEGcpt0WFX-fsos5NPa7L6zQajLQbGmPmLFU-3cAU&e=ne?'#9ca3af':priorityColorhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=6ldQ5xQpYjGr4Xt4Orbvx4I9KMM9bkUT9gW3uaRmIcM&e=iority]}">${item.done ? t('priorities','done') : priorityLabel[item.priority]}</div>
+    <div class="pitem $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=7EnZJWRdUXa0WbfajkdDreoi2lMvMiD8NG8bIfZrZhs&e=ne?'pdone':''}">
+      <div class="pbadge" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=7EnZJWRdUXa0WbfajkdDreoi2lMvMiD8NG8bIfZrZhs&e=ne?'#9ca3af':priorityColorhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=m9XRnS3QBgjEzKpi9mVEGvW03v9aovz4XZ5E6d3iisE&e=iority]}">${item.done ? t('priorities','done') : priorityLabel[item.priority]}</div>
       <div class="ptext">${item.text}</div>
       <div class="pmeta">
         ${item.dueDate ? '📅 ' + new Date(item.dueDate).toLocaleString() : ''}
         · ${new Date(item.createdAt).toLocaleDateString()}
-        ${(item.tags||[]).map(tid=>{ const tag=tags.find(t=>t.id===tid); return tag?`<span style="color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Btag.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=1bXHPv4NgNZrUu9VGbPyi6BfngsGA1jIwSiLbqghO_U&e=lor}">#${https://urldefense.proofpoint.com/v2/url?u=http-3A__tag.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=x5d2umNKPZV0bWncVudl4hRzP6XAmoXqn-9npF8OlOjrr5GTHQsu5Ra6FycXL6Au&s=sPld6LKYV1ljX0IYHMnkUf1qw9V75geXpZAl4YgwT-g&e=}</span>`:''; }).join(' ')}
+        ${(item.tags||[]).map(tid=>{ const tag=tags.find(t=>t.id===tid); return tag?`<span style="color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Btag.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=-xYqk7WkFGfUVWLM3L5lPntZmVAVNUtuMlu33Iv6aQ0&e=lor}">#${https://urldefense.proofpoint.com/v2/url?u=http-3A__tag.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9UkCgkOI7weXl2E3o3STredCVTDw2eX_COi3hodmxdNumwG5MZ821cV1iL6kR03a&s=oXM47glh6Ab8sNfyJ3CQyCeOZKiCc02UBy3Au_2gNQE&e=}</span>`:''; }).join(' ')}
       </div>
     </div>`).join('');
 
