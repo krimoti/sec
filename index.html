@@ -1971,130 +1971,209 @@ function clearSummary() {
 }
 
 // ── OFFLINE MEETING ANALYZER ──
+function parseSpeakers(text) {
+  // Detect lines with speaker prefix formats:
+  // "שם: טקסט"  /  "Name: text"  /  "[00:01] שם: טקסט"  /  "שם (00:01): טקסט"
+  var lines = text.split(/\n/);
+  var segments = [];
+  var currentSpeaker = null;
+  var currentLines = [];
+  var speakerRe = /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,30})(?:\s*\([\d:]+\))?\s*:\s*(.+)/;
+
+  lines.forEach(function(line) {
+    line = line.trim();
+    if (!line) return;
+    var m = line.match(speakerRe);
+    if (m) {
+      if (currentSpeaker && currentLines.length) {
+        segments.push({ speaker: currentSpeaker, text: currentLines.join(' ') });
+      }
+      currentSpeaker = m[1].trim();
+      currentLines = [m[2].trim()];
+    } else if (currentSpeaker) {
+      currentLines.push(line);
+    } else {
+      // No speaker detected yet — treat as unknown
+      segments.push({ speaker: '?', text: line });
+    }
+  });
+  if (currentSpeaker && currentLines.length) {
+    segments.push({ speaker: currentSpeaker, text: currentLines.join(' ') });
+  }
+  return segments;
+}
+
 function analyzeMeeting() {
-  const text = document.getElementById('sum-textarea').value.trim();
+  var text = document.getElementById('sum-textarea').value.trim();
   if (!text) { showBanner(lang==='he' ? '⚠️ אנא הכנס טקסט לניתוח' : '⚠️ Please enter text to analyze'); return; }
 
-  const sentences = text.split(/[.!?\n]+/).map(s=>s.trim()).filter(s=>s.length > 4);
+  var segments = parseSpeakers(text);
+  var hasSpeakers = segments.some(function(s){ return s.speaker !== '?'; });
 
-  // ── Participants detection ──
-  const participantPatterns = [
-    /^([א-ת]{2,10}(?:\s[א-ת]{2,10})?)\s*:/,   // Hebrew: "שם:"
-    /^([A-Z][a-z]{1,12}(?:\s[A-Z][a-z]{1,12})?)\s*:/,  // English: "Name:"
-    /(?:אמר|אמרה|הציע|הציעה|דיווח|שאל|שאלה)\s+([א-ת]{2,10})/,
-    /([A-Z][a-z]{2,12})\s+(?:said|mentioned|suggested|asked|noted)/,
-  ];
-
-  const participantSet = new Set();
-  sentences.forEach(s => {
-    participantPatterns.forEach(re => {
-      const m = s.match(re);
-      if (m && m[1] && m[1].length > 1) participantSet.add(m[1]);
-    });
+  // ── Build speaker map ──
+  var speakerMap = {};  // { name: { lines:[], wordCount:0 } }
+  segments.forEach(function(seg) {
+    if (!speakerMap[seg.speaker]) speakerMap[seg.speaker] = { lines: [], wordCount: 0 };
+    speakerMap[seg.speaker].lines.push(seg.text);
+    speakerMap[seg.speaker].wordCount += seg.text.split(/\s+/).length;
   });
-  const participants = [...participantSet].slice(0, 12);
+  var speakers = Object.keys(speakerMap).filter(function(s){ return s !== '?'; });
 
-  // ── Action items detection ──
-  const actionPatterns = [
-    { re: /(?:צריך|יש לו|עליו|אני אטפל|נטפל|יטפל|יבדוק|נבדוק|לבדוק|לשלוח|לעדכן|לסיים|להכין|לתאם|לדאוג)\s+(.{8,80})/i, who: null },
-    { re: /(?:Action|TODO|Task|Follow.?up|will|should|needs to|must)\s*:?\s*(.{8,80})/i, who: null },
-    { re: /([א-ת]{2,10})\s+(?:יבדוק|ישלח|יעדכן|יסיים|יכין|יתאם|ידאג)\s+(.{6,70})/i, who: 1, task: 2 },
-    { re: /([A-Z][a-z]{2,12})\s+(?:will|should|needs to|must)\s+(.{6,70})/i, who: 1, task: 2 },
-    { re: /(?:הוחלט|סוכם|נסכם|agreed|decided|resolved)\s*:?\s*(.{8,80})/i, who: null },
-    { re: /(?:לא לשכוח|don't forget|remember to)\s+(.{6,70})/i, who: null },
+  // ── Action items detection — per speaker ──
+  var actionPatterns = [
+    { re: /(?:צריך|יש לו|עליו|אני אטפל|נטפל|יטפל|יבדוק|נבדוק|לבדוק|לשלוח|לעדכן|לסיים|להכין|לתאם|לדאוג)\s+(.{8,80})/i },
+    { re: /(?:Action|TODO|Task|Follow.?up|will|should|needs to|must)\s*:?\s*(.{8,80})/i },
+    { re: /(?:הוחלט|סוכם|נסכם|agreed|decided|resolved)\s*:?\s*(.{8,80})/i },
+    { re: /(?:לא לשכוח|don.t forget|remember to)\s+(.{6,70})/i },
   ];
 
-  const tasks = [];
-  sentences.forEach(s => {
-    actionPatterns.forEach(p => {
-      const m = s.match(p.re);
-      if (m) {
-        const taskText = p.task ? m[p.task] : m[1];
-        const who = p.who ? m[p.who] : null;
-        if (taskText && taskText.length > 5 && !tasks.find(t=>t.text===taskText.trim())) {
-          tasks.push({ text: taskText.trim(), who, priority: detectPriority(s) });
+  var tasks = [];
+  segments.forEach(function(seg) {
+    actionPatterns.forEach(function(p) {
+      var m = seg.text.match(p.re);
+      if (m && m[1] && m[1].length > 5) {
+        var taskText = m[1].trim().replace(/[.!?]+$/, '');
+        if (!tasks.find(function(t){ return t.text === taskText; })) {
+          tasks.push({
+            text: taskText,
+            who: seg.speaker !== '?' ? seg.speaker : null,
+            priority: detectPriority(seg.text)
+          });
         }
       }
     });
   });
 
-  // ── Key points (non-task sentences) ──
-  const keywordPoints = [
-    /(?:הוחלט|סוכם|חשוב|בעיה|בעיית|הצעה|מסקנה|כי|לכן|לפיכך)/i,
-    /(?:decided|agreed|important|issue|problem|proposal|conclusion|therefore|because)/i,
-    /(?:תקציב|עלות|לוח זמנים|deadline|budget|cost|schedule|milestone)/i,
+  // ── Key points ──
+  var keywordPoints = [
+    /(?:הוחלט|סוכם|חשוב|בעיה|הצעה|מסקנה|לכן|לפיכך)/i,
+    /(?:decided|agreed|important|issue|problem|proposal|conclusion|therefore)/i,
+    /(?:תקציב|עלות|לוח זמנים|deadline|budget|cost|schedule)/i,
   ];
-
-  const keyPoints = [];
-  sentences.forEach(s => {
-    if (s.length < 15) return;
-    if (tasks.find(t => s.includes(t.text))) return;
-    if (keywordPoints.some(re => re.test(s))) {
-      keyPoints.push(s.replace(/^[א-ת]{2,10}\s*:\s*/, '').replace(/^[A-Z][a-z]+\s*:\s*/, '').trim());
+  var keyPoints = [];
+  segments.forEach(function(seg) {
+    if (seg.text.length < 15) return;
+    if (keywordPoints.some(function(r){ return r.test(seg.text); })) {
+      var point = (seg.speaker !== '?' ? seg.speaker + ': ' : '') + seg.text.trim();
+      keyPoints.push(point);
     }
   });
 
-  // ── Brief summary ──
-  const wordCount = text.split(/\s+/).length;
-  const sentCount = sentences.length;
-  const firstSentences = sentences.slice(0, 3).join('. ');
-  const summaryText = lang === 'he'
-    ? `השיחה מכילה ${wordCount.toLocaleString()} מילים ו-${sentCount} משפטים. ${firstSentences ? firstSentences + '.' : ''}`
-    : `The conversation contains ${wordCount.toLocaleString()} words and ${sentCount} sentences. ${firstSentences ? firstSentences + '.' : ''}`;
+  // ── Summary text ──
+  var wordCount = text.split(/\s+/).length;
+  var summaryText = hasSpeakers
+    ? (lang==='he'
+        ? 'זוהו ' + speakers.length + ' דוברים, ' + segments.length + ' הודעות, ' + wordCount.toLocaleString() + ' מילים.'
+        : speakers.length + ' speakers detected, ' + segments.length + ' messages, ' + wordCount.toLocaleString() + ' words.')
+    : (lang==='he'
+        ? 'טקסט ללא זיהוי דוברים. ' + wordCount.toLocaleString() + ' מילים.'
+        : 'No speaker format detected. ' + wordCount.toLocaleString() + ' words.');
 
   summaryTasks = tasks;
-  renderSummaryResults({ summaryText, participants, keyPoints, tasks });
+  renderSummaryResults({ summaryText, speakers, speakerMap, segments, keyPoints, tasks, hasSpeakers });
 }
 
-function detectPriority(sentence) {
-  if (URGENT_PATTERNS.some(r => r.test(sentence))) return 'urgent';
-  if (HIGH_PATTERNS.some(r => r.test(sentence))) return 'high';
-  return 'normal';
-}
+function renderSummaryResults(data) {
+  var summaryText = data.summaryText;
+  var speakers = data.speakers || [];
+  var speakerMap = data.speakerMap || {};
+  var keyPoints = data.keyPoints || [];
+  var tasks = data.tasks || [];
+  var hasSpeakers = data.hasSpeakers;
 
-function renderSummaryResults({ summaryText, participants, keyPoints, tasks }) {
-  const res = document.getElementById('summary-results');
+  var res = document.getElementById('summary-results');
   res.classList.add('show');
 
-  // Summary text
+  // ── Summary text ──
   document.getElementById('res-sum-body').textContent = summaryText;
 
-  // Participants
-  const partCard = document.getElementById('res-participants');
-  if (participants.length) {
+  // ── Speakers with stats ──
+  var partCard = document.getElementById('res-participants');
+  if (speakers.length) {
     partCard.style.display = '';
-    document.getElementById('res-part-count').textContent = participants.length;
-    document.getElementById('res-part-body').innerHTML =
-      participants.map(p => `<span class="participant-chip">👤 ${p}</span>`).join('');
+    document.getElementById('res-part-count').textContent = speakers.length;
+    var totalWords = speakers.reduce(function(acc, s){ return acc + (speakerMap[s]||{wordCount:0}).wordCount; }, 0);
+    document.getElementById('res-part-body').innerHTML = speakers.map(function(s) {
+      var sp = speakerMap[s];
+      var pct = totalWords > 0 ? Math.round(sp.wordCount / totalWords * 100) : 0;
+      var msgs = sp.lines.length;
+      var spTasks = tasks.filter(function(t){ return t.who === s; }).length;
+      return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--blue-ghost);">'+
+        '<span style="font-size:18px">👤</span>'+
+        '<div style="flex:1">'+
+          '<div style="font-size:13px;font-weight:700;color:var(--text-main)">'+s+'</div>'+
+          '<div style="height:5px;background:var(--blue-pale);border-radius:3px;margin-top:4px;overflow:hidden;">'+
+            '<div style="height:100%;width:'+pct+'%;background:var(--blue-bright);border-radius:3px;transition:width 0.5s"></div>'+
+          '</div>'+
+        '</div>'+
+        '<div style="text-align:left;font-size:11px;color:var(--text-soft);font-family:monospace;white-space:nowrap">'+
+          pct+'% · '+msgs+(lang==='he'?' הודעות':' msgs')+
+          (spTasks ? ' · '+spTasks+(lang==='he'?' משימות':' tasks') : '')+
+        '</div>'+
+      '</div>';
+    }).join('');
   } else { partCard.style.display = 'none'; }
 
-  // Key points
-  const pointsCard = document.getElementById('res-points');
+  // ── Conversation timeline ──
+  var timelineCard = document.getElementById('res-timeline');
+  if (!timelineCard) {
+    timelineCard = document.createElement('div');
+    timelineCard.className = 'result-card';
+    timelineCard.id = 'res-timeline';
+    document.getElementById('summary-results').insertBefore(timelineCard, document.getElementById('res-points'));
+  }
+  if (data.segments && data.segments.length && hasSpeakers) {
+    timelineCard.style.display = '';
+    // Assign color per speaker
+    var COLORS = ['#3b82f6','#e11d48','#16a34a','#9333ea','#ea580c','#0891b2'];
+    var colorMap = {};
+    speakers.forEach(function(s, i){ colorMap[s] = COLORS[i % COLORS.length]; });
+    timelineCard.innerHTML =
+      '<div class="result-card-header"><span>💬</span><span>'+(lang==='he'?'ציר שיחה':'Conversation')+'</span>'+
+      '<span class="badge-count">'+data.segments.length+'</span></div>'+
+      '<div class="result-card-body" style="max-height:260px;overflow-y:auto;padding:8px 14px;">'+
+      data.segments.slice(0,40).map(function(seg) {
+        var color = colorMap[seg.speaker] || '#6b7280';
+        var isAction = tasks.find(function(t){ return seg.text.includes(t.text.substring(0,20)); });
+        return '<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--blue-ghost);align-items:flex-start;">'+
+          '<span style="font-size:10px;font-weight:800;color:'+color+';min-width:70px;padding-top:2px;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+seg.speaker+'</span>'+
+          '<span style="font-size:12px;color:var(--text-main);line-height:1.5;direction:auto;flex:1">'+
+            (isAction ? '<span style="background:#fef9c3;border-radius:2px;padding:0 2px">'+seg.text+'</span>' : seg.text)+
+          '</span>'+
+        '</div>';
+      }).join('')+
+      (data.segments.length > 40 ? '<div style="font-size:11px;color:var(--text-soft);padding:6px 0;text-align:center">... ועוד '+(data.segments.length-40)+' הודעות</div>' : '')+
+      '</div>';
+  } else { timelineCard.style.display = 'none'; }
+
+  // ── Key points ──
+  var pointsCard = document.getElementById('res-points');
   if (keyPoints.length) {
     pointsCard.style.display = '';
     document.getElementById('res-points-count').textContent = keyPoints.length;
     document.getElementById('res-points-body').innerHTML =
-      keyPoints.slice(0,8).map(p => `<div class="point-item">${p}</div>`).join('');
+      keyPoints.slice(0,8).map(function(p){ return '<div class="point-item">'+p+'</div>'; }).join('');
   } else { pointsCard.style.display = 'none'; }
 
-  // Tasks
-  const tasksCard = document.getElementById('res-tasks');
-  const exportBtn = document.getElementById('export-all-btn');
+  // ── Tasks ──
+  var tasksCard = document.getElementById('res-tasks');
+  var exportBtn = document.getElementById('export-all-btn');
   if (tasks.length) {
     tasksCard.style.display = '';
     exportBtn.style.display = '';
     document.getElementById('res-tasks-count').textContent = tasks.length;
-    document.getElementById('res-tasks-body').innerHTML =
-      tasks.map((t,i) => `
-        <div class="task-item" id="stask-${i}">
-          <span class="task-icon">${t.priority==='urgent'?'🔴':t.priority==='high'?'🟠':'🔵'}</span>
-          <span class="task-body">
-            ${t.who ? `<span class="task-who">${t.who}</span>` : ''}${t.text}
-          </span>
-          <button class="add-to-list" onclick="addSummaryTask(${i})" id="stask-btn-${i}">
-            ${lang==='he'?'+ הוסף':'+ Add'}
-          </button>
-        </div>`).join('');
+    document.getElementById('res-tasks-body').innerHTML = tasks.map(function(t, i) {
+      var icon = t.priority==='urgent'?'🔴':t.priority==='high'?'🟠':'🔵';
+      return '<div class="task-item" id="stask-'+i+'">'+
+        '<span class="task-icon">'+icon+'</span>'+
+        '<span class="task-body">'+
+          (t.who ? '<span class="task-who">'+t.who+'</span>' : '')+t.text+
+        '</span>'+
+        '<button class="add-to-list" onclick="addSummaryTask('+i+')" id="stask-btn-'+i+'">'+
+          (lang==='he'?'+ הוסף':'+ Add')+
+        '</button>'+
+      '</div>';
+    }).join('');
   } else {
     tasksCard.style.display = 'none';
     exportBtn.style.display = 'none';
