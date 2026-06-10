@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מזכיר חכם | Smart Reminders</title>
+<title>Smart Reminder | מזכיר חכם</title>
 <style>
   /* ══════════════════════════════════════
      DESIGN SYSTEM 2026 — Apple Minimal
@@ -1611,7 +1611,7 @@ if ('serviceWorker' in navigator) {
     <div class="summary-input-box">
       <div class="input-label"><span>🗒️</span> <span id="sum-input-lbl">Paste transcript or dictate</span></div>
       <textarea class="summary-textarea" id="sum-textarea"
-        placeholder="הדבק כאן את תמליל השיחה, הפגישה, או דבר ישירות..."
+        id="sum-placeholder" placeholder="Paste conversation transcript here..."
         oninput="updateCharCount(this)"></textarea>
       <div class="summary-actions">
         <button class="sum-btn" onclick="analyzeMeeting()">
@@ -1623,7 +1623,7 @@ if ('serviceWorker' in navigator) {
         <button class="sum-btn secondary" onclick="clearSummary()">
           <span>🗑️</span><span id="sum-clear-lbl">Clear</span>
         </button>
-        <span class="char-count" id="char-count">0 תווים</span>
+        <span class="char-count" id="char-count">0 chars</span>
       </div>
     </div>
 
@@ -1715,10 +1715,10 @@ if ('serviceWorker' in navigator) {
 
     <!-- Hints -->
     <div class="hint-row" id="hint-row">
-      <span class="hint-chip" onclick="appendHint('דחוף!')"><b>דחוף!</b></span>
-      <span class="hint-chip" onclick="appendHint('לא לשכוח')"><b>לא לשכוח</b></span>
-      <span class="hint-chip" onclick="appendHint('בהקדם')"><b>בהקדם</b></span>
-      <span class="hint-chip" onclick="appendHint('מישהו צריך')"><b>משימה לאחר</b></span>
+      <span class="hint-chip" onclick="appendHint(lang==='he'?'דחוף!':'urgent!')"><b>דחוף!</b></span>
+      <span class="hint-chip" onclick="appendHint(lang==='he'?'לא לשכוח':"don't forget")"><b>לא לשכוח</b></span>
+      <span class="hint-chip" onclick="appendHint(lang==='he'?'בהקדם':'ASAP')"><b>בהקדם</b></span>
+      <span class="hint-chip" onclick="appendHint(lang==='he'?'מישהו צריך':'assigned to')"><b>משימה לאחר</b></span>
       <span class="hint-chip" onclick="appendHint('urgent!')"><b>urgent!</b></span>
       <span class="hint-chip" onclick="appendHint('don\'t forget')"><b>don't forget</b></span>
     </div>
@@ -1740,7 +1740,7 @@ if ('serviceWorker' in navigator) {
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input type="text" id="search-input" placeholder="חיפוש..." oninput="onSearch(this.value)">
+      <input type="text" id="search-input" id="search-placeholder-inp" placeholder="Search..." oninput="onSearch(this.value)">
       <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
     </div>
     <button class="toolbar-btn" id="tags-toggle-btn" onclick="toggleTagManager()">🏷️ <span id="tags-lbl">Tags</span></button>
@@ -1820,10 +1820,39 @@ const T = {
     deleteConfirm: 'למחוק פריט זה?',
     notifGranted: '🔔 התראות מופעלות!', notifDenied: '❌ ההתראות נחסמו בדפדפן',
     placeholder: 'לדוגמה: לא לשכוח לשלוח את הדוח עד מחר בבוקר, זה דחוף!',
-    langBtn: 'EN'
+    langBtn: 'EN',
+    sumInputLbl: 'הדבק תמליל שיחה או הכתב בדיבור',
+    sumAnalyzeLbl: 'נתח שיחה',
+    sumClearLbl: 'נקה',
+    sumMicLbl: 'הכתב בדיבור',
+    resSumTitle: 'סיכום',
+    resPartTitle: 'משתתפים',
+    resPointsTitle: 'נקודות מפתח',
+    resTasksTitle: 'משימות שזוהו',
+    exportAllLbl: 'ייצא את כל המשימות לרשימה',
+    modalCloseLbl: 'סגור',
+    expPdfTitle: 'PDF / הדפסה',
+    expPdfSub: 'פתח תצוגת הדפסה מעוצבת',
+    expJsonTitle: 'ייצוא JSON',
+    expJsonSub: 'גיבוי כל הנתונים',
+    expImportTitle: 'ייבוא JSON',
+    expImportSub: 'שחזור מגיבוי',
+    expCsvTitle: 'ייצוא CSV',
+    expCsvSub: 'פתח ב-Excel',
+    exportModalTitle: 'ייצוא נתונים',
+    tabRemLbl: 'תזכורות',
+    tabSumLbl: 'סיכום שיחה',
+    tagsLbl: 'תגיות',
+    exportLbl: 'ייצוא',
+    backupNowLbl: 'גיבוי עכשיו',
+    autoBackupLbl: 'גיבוי אוטומטי יומי',
+    tagMgrTitle: '🏷️ ניהול תגיות',
+    sectionTitle: 'משימות פעילות',
+    voiceStatusLbl: 'מאזין...',
+    filterLblTag: 'תגיות:'
   },
   en: {
-    appTitle: 'Smart Reminder', appSub: 'מזכיר חכם · offline',
+    appTitle: 'Smart Reminder', appSub: 'Smart Reminder · offline',
     inputLbl: 'Type a reminder, note or task',
     addLbl: 'Add', dueLbl: 'Due date', notifLbl: 'Remind me',
     filterLbl: 'Filter:', fAll: 'All', fUrgent: 'Urgent', fHigh: 'High',
@@ -2023,7 +2052,7 @@ function showPrev(priority, category, date, confidence) {
   confEl.style.width = pct + '%';
   confEl.style.background = fillColor;
   const confLabel = document.getElementById('prev-conf-label');
-  if (confLabel) confLabel.textContent = (lang==='he'?'ביטחון: ':'Confidence: ') + pct + '%';
+  if (confLabel) confLabel.textContent = (lang==='he'?(lang==='he'?'ביטחון: ':'Confidence: '):'Confidence: ') + pct + '%';
 }
 function hidePrev() { document.getElementById('preview-bar').style.display = 'none'; }
 
@@ -2059,7 +2088,7 @@ function addItem() {
   if (notifEnabled && dueDate) scheduleNotif(item);
 
   render();
-  showBanner(item.priority === 'urgent' ? '🚨 פריט דחוף נוסף!' : '✅ נוסף בהצלחה');
+  showBanner(item.priority === 'urgent' ? (lang==='he'?'🚨 פריט דחוף נוסף!':'🚨 Urgent item added!') : (lang==='he'?'✅ נוסף בהצלחה':'✅ Added!'));
 }
 
 function shakeInput() {
@@ -2165,7 +2194,7 @@ function cardHTML(item) {
   return `
   <div class="item-card ${cls}" id="card-${item.id}">
     <div class="check-wrap">
-      <div class="custom-check ${checkCls}" onclick="toggleDone(${item.id})" title="${item.done?'בטל':'סמן כהושלם'}">${checkIcon}</div>
+      <div class="custom-check ${checkCls}" onclick="toggleDone(${item.id})" title="סמן/בטל">${checkIcon}</div>
     </div>
     <div class="item-body">
       <div class="item-top">
@@ -2313,6 +2342,8 @@ function safeText(id, val) {
 function applyLang() {
   const isHe = lang==='he';
   document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='he' ? 'rtl' : 'ltr';
+  document.body.style.direction = lang==='he' ? 'rtl' : 'ltr';
   safeText('app-title', t('appTitle'));
   safeText('app-sub', t('appSub'));
   safeText('input-lbl', t('inputLbl'));
@@ -2326,7 +2357,6 @@ function applyLang() {
   safeText('f-normal-lbl', t('fNormal'));
   safeText('f-low-lbl', t('fLow'));
   safeText('f-done-lbl', t('fDone'));
-  safeText('section-title', t('sTitle'));
   safeText('clear-done-lbl', t('clearDone'));
   safeText('empty-h', t('emptyH'));
   safeText('empty-p', t('emptyP'));
@@ -2371,26 +2401,25 @@ function applyLang() {
     safeText('mic-lbl', lang==='he' ? 'דיבור' : 'Speak');
   }
 
+  // update sum textarea placeholder
+  var sumTa = document.getElementById('sum-textarea');
+  if (sumTa) sumTa.placeholder = lang==='he' ? 'הדבק כאן את תמליל השיחה, הפגישה, או דבר ישירות...' : 'Paste conversation transcript here...';
+  var searchInp = document.getElementById('search-input');
+  if (searchInp) searchInp.placeholder = lang==='he' ? 'חיפוש...' : 'Search...';
+
   // hints
   const hintRow = document.getElementById('hint-row');
-  if (isHe) {
-    hintRow.innerHTML = `
-      <span class="hint-chip" onclick="appendHint('דחוף!')"><b>דחוף!</b></span>
-      <span class="hint-chip" onclick="appendHint('לא לשכוח')"><b>לא לשכוח</b></span>
-      <span class="hint-chip" onclick="appendHint('בהקדם')"><b>בהקדם</b></span>
-      <span class="hint-chip" onclick="appendHint('משימה לאחר')"><b>משימה לאחר</b></span>
-      <span class="hint-chip" onclick="appendHint('urgent!')"><b>urgent!</b></span>
-      <span class="hint-chip" onclick="appendHint(&quot;don\'t forget&quot;)"><b>don't forget</b></span>`;
-  } else {
-    hintRow.innerHTML = `
-      <span class="hint-chip" onclick="appendHint('urgent!')"><b>urgent!</b></span>
-      <span class="hint-chip" onclick="appendHint(&quot;don\'t forget&quot;)"><b>don't forget</b></span>
-      <span class="hint-chip" onclick="appendHint('ASAP')"><b>ASAP</b></span>
-      <span class="hint-chip" onclick="appendHint('important')"><b>important</b></span>
-      <span class="hint-chip" onclick="appendHint('דחוף!')"><b>דחוף</b></span>
-      <span class="hint-chip" onclick="appendHint('לא לשכוח')"><b>לא לשכוח</b></span>`;
-  }
-}
+  var heHints = ['דחוף!','לא לשכוח','בהקדם','מחר','היום'];
+  var enHints = ['urgent!','ASAP','important','tomorrow','deadline'];
+  var hintsArr = isHe ? heHints : enHints;
+  hintRow.innerHTML = '';
+  hintsArr.forEach(function(h) {
+    var sp = document.createElement('span');
+    sp.className = 'hint-chip';
+    sp.innerHTML = '<b>' + h + '</b>';
+    sp.addEventListener('click', function(){ appendHint(h); });
+    hintRow.appendChild(sp);
+  });}
 
 // ── HELPERS ──
 function appendHint(txt) {
@@ -2421,7 +2450,7 @@ function checkOverdue() {
     const due = new Date(item.dueDate);
     if (due < now && due > new Date(now - 60000)) {
       item._alerted = true;
-      showBanner('⏰ ' + item.text.substring(0,40) + (lang==='he'?' — הגיע המועד!':" — Due now!"));
+      showBanner('⏰ ' + item.text.substring(0,40) + (lang==='he'?(lang==='he'?' — הגיע המועד!':' — Due now!'):' — Due now!'));
     }
   });
 }
@@ -2436,7 +2465,7 @@ function initSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
     document.getElementById('mic-btn').classList.add('unsupported');
-    document.getElementById('mic-btn').title = 'זיהוי דיבור לא נתמך בדפדפן זה';
+    document.getElementById('mic-btn').title = (lang==='he'?'זיהוי דיבור לא נתמך בדפדפן זה':'Not supported in this browser');
     return null;
   }
   const rec = new SpeechRecognition();
@@ -2552,7 +2581,7 @@ function checkMicSupport() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) {
     var btn = document.getElementById('mic-btn');
-    if (btn) { btn.classList.add('unsupported'); btn.title = 'לא נתמך בדפדפן זה'; }
+    if (btn) { btn.classList.add('unsupported'); btn.title = (lang==='he'?'לא נתמך בדפדפן זה':'Not supported'); }
   }
 }
 
@@ -2573,12 +2602,12 @@ function switchTab(tab) {
 
 function updateCharCount(el) {
   const n = el.value.length;
-  document.getElementById('char-count').textContent = n.toLocaleString() + (lang==='he' ? ' תווים' : ' chars');
+  document.getElementById('char-count').textContent = n.toLocaleString() + (lang==='he' ? (lang==='he'?(lang==='he'?' תווים':' chars'):' chars') : ' chars');
 }
 
 function clearSummary() {
   document.getElementById('sum-textarea').value = '';
-  document.getElementById('char-count').textContent = lang==='he' ? '0 תווים' : '0 chars';
+  document.getElementById('char-count').textContent = lang==='he' ? (lang==='he'?'0 תווים':'0 chars') : '0 chars';
   document.getElementById('summary-results').classList.remove('show');
   summaryTasks = [];
 }
@@ -2770,14 +2799,14 @@ function analyzeMeeting() {
   // ── Summary ──
   var wordCount = text.split(/\s+/).length;
   var summaryText = (lang==='he'
-    ? 'שפה שזוהתה: ' + detectedLabel + ' · '
+    ? (lang==='he'?(lang==='he'?'שפה שזוהתה: ':'Detected: '):'Detected: ') + detectedLabel + ' · '
     : 'Detected: ' + detectedLabel + ' · ') +
     (hasSpeakers
       ? (lang==='he'
-          ? speakers.length + ' דוברים · ' + segments.length + ' הודעות · ' + wordCount.toLocaleString() + ' מילים'
+          ? speakers.length + (lang==='he'?(lang==='he'?' דוברים · ':' speakers · '):' speakers · ') + segments.length + (lang==='he'?(lang==='he'?' הודעות · ':' messages · '):' messages · ') + wordCount.toLocaleString() + (lang==='he'?(lang==='he'?' מילים':' words'):' words')
           : speakers.length + ' speakers · ' + segments.length + ' messages · ' + wordCount.toLocaleString() + ' words')
       : (lang==='he'
-          ? wordCount.toLocaleString() + ' מילים (ללא זיהוי דוברים)'
+          ? wordCount.toLocaleString() + (lang==='he'?(lang==='he'?' מילים (ללא זיהוי דוברים)':' words (no speaker format)'):' words (no speaker format)')
           : wordCount.toLocaleString() + ' words (no speaker format)'));
 
   summaryTasks = tasks;
@@ -2818,8 +2847,8 @@ function renderSummaryResults(data) {
           '</div>'+
         '</div>'+
         '<div style="text-align:left;font-size:11px;color:var(--text-soft);font-family:monospace;white-space:nowrap">'+
-          pct+'% · '+msgs+(lang==='he'?' הודעות':' msgs')+
-          (spTasks ? ' · '+spTasks+(lang==='he'?' משימות':' tasks') : '')+
+          pct+'% · '+msgs+(lang==='he'?(lang==='he'?' הודעות':' messages'):' msgs')+
+          (spTasks ? ' · '+spTasks+(lang==='he'?(lang==='he'?' משימות':' tasks'):' tasks') : '')+
         '</div>'+
       '</div>';
     }).join('');
@@ -2840,7 +2869,7 @@ function renderSummaryResults(data) {
     var colorMap = {};
     speakers.forEach(function(s, i){ colorMap[s] = COLORS[i % COLORS.length]; });
     timelineCard.innerHTML =
-      '<div class="result-card-header"><span>💬</span><span>'+(lang==='he'?'ציר שיחה':'Conversation')+'</span>'+
+      '<div class="result-card-header"><span>💬</span><span>'+(lang==='he'?(lang==='he'?'ציר שיחה':'Timeline'):'Conversation')+'</span>'+
       '<span class="badge-count">'+data.segments.length+'</span></div>'+
       '<div class="result-card-body" style="max-height:260px;overflow-y:auto;padding:8px 14px;">'+
       data.segments.slice(0,40).map(function(seg) {
@@ -2853,7 +2882,7 @@ function renderSummaryResults(data) {
           '</span>'+
         '</div>';
       }).join('')+
-      (data.segments.length > 40 ? '<div style="font-size:11px;color:var(--text-soft);padding:6px 0;text-align:center">... ועוד '+(data.segments.length-40)+' הודעות</div>' : '')+
+      (data.segments.length > 40 ? '<div style="font-size:11px;color:var(--text-soft);padding:6px 0;text-align:center">... ועוד '+(data.segments.length-40)+(lang==='he'?(lang==='he'?' הודעות':' messages'):' more')+'</div>' : '')+
       '</div>';
   } else { timelineCard.style.display = 'none'; }
 
@@ -2881,7 +2910,7 @@ function renderSummaryResults(data) {
           (t.who ? '<span class="task-who">'+t.who+'</span>' : '')+t.text+
         '</span>'+
         '<button class="add-to-list" onclick="addSummaryTask('+i+')" id="stask-btn-'+i+'">'+
-          (lang==='he'?'+ הוסף':'+ Add')+
+          (lang==='he'?(lang==='he'?(lang==='he'?'+ הוסף':'+ Add'):'+ Add'):'+ Add')+
         '</button>'+
       '</div>';
     }).join('');
@@ -2932,7 +2961,7 @@ function exportAllTasks() {
     if (btn) { btn.textContent = lang==='he'?'✓ נוסף':'✓ Added'; btn.classList.add('added'); btn.disabled=true; }
   });
   save();
-  showBanner(lang==='he' ? `✅ ${summaryTasks.length} משימות נוספו!` : `✅ ${summaryTasks.length} tasks added!`);
+  showBanner(lang==='he' ? (lang==='he'?'✅ '+summaryTasks.length+' משימות נוספו!':'✅ '+summaryTasks.length+' tasks added!') : `✅ ${summaryTasks.length} tasks added!`);
 }
 
 // ── SUMMARY VOICE ──
@@ -3157,7 +3186,7 @@ function deleteTag(id) {
 function renderTagList() {
   const el = document.getElementById('tag-list-display');
   if (!el) return;
-  if (!tags.length) { el.innerHTML = '<span style="font-size:12px;color:var(--text-soft)">אין תגיות עדיין</span>'; return; }
+  if (!tags.length) { el.innerHTML = '<span style="font-size:12px;color:var(--text-soft)">'+(lang==='he'?'אין תגיות עדיין':'No tags yet')+'</span>'; return; }
   el.innerHTML = tags.map(t =>
     `<span class="tag-chip" style="background:${t.color}22;border-color:${t.color};color:${t.color}">
       ${t.name}
@@ -3171,7 +3200,7 @@ function renderTagFilterRow() {
   if (!row) return;
   if (!tags.length) { row.style.display = 'none'; return; }
   row.style.display = 'flex';
-  row.innerHTML = '<span style="font-size:12px;color:var(--text-soft);font-weight:600">תגיות:</span>' +
+  row.innerHTML = '<span style="font-size:12px;color:var(--text-soft);font-weight:600">'+(lang==='he'?'תגיות:':'Tags:')+'</span>' +
     tags.map(t =>
       `<span class="tag-filter-chip${selectedTagFilter===t.id?' selected':''}"
         style="background:${t.color}22;border-color:${t.color};color:${t.color}"
@@ -3203,7 +3232,7 @@ function tagsHTML(item) {
   ).join('');
   const addSelect = available.length
     ? `<select onchange="addTagToItem(${item.id},parseInt(this.value))" style="font-size:11px;border:1px solid var(--blue-pale);border-radius:20px;padding:1px 6px;background:var(--blue-ghost);color:var(--text-soft);cursor:pointer;max-width:90px;">
-        <option value="">+ תגית</option>
+        <option value="">'+(lang==='he'?'+ תגית':'+ Tag')+'</option>
         ${available.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}
        </select>`
     : '';
