@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1573,7 +1573,7 @@ if ('serviceWorker' in navigator) {
     <div class="logo">
       <div class="logo-icon">📋</div>
       <div class="logo-text">
-        <h1 id="app-title">מזכיר חכם</h1>
+        <h1 id="app-title">Smart Reminder</h1>
         <span id="app-sub">offline</span>
       </div>
     </div>
@@ -1599,29 +1599,29 @@ if ('serviceWorker' in navigator) {
   <!-- Tabs -->
   <div class="tabs-bar">
     <button class="tab-btn active" id="tab-reminders" onclick="switchTab('reminders')">
-      <span>📋</span><span id="tab-rem-lbl">תזכורות</span>
+      <span>📋</span><span id="tab-rem-lbl">Reminders</span>
     </button>
     <button class="tab-btn" id="tab-summary" onclick="switchTab('summary')">
-      <span>🗒️</span><span id="tab-sum-lbl">סיכום שיחה</span>
+      <span>🗒️</span><span id="tab-sum-lbl">Meeting Summary</span>
     </button>
   </div>
 
   <!-- Summary Panel -->
   <div class="summary-panel" id="summary-panel">
     <div class="summary-input-box">
-      <div class="input-label"><span>🗒️</span> <span id="sum-input-lbl">הדבק תמליל שיחה או הכתב בדיבור</span></div>
+      <div class="input-label"><span>🗒️</span> <span id="sum-input-lbl">Paste transcript or dictate</span></div>
       <textarea class="summary-textarea" id="sum-textarea"
         placeholder="הדבק כאן את תמליל השיחה, הפגישה, או דבר ישירות..."
         oninput="updateCharCount(this)"></textarea>
       <div class="summary-actions">
         <button class="sum-btn" onclick="analyzeMeeting()">
-          <span>🔍</span><span id="sum-analyze-lbl">נתח שיחה</span>
+          <span>🔍</span><span id="sum-analyze-lbl">Analyze</span>
         </button>
         <button class="sum-mic-btn" id="sum-mic-btn" onclick="toggleSumVoice()">
-          <span id="sum-mic-icon">🎤</span><span id="sum-mic-lbl">הכתב בדיבור</span>
+          <span id="sum-mic-icon">🎤</span><span id="sum-mic-lbl">Dictate</span>
         </button>
         <button class="sum-btn secondary" onclick="clearSummary()">
-          <span>🗑️</span><span id="sum-clear-lbl">נקה</span>
+          <span>🗑️</span><span id="sum-clear-lbl">Clear</span>
         </button>
         <span class="char-count" id="char-count">0 תווים</span>
       </div>
@@ -1632,7 +1632,7 @@ if ('serviceWorker' in navigator) {
       <!-- Summary text -->
       <div class="result-card" id="res-summary">
         <div class="result-card-header">
-          <span>📝</span><span id="res-sum-title">סיכום</span>
+          <span>📝</span><span id="res-sum-title">Summary</span>
         </div>
         <div class="result-card-body">
           <div class="summary-text" id="res-sum-body"></div>
@@ -1642,7 +1642,7 @@ if ('serviceWorker' in navigator) {
       <!-- Participants -->
       <div class="result-card" id="res-participants" style="display:none">
         <div class="result-card-header">
-          <span>👥</span><span id="res-part-title">משתתפים</span>
+          <span>👥</span><span id="res-part-title">Participants</span>
           <span class="badge-count" id="res-part-count">0</span>
         </div>
         <div class="result-card-body" id="res-part-body"></div>
@@ -1651,7 +1651,7 @@ if ('serviceWorker' in navigator) {
       <!-- Key points -->
       <div class="result-card" id="res-points" style="display:none">
         <div class="result-card-header">
-          <span>💡</span><span id="res-points-title">נקודות מפתח</span>
+          <span>💡</span><span id="res-points-title">Key Points</span>
           <span class="badge-count" id="res-points-count">0</span>
         </div>
         <div class="result-card-body" id="res-points-body"></div>
@@ -1660,7 +1660,7 @@ if ('serviceWorker' in navigator) {
       <!-- Action items -->
       <div class="result-card" id="res-tasks" style="display:none">
         <div class="result-card-header">
-          <span>✅</span><span id="res-tasks-title">משימות שזוהו</span>
+          <span>✅</span><span id="res-tasks-title">Action Items</span>
           <span class="badge-count" id="res-tasks-count">0</span>
         </div>
         <div class="result-card-body" id="res-tasks-body"></div>
@@ -1668,7 +1668,7 @@ if ('serviceWorker' in navigator) {
 
       <!-- Export all -->
       <button class="export-all-btn" id="export-all-btn" onclick="exportAllTasks()" style="display:none">
-        <span>➕</span><span id="export-all-lbl">ייצא את כל המשימות לרשימה</span>
+        <span>➕</span><span id="export-all-lbl">Export All Tasks to List</span>
       </button>
     </div>
   </div>
@@ -1677,13 +1677,13 @@ if ('serviceWorker' in navigator) {
   <div class="reminders-panel" id="reminders-panel">
   <!-- Input -->
   <div class="input-section">
-    <div class="input-label"><span>✍️</span> <span id="input-lbl">הכתב תזכורת, הערה או משימה</span></div>
+    <div class="input-label"><span>✍️</span> <span id="input-lbl">Type a reminder, note or task</span></div>
     <div class="input-row">
       <textarea id="main-input" placeholder="לדוגמה: לא לשכוח לשלוח את הדוח עד מחר בבוקר, זה דחוף!" oninput="analyzeInput(this.value)" onkeydown="handleKey(event)"></textarea>
       <div class="btn-row">
-        <button class="add-btn" onclick="addItem()"><span>➕</span><span id="add-lbl">הוסף</span></button>
+        <button class="add-btn" onclick="addItem()"><span>➕</span><span id="add-lbl">Add</span></button>
         <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="הכתבה קולית">
-          <span id="mic-icon">🎤</span><span id="mic-lbl">דיבור</span>
+          <span id="mic-icon">🎤</span><span id="mic-lbl">Speak</span>
         </button>
       </div>
     </div>
@@ -1691,9 +1691,9 @@ if ('serviceWorker' in navigator) {
     <!-- Voice status -->
     <div id="voice-status" style="display:none; align-items:center; gap:10px; background:linear-gradient(90deg,#fee2e2,#fff1f2); border:1px solid #fca5a5; border-radius:var(--radius-sm); padding:10px 14px; margin-top:10px; font-size:13px; color:#dc2626; font-weight:600;">
       <div class="voice-wave"><span></span><span></span><span></span><span></span><span></span></div>
-      <span id="voice-status-lbl">מאזין...</span>
+      <span id="voice-status-lbl">Listening...</span>
       <span id="voice-interim" style="font-style:italic;color:var(--text-soft);font-weight:400;font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-      <button class="voice-lang-toggle" id="voice-lang-btn" onclick="switchVoiceLang()">עב</button>
+      <button class="voice-lang-toggle" id="voice-lang-btn" onclick="switchVoiceLang()">HE</button>
     </div>
 
     <!-- Preview bar -->
@@ -1706,10 +1706,10 @@ if ('serviceWorker' in navigator) {
 
     <!-- Date row -->
     <div class="date-row">
-      <label>📅 <span id="due-lbl">מועד אחרון</span>: <input type="datetime-local" id="due-date"></label>
+      <label>📅 <span id="due-lbl">Due date</span>: <input type="datetime-local" id="due-date"></label>
       <label class="notif-toggle" onclick="toggleNotif()">
         <span class="toggle-switch" id="notif-toggle"></span>
-        <span id="notif-lbl">תזכורת</span>
+        <span id="notif-lbl">Remind me</span>
       </label>
     </div>
 
@@ -1728,11 +1728,11 @@ if ('serviceWorker' in navigator) {
   <!-- Backup status bar -->
   <div class="backup-bar" id="backup-bar">
     <span>💾</span>
-    <span id="backup-status-txt">בודק גיבוי...</span>
-    <button class="backup-now-btn" onclick="manualBackup()" id="backup-now-btn">גיבוי עכשיו</button>
+    <span id="backup-status-txt">Checking backup...</span>
+    <button class="backup-now-btn" onclick="manualBackup()" id="backup-now-btn">Backup Now</button>
     <label class="backup-auto-toggle">
       <span class="toggle-switch" id="auto-backup-toggle"></span>
-      <span id="auto-backup-lbl">גיבוי אוטומטי יומי</span>
+      <span id="auto-backup-lbl">Daily Auto-backup</span>
     </label>
   </div>
 
@@ -1743,13 +1743,13 @@ if ('serviceWorker' in navigator) {
       <input type="text" id="search-input" placeholder="חיפוש..." oninput="onSearch(this.value)">
       <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
     </div>
-    <button class="toolbar-btn" id="tags-toggle-btn" onclick="toggleTagManager()">🏷️ <span id="tags-lbl">תגיות</span></button>
-    <button class="toolbar-btn" onclick="openExportModal()">📤 <span id="export-lbl">ייצוא</span></button>
+    <button class="toolbar-btn" id="tags-toggle-btn" onclick="toggleTagManager()">🏷️ <span id="tags-lbl">Tags</span></button>
+    <button class="toolbar-btn" onclick="openExportModal()">📤 <span id="export-lbl">Export</span></button>
   </div>
 
   <!-- Tag Manager -->
   <div class="tag-manager" id="tag-manager">
-    <h3 id="tag-mgr-title">🏷️ ניהול תגיות</h3>
+    <h3 id="tag-mgr-title">🏷️ Manage Tags</h3>
     <div class="tag-list" id="tag-list-display"></div>
     <div class="tag-add-row">
       <input type="text" id="new-tag-input" placeholder="שם תגית..." maxlength="20">
@@ -1763,33 +1763,33 @@ if ('serviceWorker' in navigator) {
 
   <!-- Filters -->
   <div class="filter-row">
-    <span class="filter-label" id="filter-lbl">סינון:</span>
-    <button class="filter-btn active" id="f-all" onclick="setFilter('all',this)">📋 <span id="f-all-lbl">הכל</span></button>
-    <button class="filter-btn urgent-f" id="f-urgent" onclick="setFilter('urgent',this)">🔴 <span id="f-urgent-lbl">דחוף</span></button>
-    <button class="filter-btn high-f" id="f-high" onclick="setFilter('high',this)">🟠 <span id="f-high-lbl">גבוה</span></button>
-    <button class="filter-btn" id="f-normal" onclick="setFilter('normal',this)">🔵 <span id="f-normal-lbl">רגיל</span></button>
-    <button class="filter-btn" id="f-low" onclick="setFilter('low',this)">🟢 <span id="f-low-lbl">נמוך</span></button>
-    <button class="filter-btn done-f" id="f-done" onclick="setFilter('done',this)">✅ <span id="f-done-lbl">הושלם</span></button>
+    <span class="filter-label" id="filter-lbl">Filter:</span>
+    <button class="filter-btn active" id="f-all" onclick="setFilter('all',this)">📋 <span id="f-all-lbl">All</span></button>
+    <button class="filter-btn urgent-f" id="f-urgent" onclick="setFilter('urgent',this)">🔴 <span id="f-urgent-lbl">Urgent</span></button>
+    <button class="filter-btn high-f" id="f-high" onclick="setFilter('high',this)">🟠 <span id="f-high-lbl">High</span></button>
+    <button class="filter-btn" id="f-normal" onclick="setFilter('normal',this)">🔵 <span id="f-normal-lbl">Normal</span></button>
+    <button class="filter-btn" id="f-low" onclick="setFilter('low',this)">🟢 <span id="f-low-lbl">Low</span></button>
+    <button class="filter-btn done-f" id="f-done" onclick="setFilter('done',this)">✅ <span id="f-done-lbl">Done</span></button>
     <select class="sort-select" id="sort-sel" onchange="render()">
-      <option value="priority" id="sort-priority">מיון: עדיפות</option>
-      <option value="date" id="sort-date">מיון: תאריך</option>
-      <option value="added" id="sort-added">מיון: חדשות</option>
+      <option value="priority" id="sort-priority">Sort: Priority</option>
+      <option value="date" id="sort-date">Sort: Date</option>
+      <option value="added" id="sort-added">Sort: Newest</option>
     </select>
   </div>
 
   <!-- Section header -->
   <div class="section-header">
-    <h2 id="section-title">משימות פעילות</h2>
+    <h2 id="section-title">Active Items</h2>
     <span class="count-pill" id="count-pill">0</span>
-    <button class="clear-done-btn" onclick="clearDone()" id="clear-done-lbl">נקה הושלם</button>
+    <button class="clear-done-btn" onclick="clearDone()" id="clear-done-lbl">Clear Done</button>
   </div>
 
   <!-- Cards -->
   <div id="items-container"></div>
   <div id="empty-state">
     <div class="empty-icon">📭</div>
-    <h3 id="empty-h">אין פריטים</h3>
-    <p id="empty-p">הוסף תזכורת, הערה או משימה למעלה</p>
+    <h3 id="empty-h">No items yet</h3>
+    <p id="empty-p">Add a reminder, note or task above</p>
   </div>
   </div><!-- /reminders-panel -->
 </main>
@@ -1838,7 +1838,36 @@ const T = {
     deleteConfirm: 'Delete this item?',
     notifGranted: '🔔 Notifications enabled!', notifDenied: '❌ Notifications blocked by browser',
     placeholder: 'e.g. Don\'t forget to send the report by tomorrow morning, urgent!',
-    langBtn: 'עב'
+    langBtn: 'עב',
+    sumInputLbl: 'Paste transcript or dictate',
+    sumAnalyzeLbl: 'Analyze',
+    sumClearLbl: 'Clear',
+    sumMicLbl: 'Dictate',
+    resSumTitle: 'Summary',
+    resPartTitle: 'Participants',
+    resPointsTitle: 'Key Points',
+    resTasksTitle: 'Action Items',
+    exportAllLbl: 'Export All Tasks to List',
+    modalCloseLbl: 'Close',
+    expPdfTitle: 'PDF / Print',
+    expPdfSub: 'Open formatted print view',
+    expJsonTitle: 'Export JSON',
+    expJsonSub: 'Backup all data',
+    expImportTitle: 'Import JSON',
+    expImportSub: 'Restore from backup',
+    expCsvTitle: 'Export CSV',
+    expCsvSub: 'Open in Excel',
+    exportModalTitle: 'Export Data',
+    tabRemLbl: 'Reminders',
+    tabSumLbl: 'Meeting Summary',
+    tagsLbl: 'Tags',
+    exportLbl: 'Export',
+    backupNowLbl: 'Backup Now',
+    autoBackupLbl: 'Daily Auto-backup',
+    tagMgrTitle: '🏷️ Manage Tags',
+    sectionTitle: 'Active Items',
+    voiceStatusLbl: 'Listening...',
+    filterLblTag: 'Tags:'
   }
 };
 
@@ -2307,6 +2336,34 @@ function applyLang() {
   safeText('sort-date', t('sortDate'));
   safeText('sort-added', t('sortAdded'));
   safeText('lang-btn', t('langBtn'));
+  safeText('sum-input-lbl', t('sumInputLbl'));
+  safeText('sum-analyze-lbl', t('sumAnalyzeLbl'));
+  safeText('sum-clear-lbl', t('sumClearLbl'));
+  safeText('sum-mic-lbl', isListening ? (lang==='he'?'עצור':'Stop') : t('sumMicLbl'));
+  safeText('res-sum-title', t('resSumTitle'));
+  safeText('res-part-title', t('resPartTitle'));
+  safeText('res-points-title', t('resPointsTitle'));
+  safeText('res-tasks-title', t('resTasksTitle'));
+  safeText('export-all-lbl', t('exportAllLbl'));
+  safeText('modal-close-lbl', t('modalCloseLbl'));
+  safeText('exp-pdf-title', t('expPdfTitle'));
+  safeText('exp-pdf-sub', t('expPdfSub'));
+  safeText('exp-json-title', t('expJsonTitle'));
+  safeText('exp-json-sub', t('expJsonSub'));
+  safeText('exp-import-title', t('expImportTitle'));
+  safeText('exp-import-sub', t('expImportSub'));
+  safeText('exp-csv-title', t('expCsvTitle'));
+  safeText('exp-csv-sub', t('expCsvSub'));
+  safeText('export-modal-title', t('exportModalTitle'));
+  safeText('tab-rem-lbl', t('tabRemLbl'));
+  safeText('tab-sum-lbl', t('tabSumLbl'));
+  safeText('tags-lbl', t('tagsLbl'));
+  safeText('export-lbl', t('exportLbl'));
+  safeText('backup-now-btn', t('backupNowLbl'));
+  safeText('auto-backup-lbl', t('autoBackupLbl'));
+  safeText('tag-mgr-title', t('tagMgrTitle'));
+  safeText('section-title', t('sectionTitle'));
+  safeText('voice-status-lbl', t('voiceStatusLbl'));
   document.getElementById('main-input').placeholder = t('placeholder');
   checkMicSupport();
   // update mic label if not listening
@@ -2526,15 +2583,98 @@ function clearSummary() {
   summaryTasks = [];
 }
 
-// ── OFFLINE MEETING ANALYZER ──
-function parseSpeakers(text) {
-  // Detect lines with speaker prefix formats:
-  // "שם: טקסט"  /  "Name: text"  /  "[00:01] שם: טקסט"  /  "שם (00:01): טקסט"
+// ── MULTILINGUAL MEETING ANALYZER ──
+
+// ── LANGUAGE DETECTION ──
+function detectTextLang(text) {
+  var sample = text.slice(0, 500);
+  var scores = {
+    he: (sample.match(/[\u05d0-\u05ea]/g)||[]).length,
+    ar: (sample.match(/[\u0600-\u06ff]/g)||[]).length,
+    ru: (sample.match(/[\u0400-\u04ff]/g)||[]).length,
+    ka: (sample.match(/[\u10d0-\u10ff]/g)||[]).length,
+    mk: (sample.match(/[\u0400-\u04ff]/g)||[]).length, // Cyrillic (Macedonian)
+    fr: (sample.match(/[àâäéèêëîïôùûüç]/gi)||[]).length,
+    en: (sample.match(/\b(the|and|is|are|will|to|of|in|for|that|this)\b/gi)||[]).length,
+  };
+  // Georgian takes priority over Cyrillic
+  if (scores.ka > 3) return 'ka';
+  if (scores.ar > 5) return 'ar';
+  if (scores.he > 5) return 'he';
+  if (scores.ru > 5) return 'ru';
+  if (scores.fr > 3) return 'fr';
+  if (scores.en > 3) return 'en';
+  return 'en'; // default
+}
+
+// ── MULTILINGUAL PATTERNS ──
+var LANG_PATTERNS = {
+  he: {
+    action: [
+      /(?:צריך|יש לו|עליו|אני אטפל|נטפל|יטפל|יבדוק|נבדוק|לבדוק|לשלוח|לעדכן|לסיים|להכין|לתאם|לדאוג)\s+(.{6,80})/i,
+      /(?:הוחלט|סוכם|נסכם)\s*:?\s*(.{6,80})/i,
+      /(?:לא לשכוח)\s+(.{6,60})/i,
+    ],
+    keyword: [/(?:הוחלט|סוכם|חשוב|בעיה|הצעה|מסקנה|לכן|תקציב|עלות|לוח זמנים)/i],
+    speaker: /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,30})(?:\s*\([\d:]+\))?\s*:\s*(.+)/,
+  },
+  en: {
+    action: [
+      /(?:will|should|needs? to|must|going to|have to|plan to)\s+(.{6,80})/i,
+      /(?:action item|todo|follow.?up|assigned to)\s*:?\s*(.{6,80})/i,
+      /(?:agreed|decided|resolved)\s*:?\s*(.{6,80})/i,
+      /(?:don.t forget|remember to)\s+(.{6,60})/i,
+    ],
+    keyword: [/(?:decided|agreed|important|issue|problem|proposal|conclusion|budget|deadline|milestone)/i],
+    speaker: /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,30})(?:\s*\([\d:]+\))?\s*:\s*(.+)/,
+  },
+  ar: {
+    action: [
+      /(?:يجب|ينبغي|سيقوم|سأقوم|نحتاج|يحتاج|قرر)\s+(.{6,80})/,
+      /(?:تم الاتفاق|تقرر|ملاحظة)\s*:?\s*(.{6,80})/,
+    ],
+    keyword: [/(?:مهم|مشكلة|قرار|ميزانية|موعد|اتفاق)/],
+    speaker: /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,20})(?:\s*\([\d:]+\))?\s*:\s*(.+)/,
+  },
+  ru: {
+    action: [
+      /(?:нужно|необходимо|следует|должен|будет|сделать|отправить|проверить)\s+(.{6,80})/i,
+      /(?:решено|договорились|согласовано)\s*:?\s*(.{6,80})/i,
+    ],
+    keyword: [/(?:важно|проблема|решение|бюджет|срок|план)/i],
+    speaker: /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,30})(?:\s*\([\d:]+\))?\s*:\s*(.+)/,
+  },
+  fr: {
+    action: [
+      /(?:doit|devra|va|faut|besoin de|prévu de|planifié)\s+(.{6,80})/i,
+      /(?:décidé|convenu|action|suivi)\s*:?\s*(.{6,80})/i,
+      /(?:ne pas oublier|rappel)\s+(.{6,60})/i,
+    ],
+    keyword: [/(?:important|problème|décision|budget|délai|accord)/i],
+    speaker: /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,30})(?:\s*\([\d:]+\))?\s*:\s*(.+)/,
+  },
+  ka: {
+    action: [
+      /(?:უნდა|საჭიროა|გადაწყდა|შეთანხმდნენ)\s*(.{4,60})/,
+    ],
+    keyword: [/(?:მნიშვნელოვანი|პრობლემა|გადაწყვეტილება|ბიუჯეტი)/],
+    speaker: /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,20})(?:\s*\([\d:]+\))?\s*:\s*(.+)/,
+  },
+};
+
+// Fallback: Latin-based languages use English patterns
+function getLangPatterns(langCode) {
+  return LANG_PATTERNS[langCode] || LANG_PATTERNS['en'];
+}
+
+// ── UNIVERSAL SPEAKER PARSER ──
+function parseSpeakers(text, langCode) {
+  var pats = getLangPatterns(langCode);
+  var speakerRe = pats.speaker;
   var lines = text.split(/\n/);
   var segments = [];
   var currentSpeaker = null;
   var currentLines = [];
-  var speakerRe = /^(?:\[[\d:]+\]\s*)?([^\[\]:]{1,30})(?:\s*\([\d:]+\))?\s*:\s*(.+)/;
 
   lines.forEach(function(line) {
     line = line.trim();
@@ -2549,7 +2689,6 @@ function parseSpeakers(text) {
     } else if (currentSpeaker) {
       currentLines.push(line);
     } else {
-      // No speaker detected yet — treat as unknown
       segments.push({ speaker: '?', text: line });
     }
   });
@@ -2559,15 +2698,35 @@ function parseSpeakers(text) {
   return segments;
 }
 
+// ── UNIVERSAL PRIORITY DETECTION ──
+function detectPriority(sentence) {
+  // Universal urgency signals (work across languages)
+  if (/[!]{2,}/.test(sentence)) return 'urgent';
+  if (URGENT_PATTERNS.some(function(r){ return r.test(sentence); })) return 'urgent';
+  if (HIGH_PATTERNS.some(function(r){ return r.test(sentence); })) return 'high';
+  // Arabic/Hebrew urgent words
+  if (/(?:عاجل|דחוף|срочно|urgent|urgente|d'urgence)/i.test(sentence)) return 'urgent';
+  // Arabic/Hebrew high priority
+  if (/(?:مهم|חשוב|важно|important)/i.test(sentence)) return 'high';
+  return 'normal';
+}
+
+// ── MAIN ANALYZER ──
 function analyzeMeeting() {
   var text = document.getElementById('sum-textarea').value.trim();
-  if (!text) { showBanner(lang==='he' ? '⚠️ אנא הכנס טקסט לניתוח' : '⚠️ Please enter text to analyze'); return; }
+  if (!text) {
+    showBanner(lang==='he' ? '⚠️ אנא הכנס טקסט לניתוח' : '⚠️ Please enter text to analyze');
+    return;
+  }
 
-  var segments = parseSpeakers(text);
+  // Auto-detect language of transcript
+  var textLang = detectTextLang(text);
+  var pats = getLangPatterns(textLang);
+  var segments = parseSpeakers(text, textLang);
   var hasSpeakers = segments.some(function(s){ return s.speaker !== '?'; });
 
-  // ── Build speaker map ──
-  var speakerMap = {};  // { name: { lines:[], wordCount:0 } }
+  // ── Speaker map ──
+  var speakerMap = {};
   segments.forEach(function(seg) {
     if (!speakerMap[seg.speaker]) speakerMap[seg.speaker] = { lines: [], wordCount: 0 };
     speakerMap[seg.speaker].lines.push(seg.text);
@@ -2575,19 +2734,12 @@ function analyzeMeeting() {
   });
   var speakers = Object.keys(speakerMap).filter(function(s){ return s !== '?'; });
 
-  // ── Action items detection — per speaker ──
-  var actionPatterns = [
-    { re: /(?:צריך|יש לו|עליו|אני אטפל|נטפל|יטפל|יבדוק|נבדוק|לבדוק|לשלוח|לעדכן|לסיים|להכין|לתאם|לדאוג)\s+(.{8,80})/i },
-    { re: /(?:Action|TODO|Task|Follow.?up|will|should|needs to|must)\s*:?\s*(.{8,80})/i },
-    { re: /(?:הוחלט|סוכם|נסכם|agreed|decided|resolved)\s*:?\s*(.{8,80})/i },
-    { re: /(?:לא לשכוח|don.t forget|remember to)\s+(.{6,70})/i },
-  ];
-
+  // ── Action items ──
   var tasks = [];
   segments.forEach(function(seg) {
-    actionPatterns.forEach(function(p) {
-      var m = seg.text.match(p.re);
-      if (m && m[1] && m[1].length > 5) {
+    pats.action.forEach(function(re) {
+      var m = seg.text.match(re);
+      if (m && m[1] && m[1].length > 4) {
         var taskText = m[1].trim().replace(/[.!?]+$/, '');
         if (!tasks.find(function(t){ return t.text === taskText; })) {
           tasks.push({
@@ -2601,32 +2753,35 @@ function analyzeMeeting() {
   });
 
   // ── Key points ──
-  var keywordPoints = [
-    /(?:הוחלט|סוכם|חשוב|בעיה|הצעה|מסקנה|לכן|לפיכך)/i,
-    /(?:decided|agreed|important|issue|problem|proposal|conclusion|therefore)/i,
-    /(?:תקציב|עלות|לוח זמנים|deadline|budget|cost|schedule)/i,
-  ];
   var keyPoints = [];
   segments.forEach(function(seg) {
-    if (seg.text.length < 15) return;
-    if (keywordPoints.some(function(r){ return r.test(seg.text); })) {
+    if (seg.text.length < 12) return;
+    if (tasks.find(function(t){ return seg.text.includes(t.text.substring(0,15)); })) return;
+    if (pats.keyword.some(function(r){ return r.test(seg.text); })) {
       var point = (seg.speaker !== '?' ? seg.speaker + ': ' : '') + seg.text.trim();
       keyPoints.push(point);
     }
   });
 
-  // ── Summary text ──
+  // ── Detected language label ──
+  var langLabels = { he:'עברית', en:'English', ar:'عربي', ru:'Русский', fr:'Français', ka:'ქართული', mk:'Македонски' };
+  var detectedLabel = langLabels[textLang] || textLang;
+
+  // ── Summary ──
   var wordCount = text.split(/\s+/).length;
-  var summaryText = hasSpeakers
-    ? (lang==='he'
-        ? 'זוהו ' + speakers.length + ' דוברים, ' + segments.length + ' הודעות, ' + wordCount.toLocaleString() + ' מילים.'
-        : speakers.length + ' speakers detected, ' + segments.length + ' messages, ' + wordCount.toLocaleString() + ' words.')
-    : (lang==='he'
-        ? 'טקסט ללא זיהוי דוברים. ' + wordCount.toLocaleString() + ' מילים.'
-        : 'No speaker format detected. ' + wordCount.toLocaleString() + ' words.');
+  var summaryText = (lang==='he'
+    ? 'שפה שזוהתה: ' + detectedLabel + ' · '
+    : 'Detected: ' + detectedLabel + ' · ') +
+    (hasSpeakers
+      ? (lang==='he'
+          ? speakers.length + ' דוברים · ' + segments.length + ' הודעות · ' + wordCount.toLocaleString() + ' מילים'
+          : speakers.length + ' speakers · ' + segments.length + ' messages · ' + wordCount.toLocaleString() + ' words')
+      : (lang==='he'
+          ? wordCount.toLocaleString() + ' מילים (ללא זיהוי דוברים)'
+          : wordCount.toLocaleString() + ' words (no speaker format)'));
 
   summaryTasks = tasks;
-  renderSummaryResults({ summaryText, speakers, speakerMap, segments, keyPoints, tasks, hasSpeakers });
+  renderSummaryResults({ summaryText: summaryText, speakers: speakers, speakerMap: speakerMap, segments: segments, keyPoints: keyPoints, tasks: tasks, hasSpeakers: hasSpeakers });
 }
 
 function renderSummaryResults(data) {
@@ -3218,38 +3373,38 @@ if (document.readyState === 'loading') {
 <!-- Export Modal -->
 <div class="modal-overlay" id="export-modal" onclick="closeExportModal(event)">
   <div class="modal-box">
-    <h2>📤 <span id="export-modal-title">ייצוא נתונים</span></h2>
+    <h2>📤 <span id="export-modal-title">Export Data</span></h2>
     <div class="export-options">
       <div class="export-opt" onclick="exportPDF()">
         <span class="eicon">🖨️</span>
         <div>
-          <div class="etitle" id="exp-pdf-title">PDF / הדפסה</div>
-          <div class="esub" id="exp-pdf-sub">פתח תצוגת הדפסה מעוצבת</div>
+          <div class="etitle" id="exp-pdf-title">PDF / Print</div>
+          <div class="esub" id="exp-pdf-sub">Open formatted print view</div>
         </div>
       </div>
       <div class="export-opt" onclick="exportJSON()">
         <span class="eicon">💾</span>
         <div>
-          <div class="etitle" id="exp-json-title">ייצוא JSON</div>
-          <div class="esub" id="exp-json-sub">גיבוי כל הנתונים</div>
+          <div class="etitle" id="exp-json-title">Export JSON</div>
+          <div class="esub" id="exp-json-sub">Backup all data</div>
         </div>
       </div>
       <div class="export-opt" onclick="importJSON()">
         <span class="eicon">📂</span>
         <div>
-          <div class="etitle" id="exp-import-title">ייבוא JSON</div>
-          <div class="esub" id="exp-import-sub">שחזור מגיבוי</div>
+          <div class="etitle" id="exp-import-title">Import JSON</div>
+          <div class="esub" id="exp-import-sub">Restore from backup</div>
         </div>
       </div>
       <div class="export-opt" onclick="exportCSV()">
         <span class="eicon">📊</span>
         <div>
-          <div class="etitle" id="exp-csv-title">ייצוא CSV</div>
-          <div class="esub" id="exp-csv-sub">פתח ב-Excel</div>
+          <div class="etitle" id="exp-csv-title">Export CSV</div>
+          <div class="esub" id="exp-csv-sub">Open in Excel</div>
         </div>
       </div>
     </div>
-    <button class="modal-close" onclick="closeExportModal()">✕ <span id="modal-close-lbl">סגור</span></button>
+    <button class="modal-close" onclick="closeExportModal()">✕ <span id="modal-close-lbl">Close</span></button>
   </div>
 </div>
 <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="handleImport(event)">
