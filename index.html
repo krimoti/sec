@@ -526,7 +526,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px;}
       <div class="quick-add-row">
         <input class="quick-input" id="quick-input"
           placeholder="הוסף משימה מהירה..."
-          onkeydown="ifhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28event.ke&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=hJHxfCMEL_iwCtHTBBzdLHmpCKfZMBEtM0YMiMml5C8&e=y==='Enter')quickAdd()">
+          onkeydown="if(event.key==='Enter')quickAdd()">
         <button class="quick-open-btn" onclick="quickAdd()" id="quick-btn-lbl">פתק</button>
       </div>
     </div>
@@ -617,11 +617,11 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px;}
         <div class="inp-wrap">
           <textarea class="inp-ta" id="main-input"
             placeholder="e.g. Don't forget to send the report by tomorrow morning, urgent!"
-            oninput="analyzeInputhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0flNXOmAnEcdV8Gz6dy4PK6zkkodDZQtAfi-eWV-yPY&e=lue)" onkeydown="handleKey(event)"></textarea>
+            oninput="analyzeInput(this.value)" onkeydown="handleKey(event)"></textarea>
           <div class="act-row">
             <button class="btn-add" onclick="addItem()"><span>➕</span><span id="add-lbl">Add</span></button>
             <button class="btn-sq" id="mic-btn" onclick="toggleVoice()">🎤</button>
-            <button class="btn-sq" onclick="(function(){var d=document.getElementById('due-date');ifhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28d.sh&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=uAGI5QPPLUpjLdFO08e4tjG2eoS8G8cr3L-vdUKD_MQ&e=owPickerhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-29d.sh&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=Upl6G28CGHQq7wGVQ1ep1PNryp3qVHpmRtGhUw_BhDQ&e=owPicker();elsehttps://urldefense.proofpoint.com/v2/url?u=http-3A__d.fo&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=NjFxXGCT5V-9z2Ol6X7uq56cXPMq24f8omTeL0qqQgs&e=cus();})()">📅</button>
+            <button class="btn-sq" onclick="(function(){var d=document.getElementById('due-date');if(d.showPicker)d.showPicker();else d.focus();})()">📅</button>
           </div>
           <div id="vbar" style="display:none;align-items:center;gap:8px;background:rgba(239,68,68,.07);border-radius:10px;padding:7px 12px;font-size:12px;color:var(--ur);font-weight:600;">
             <div class="vw"><b></b><b></b><b></b><b></b><b></b></div>
@@ -660,7 +660,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px;}
       <div class="toolbar">
         <div class="srch">
           <span style="color:var(--t3);font-size:13px;">🔍</span>
-          <input type="text" id="search-input" placeholder="Search..." oninput="onSearchhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0flNXOmAnEcdV8Gz6dy4PK6zkkodDZQtAfi-eWV-yPY&e=lue)">
+          <input type="text" id="search-input" placeholder="Search..." oninput="onSearch(this.value)">
           <button class="srch-x" id="search-clear" onclick="clearSearch()">✕</button>
         </div>
         <button class="tbtn" id="tags-toggle-btn" onclick="toggleTagManager()">🏷️ <span id="tags-lbl">Tags</span></button>
@@ -922,7 +922,7 @@ function extractDate(text) {
   const timeSuffix = /(\d{1,2})\s*(בבוקר|בצהריים|אחה"צ|בערב|AM|PM)/i;
 
   for (const p of patterns) {
-    const m = text.match(https://urldefense.proofpoint.com/v2/url?u=http-3A__p.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=KIfMHWpvVRHvqc3lLELK1xBJa_yLy6KKHRzMERXMkJ8&e=);
+    const m = text.match(p.re);
     if (m) {
       const d = p.fn(m);
       const tm = text.match(timeRe);
@@ -933,7 +933,7 @@ function extractDate(text) {
         if (/בבוקר|AM/i.test(ts[2])) d.setHours(h,0,0,0);
         else if (/בצהריים/i.test(ts[2])) d.setHours(12,0,0,0);
         else if (/אחה"צ|PM/i.test(ts[2])) d.setHours(h<12?h+12:h,0,0,0);
-        else if (/בערב/i.test(ts[2]))https://urldefense.proofpoint.com/v2/url?u=http-3A__d.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4AS3mEvwMfE0xTI04DROuQxqDifJEhKDRU7kfcbt4Yw&e=tHours(h<12?h+12:h,0,0,0);
+        else if (/בערב/i.test(ts[2])) d.setHours(h<12?h+12:h,0,0,0);
       }
       return d;
     }
@@ -1089,7 +1089,7 @@ function scheduleNotif(item) {
     setTimeout(() => {
       new Notification('⏰ ' + (lang==='he'?'תזכורת':'Reminder'), {
         body: item.text.substring(0,80),
-        icon: 'data:image/svg+xml,<svg xmlns="https://urldefense.proofpoint.com/v2/url?u=http-3A__www.w3.org_2000_svg&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=u5RKnVVOxPZlh2m23r9BIK4BYYzjZZMRkPwe8kmGAo0&e=" viewBox="0 0 32 32"><text y="26" font-size="28">📋</text></svg>'
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text y="26" font-size="28">📋</text></svg>'
       });
     }, ms);
   }
@@ -1118,7 +1118,7 @@ function render() {
     if (!a.dueDate) return 1; if (!b.dueDate) return -1;
     return new Date(a.dueDate)-new Date(b.dueDate);
   });
-  else filtered.sort((a,b) => https://urldefense.proofpoint.com/v2/url?u=http-3A__b.id-2Da.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=5RL0AyftEvrQIIhkdG8BnZSlwcDWCKMTxvgcYtlR7wk&e=);
+  else filtered.sort((a,b) => b.id-a.id);
 
   if (!filtered.length) {
     container.innerHTML = '';
@@ -1164,8 +1164,8 @@ function cardHTML(item) {
     var tag=tags.find(function(t){return t.id===tid;});
     return tag?'<span class="itag" style="background:'+tag.color+'22;color:'+tag.color+'">'+tag.name+'</span>':'';
   }).join('');
-  var avail=tags.filter(function(t){return !(item.tags||[]).includes(https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=yS4t2v3c25dNhBbNR8z5camxcERDA5haoZ3OeBOmtqk&e=);});
-  var addSel=avail.length?'<select onchange="addTagToItem('+item.id+',parseInthttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0flNXOmAnEcdV8Gz6dy4PK6zkkodDZQtAfi-eWV-yPY&e=lue))" style="font-size:10px;border:none;border-radius:20px;padding:1px 5px;background:var(--card2);color:var(--t3);cursor:pointer;max-width:70px;"><option value="">+tag</option>'+avail.map(function(t){return'<option value="'+t.id+'">'+t.name+'</option>';}).join('')+'</select>':'';
+  var avail=tags.filter(function(t){return !(item.tags||[]).includes(t.id);});
+  var addSel=avail.length?'<select onchange="addTagToItem('+item.id+',parseInt(this.value))" style="font-size:10px;border:none;border-radius:20px;padding:1px 5px;background:var(--card2);color:var(--t3);cursor:pointer;max-width:70px;"><option value="">+tag</option>'+avail.map(function(t){return'<option value="'+t.id+'">'+t.name+'</option>';}).join('')+'</select>':'';
   return (
     '<div class="swp">'+
     '<div class="swp-bg"><div class="swp-ok">✓</div><div class="swp-dl">🗑️</div></div>'+
@@ -1201,7 +1201,7 @@ function escHtml(s) {
 
 // ── INLINE EDIT ──
 function editItem(id) {
-  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VlcHYde4I2tgyaecN73GlboJ8QKdHMXArNo_risoQcE&e= === id);
+  const item = items.find(i => i.id === id);
   if (!item) return;
   const card = document.getElementById('card-' + id);
   if (!card) return;
@@ -1216,10 +1216,10 @@ function editItem(id) {
       <button class="e-save" onclick="saveEdit(${id})">${lang==='he'?'💾 שמור':'💾 Save'}</button>
       <button class="e-cancel" onclick="cancelEdit(${id})">${lang==='he'?'ביטול':'Cancel'}</button>
       <select class="e-pri" id="edit-pr-${id}">
-        <option value="urgent" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=X3WGyHtWCRRXNHHoeDS7x3hVJYaYXaNlrWIfyLvP2H4&e=iority==='urgent'?'selected':''}>${t('priorities','urgent')}</option>
-        <option value="high"   $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=X3WGyHtWCRRXNHHoeDS7x3hVJYaYXaNlrWIfyLvP2H4&e=iority==='high'?'selected':''}>${t('priorities','high')}</option>
-        <option value="normal" $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=X3WGyHtWCRRXNHHoeDS7x3hVJYaYXaNlrWIfyLvP2H4&e=iority==='normal'?'selected':''}>${t('priorities','normal')}</option>
-        <option value="low"    $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=X3WGyHtWCRRXNHHoeDS7x3hVJYaYXaNlrWIfyLvP2H4&e=iority==='low'?'selected':''}>${t('priorities','low')}</option>
+        <option value="urgent" ${item.priority==='urgent'?'selected':''}>${t('priorities','urgent')}</option>
+        <option value="high"   ${item.priority==='high'?'selected':''}>${t('priorities','high')}</option>
+        <option value="normal" ${item.priority==='normal'?'selected':''}>${t('priorities','normal')}</option>
+        <option value="low"    ${item.priority==='low'?'selected':''}>${t('priorities','low')}</option>
       </select>
       <input type="datetime-local" class="e-due" id="edit-due-${id}" value="${dueVal}">
     </div>`;
@@ -1234,7 +1234,7 @@ function editKey(e, id) {
 }
 
 function saveEdit(id) {
-  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VlcHYde4I2tgyaecN73GlboJ8QKdHMXArNo_risoQcE&e= === id);
+  const item = items.find(i => i.id === id);
   if (!item) return;
   const ta = document.getElementById('edit-ta-' + id);
   const pr = document.getElementById('edit-pr-' + id);
@@ -1469,11 +1469,156 @@ function initSpeechRecognition() {
   rec.onresult = function(e) {
     let interim = '';
     let final = '';
-    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bconsttranscript-3De.results-5Bi-5D-5B0-5D.transcript-3Bif-28e.results-5Bi-5D.isFinal-29final-2B-3Dtranscript-2B-27-27-3Belseinterim-2B-3Dtranscript-3B-7D__showinterimtextinpreviewdocument.getElementById-28-27vi-27-29.textContent-3Dinterim-3B__appendfinaltotextareaif-28final.trim-28-29-29-7Bconstinp-3Ddocument.getElementById-28-27main-2Dinput-27-29-3Binp.value-2B-3D-28inp.value-26-26-21inp.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BanalyzeInput-28inp.value-29-3Bdocument.getElementById-28-27vi-27-29.textContent-3D-27-27-3B-7D-7D-3Brec.onerror-3Dfunction-28e-29-7Bconsole.warn-28-27Speecherror-3A-27-2Ce.error-29-3Bif-28e.error-3D-3D-3D-27not-2Dallowed-27-29-7BshowBanner-28lang-3D-3D-3D-27he-27-3F-27-E2-9D-8C-D7-92-D7-99-D7-A9-D7-94-D7-9C-D7-9E-D7-99-D7-A7-D7-A8-D7-95-D7-A4-D7-95-D7-9F-D7-A0-D7-93-D7-97-D7-AA-D7-94-27-3A-27-E2-9D-8CMicrophoneaccessdenied-27-29-3B-7Delseif-28e.error-3D-3D-3D-27no-2Dspeech-27-29-7B__justrestartsilently-7DstopVoice-28-29-3B-7D-3Brec.onend-3Dfunction-28-29-7Bif-28isListening-29-7B__auto-2Drestartifstillsupposedtobelisteningtry-7Brec.start-28-29-3B-7Dcatch-28e-29-7B-7D-7Delse-7BupdateMicUI-28false-29-3B-7D-7D-3Breturnrec-3B-7DfunctiontoggleVoice-28-29-7Bconstbtn-3Ddocument.getElementById-28-27mic-2Dbtn-27-29-3Bif-28btn.classList.contains-28-27unsupported-27-29-29return-3Bif-28isListening-29stopVoice-28-29-3BelsestartVoice-28-29-3B-7DfunctionstartVoice-28-29-7Bif-28-21recognition-29recognition-3DinitSpeechRecognition-28-29-3Bif-28-21recognition-29return-3Brecognition.lang-3DvoiceLang-3Btry-7Brecognition.start-28-29-3Bdocument.getElementById-28-27vs-27-29.style.display-3D-27flex-27-3BupdateVoiceStatusLabel-28-29-3B-7Dcatch-28e-29-7Bconsole.warn-28e-29-3B-7D-7DfunctionstopVoice-28-29-7BisListening-3Dfalse-3Bif-28recognition-29try-7Brecognition.stop-28-29-3B-7Dcatch-28e-29-7B-7DupdateMicUI-28false-29-3Bdocument.getElementById-28-27vs-27-29.style.display-3D-27none-27-3Bdocument.getElementById-28-27vi-27-29.textContent-3D-27-27-3B-7DfunctionupdateMicUI-28listening-29-7Bconstbtn-3Ddocument.getElementById-28-27mic-2Dbtn-27-29-3Bconsticon-3Ddocument.getElementById-28-27mic-2Dicon-27-29-3Bconstlbl-3Ddocument.getElementById-28-27mic-2Dlbl-27-29-3Bif-28listening-29-7Bbtn.classList.add-28-27on-27-29-3Bicon.textContent-3D-27-E2-8F-B9-EF-B8-8F-27-3Blbl.textContent-3Dlang-3D-3D-3D-27he-27-3F-27-D7-A2-D7-A6-D7-95-D7-A8-27-3A-27Stop-27-3B-7Delse-7Bbtn.classList.remove-28-27on-27-29-3Bicon.textContent-3D-27-F0-9F-8E-A4-27-3Blbl.textContent-3Dlang-3D-3D-3D-27he-27-3F-27-D7-93-D7-99-D7-91-D7-95-D7-A8-27-3A-27Speak-27-3B-7D-7DfunctionswitchVoiceLang-28-29-7BvoiceLang-3DvoiceLang-3D-3D-3D-27he-2DIL-27-3F-27en-2DUS-27-3A-27he-2DIL-27-3Bconstbtn-3Ddocument.getElementById-28-27voice-2Dlang-2Dbtn-27-29-3Bbtn.textContent-3DvoiceLang-3D-3D-3D-27he-2DIL-27-3F-27-D7-A2-D7-91-27-3A-27EN-27-3Bif-28recognition-29recognition.lang-3DvoiceLang-3BupdateVoiceStatusLabel-28-29-3B-7DfunctionupdateVoiceStatusLabel-28-29-7Bconstlbl-3Ddocument.getElementById-28-27voice-2Dstatus-2Dlbl-27-29-3Blbl.textContent-3DvoiceLang-3D-3D-3D-27he-2DIL-27-3F-28lang-3D-3D-3D-27he-27-3F-27-D7-9E-D7-90-D7-96-D7-99-D7-9F-D7-91-D7-A2-D7-91-D7-A8-D7-99-D7-AA...-27-3A-27ListeninginHebrew...-27-29-3A-28lang-3D-3D-3D-27he-27-3F-27-D7-9E-D7-90-D7-96-D7-99-D7-9F-D7-91-D7-90-D7-A0-D7-92-D7-9C-D7-99-D7-AA...-27-3A-27ListeninginEnglish...-27-29-3B-7D__Micsupportcheck-28calledfrominitAppviaapplyLang-29functioncheckMicSupport-28-29-7BvarSR-3Dwindow.SpeechRecognition-7C-7Cwindow.webkitSpeechRecognition-3Bif-28-21SR-29-7Bvarbtn-3Ddocument.getElementById-28-27mic-2Dbtn-27-29-3Bif-28btn-29-7Bbtn.classList.add-28-27unsupported-27-29-3Bbtn.title-3D-28lang-3D-3D-3D-27he-27-3F-27-D7-9C-D7-90-D7-A0-D7-AA-D7-9E-D7-9A-D7-91-D7-93-D7-A4-D7-93-D7-A4-D7-9F-D7-96-D7-94-27-3A-27Notsupported-27-29-3B-7D-7D-7D__-E2-94-80-E2-94-80SUMMARYENGINE-E2-94-80-E2-94-80letsummaryTasks-3D-5B-5D-3BletsumListening-3Dfalse-3BletsumRecognition-3Dnull-3BfunctionswitchTab-28tab-29-7BconstisRem-3Dtab-3D-3D-3D-27reminders-27-3Bdocument.getElementById-28-27tab-2Dreminders-27-29.classList.toggle-28-27on-27-2CisRem-29-3Bdocument.getElementById-28-27tab-2Dsummary-27-29.classList.toggle-28-27on-27-2C-21isRem-29-3Bdocument.getElementById-28-27reminders-2Dpanel-27-29.classList.toggle-28-27off-27-2C-21isRem-29-3Bdocument.getElementById-28-27summary-2Dpanel-27-29.classList.toggle-28-27on-27-2C-21isRem-29-3Bif-28isRem-26-26sumListening-29stopSumVoice-28-29-3B-7DfunctionupdateCharCount-28el-29-7Bconstn-3Del.value.length-3Bdocument.getElementById-28-27char-2Dcount-27-29.textContent-3Dn.toLocaleString-28-29-2B-28lang-3D-3D-3D-27he-27-3F-28lang-3D-3D-3D-27he-27-3F-28lang-3D-3D-3D-27he-27-3F-27-D7-AA-D7-95-D7-95-D7-99-D7-9D-27-3A-27chars-27-29-3A-27chars-27-29-3A-27chars-27-29-3B-7DfunctionclearSummary-28-29-7Bdocument.getElementById-28-27sum-2Dtextarea-27-29.value-3D-27-27-3Bdocument.getElementById-28-27char-2Dcount-27-29.textContent-3Dlang-3D-3D-3D-27he-27-3F-28lang-3D-3D-3D-27he-27-3F-270-D7-AA-D7-95-D7-95-D7-99-D7-9D-27-3A-270chars-27-29-3A-270chars-27-3Bdocument.getElementById-28-27summary-2Dresults-27-29.classList.remove-28-27on-27-29-3BsummaryTasks-3D-5B-5D-3B-7D__-E2-94-80-E2-94-80MULTILINGUALMEETINGANALYZER-E2-94-80-E2-94-80__-E2-94-80-E2-94-80LANGUAGEDETECTION-E2-94-80-E2-94-80functiondetectTextLang-28text-29-7Bvarsample-3Dtext.slice-280-2C500-29-3Bvarscores-3D-7Bhe-3A-28sample.match-28_-5B-5Cu05d0-2D-5Cu05ea-5D_g-29-7C-7C-5B-5D-29.length-2Car-3A-28sample.match-28_-5B-5Cu0600-2D-5Cu06ff-5D_g-29-7C-7C-5B-5D-29.length-2Cru-3A-28sample.match-28_-5B-5Cu0400-2D-5Cu04ff-5D_g-29-7C-7C-5B-5D-29.length-2Cka-3A-28sample.match-28_-5B-5Cu10d0-2D-5Cu10ff-5D_g-29-7C-7C-5B-5D-29.length-2Cmk-3A-28sample.match-28_-5B-5Cu0400-2D-5Cu04ff-5D_g-29-7C-7C-5B-5D-29.length-2C__Cyrillic-28Macedonian-29fr-3A-28sample.match-28_-5B-C3-A0-C3-A2-C3-A4-C3-A9-C3-A8-C3-AA-C3-AB-C3-AE-C3-AF-C3-B4-C3-B9-C3-BB-C3-BC-C3-A7-5D_gi-29-7C-7C-5B-5D-29.length-2Cen-3A-28sample.match-28_-5Cb-28the-7Cand-7Cis-7Care-7Cwill-7Cto-7Cof-7Cin-7Cfor-7Cthat-7Cthis-29-5Cb_gi-29-7C-7C-5B-5D-29.length-2C-7D-3B__GeorgiantakespriorityoverCyrillicif-28scores.ka&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=xaRoA9W_EIINKvjU_6I1K9T0YpZoeskRR0XLhZ5mc7w&e=> 3) return 'ka';
-  if (https://urldefense.proofpoint.com/v2/url?u=http-3A__scores.ar&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=XXNMbLVIkwBm1LSIRfbL4gHqIn4ZkTy1g1Xsh77_RQ8&e= > 5) return 'ar';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const transcript = e.results[i][0].transcript;
+      if (e.results[i].isFinal) final += transcript + ' ';
+      else interim += transcript;
+    }
+    // show interim text in preview
+    document.getElementById('vi').textContent = interim;
+    // append final to textarea
+    if (final.trim()) {
+      const inp = document.getElementById('main-input');
+      inp.value += (inp.value && !inp.value.endsWith(' ') ? ' ' : '') + final.trim();
+      analyzeInput(inp.value);
+      document.getElementById('vi').textContent = '';
+    }
+  };
+
+  rec.onerror = function(e) {
+    console.warn('Speech error:', e.error);
+    if (e.error === 'not-allowed') {
+      showBanner(lang==='he' ? '❌ גישה למיקרופון נדחתה' : '❌ Microphone access denied');
+    } else if (e.error === 'no-speech') {
+      // just restart silently
+    }
+    stopVoice();
+  };
+
+  rec.onend = function() {
+    if (isListening) {
+      // auto-restart if still supposed to be listening
+      try { rec.start(); } catch(e) {}
+    } else {
+      updateMicUI(false);
+    }
+  };
+
+  return rec;
+}
+
+function toggleVoice() {
+  const btn = document.getElementById('mic-btn');
+  if (btn.classList.contains('unsupported')) return;
+  if (isListening) stopVoice();
+  else startVoice();
+}
+
+function startVoice() {
+  if (!recognition) recognition = initSpeechRecognition();
+  if (!recognition) return;
+  recognition.lang = voiceLang;
+  try {
+    recognition.start();
+    document.getElementById('vs').style.display = 'flex';
+    updateVoiceStatusLabel();
+  } catch(e) { console.warn(e); }
+}
+
+function stopVoice() {
+  isListening = false;
+  if (recognition) try { recognition.stop(); } catch(e) {}
+  updateMicUI(false);
+  document.getElementById('vs').style.display = 'none';
+  document.getElementById('vi').textContent = '';
+}
+
+function updateMicUI(listening) {
+  const btn = document.getElementById('mic-btn');
+  const icon = document.getElementById('mic-icon');
+  const lbl  = document.getElementById('mic-lbl');
+  if (listening) {
+    btn.classList.add('on');
+    icon.textContent = '⏹️';
+    lbl.textContent = lang==='he' ? 'עצור' : 'Stop';
+  } else {
+    btn.classList.remove('on');
+    icon.textContent = '🎤';
+    lbl.textContent = lang==='he' ? 'דיבור' : 'Speak';
+  }
+}
+
+function switchVoiceLang() {
+  voiceLang = voiceLang === 'he-IL' ? 'en-US' : 'he-IL';
+  const btn = document.getElementById('voice-lang-btn');
+  btn.textContent = voiceLang === 'he-IL' ? 'עב' : 'EN';
+  if (recognition) recognition.lang = voiceLang;
+  updateVoiceStatusLabel();
+}
+
+function updateVoiceStatusLabel() {
+  const lbl = document.getElementById('voice-status-lbl');
+  lbl.textContent = voiceLang === 'he-IL'
+    ? (lang==='he' ? 'מאזין בעברית...' : 'Listening in Hebrew...')
+    : (lang==='he' ? 'מאזין באנגלית...' : 'Listening in English...');
+}
+
+// Mic support check (called from initApp via applyLang)
+function checkMicSupport() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    var btn = document.getElementById('mic-btn');
+    if (btn) { btn.classList.add('unsupported'); btn.title = (lang==='he'?'לא נתמך בדפדפן זה':'Not supported'); }
+  }
+}
+
+
+// ── SUMMARY ENGINE ──
+let summaryTasks = [];
+let sumListening = false;
+let sumRecognition = null;
+
+function switchTab(tab) {
+  const isRem = tab === 'reminders';
+  document.getElementById('tab-reminders').classList.toggle('on', isRem);
+  document.getElementById('tab-summary').classList.toggle('on', !isRem);
+  document.getElementById('reminders-panel').classList.toggle('off', !isRem);
+  document.getElementById('summary-panel').classList.toggle('on', !isRem);
+  if (isRem && sumListening) stopSumVoice();
+}
+
+function updateCharCount(el) {
+  const n = el.value.length;
+  document.getElementById('char-count').textContent = n.toLocaleString() + (lang==='he' ? (lang==='he'?(lang==='he'?' תווים':' chars'):' chars') : ' chars');
+}
+
+function clearSummary() {
+  document.getElementById('sum-textarea').value = '';
+  document.getElementById('char-count').textContent = lang==='he' ? (lang==='he'?'0 תווים':'0 chars') : '0 chars';
+  document.getElementById('summary-results').classList.remove('on');
+  summaryTasks = [];
+}
+
+// ── MULTILINGUAL MEETING ANALYZER ──
+
+// ── LANGUAGE DETECTION ──
+function detectTextLang(text) {
+  var sample = text.slice(0, 500);
+  var scores = {
+    he: (sample.match(/[\u05d0-\u05ea]/g)||[]).length,
+    ar: (sample.match(/[\u0600-\u06ff]/g)||[]).length,
+    ru: (sample.match(/[\u0400-\u04ff]/g)||[]).length,
+    ka: (sample.match(/[\u10d0-\u10ff]/g)||[]).length,
+    mk: (sample.match(/[\u0400-\u04ff]/g)||[]).length, // Cyrillic (Macedonian)
+    fr: (sample.match(/[àâäéèêëîïôùûüç]/gi)||[]).length,
+    en: (sample.match(/\b(the|and|is|are|will|to|of|in|for|that|this)\b/gi)||[]).length,
+  };
+  // Georgian takes priority over Cyrillic
+  if (scores.ka > 3) return 'ka';
+  if (scores.ar > 5) return 'ar';
   if (scores.he > 5) return 'he';
-  if (https://urldefense.proofpoint.com/v2/url?u=http-3A__scores.ru&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=e4BWLbkyeXjZi991UHA3JXsUNeOeulJNq92oWe1izSM&e= > 5) return 'ru';
-  if (https://urldefense.proofpoint.com/v2/url?u=http-3A__scores.fr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=DHFXkKj0H4SBkK7V9A8QuMRYgJo-LuGO2aQW-QzeEc4&e= > 3) return 'fr';
+  if (scores.ru > 5) return 'ru';
+  if (scores.fr > 3) return 'fr';
   if (scores.en > 3) return 'en';
   return 'en'; // default
 }
@@ -1627,9 +1772,9 @@ function analyzeMeeting() {
   var keyPoints = [];
   segments.forEach(function(seg) {
     if (seg.text.length < 12) return;
-    if https://urldefense.proofpoint.com/v2/url?u=http-3A__-28tasks.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=gch2t6ZSm64v-MRxmTBRz1mE7HmpRoUeOQTx7-HoG8M&e=nd(function(t){ returnhttps://urldefense.proofpoint.com/v2/url?u=http-3A__seg.text.in&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=asTPSyd9r8U4GvE7nNHPemCXVSHkv_Leqww9vlDq-J0&e=cludeshttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28t.text.su&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=-Axe6miZ1IHCmLRUGJEILkgBweItdX0mXFMDLFiup2o&e=bstring(0,15)); })) return;
-    if https://urldefense.proofpoint.com/v2/url?u=http-3A__-28pats.keyword.so&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=8NbSwVO3YLAq3dP3GxYGPFAcrlzGzcMB8NsJdStsfw0&e=me(function(r){ return r.test(seg.text); })) {
-      var point = (seg.speaker !== '?' ? seg.speaker + ': ' : '') +https://urldefense.proofpoint.com/v2/url?u=http-3A__seg.text.tr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=WxcSqn7FKrVt6lWjdgjAY2gV9tuYrD8F0FS8v-CmpPE&e=im();
+    if (tasks.find(function(t){ return seg.text.includes(t.text.substring(0,15)); })) return;
+    if (pats.keyword.some(function(r){ return r.test(seg.text); })) {
+      var point = (seg.speaker !== '?' ? seg.speaker + ': ' : '') + seg.text.trim();
       keyPoints.push(point);
     }
   });
@@ -1645,37 +1790,37 @@ function analyzeMeeting() {
     : 'Detected: ' + detectedLabel + ' · ') +
     (hasSpeakers
       ? (lang==='he'
-          ? speakers.length + (lang==='he'?(lang==='he'?' דוברים · ':' speakers · '):' speakers · ') + segments.length + (lang==='he'?(lang==='he'?' הודעות · ':' messages · '):' messages · ') +https://urldefense.proofpoint.com/v2/url?u=http-3A__wordCount.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0XzHpjwdpJ1bykWL629-SMIKko-oPun6a9xum9KzlB8&e=LocaleString() + (lang==='he'?(lang==='he'?' מילים':' words'):' words')
-          : speakers.length + ' speakers · ' + segments.length + ' messages · ' +https://urldefense.proofpoint.com/v2/url?u=http-3A__wordCount.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0XzHpjwdpJ1bykWL629-SMIKko-oPun6a9xum9KzlB8&e=LocaleString() + ' words')
+          ? speakers.length + (lang==='he'?(lang==='he'?' דוברים · ':' speakers · '):' speakers · ') + segments.length + (lang==='he'?(lang==='he'?' הודעות · ':' messages · '):' messages · ') + wordCount.toLocaleString() + (lang==='he'?(lang==='he'?' מילים':' words'):' words')
+          : speakers.length + ' speakers · ' + segments.length + ' messages · ' + wordCount.toLocaleString() + ' words')
       : (lang==='he'
-          ?https://urldefense.proofpoint.com/v2/url?u=http-3A__wordCount.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0XzHpjwdpJ1bykWL629-SMIKko-oPun6a9xum9KzlB8&e=LocaleString() + (lang==='he'?(lang==='he'?' מילים (ללא זיהוי דוברים)':' words (no speaker format)'):' words (no speaker format)')
-          :https://urldefense.proofpoint.com/v2/url?u=http-3A__wordCount.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0XzHpjwdpJ1bykWL629-SMIKko-oPun6a9xum9KzlB8&e=LocaleString() + ' words (no speaker format)'));
+          ? wordCount.toLocaleString() + (lang==='he'?(lang==='he'?' מילים (ללא זיהוי דוברים)':' words (no speaker format)'):' words (no speaker format)')
+          : wordCount.toLocaleString() + ' words (no speaker format)'));
 
   summaryTasks = tasks;
   renderSummaryResults({ summaryText: summaryText, speakers: speakers, speakerMap: speakerMap, segments: segments, keyPoints: keyPoints, tasks: tasks, hasSpeakers: hasSpeakers });
 }
 
 function renderSummaryResults(data) {
-  var summaryText =https://urldefense.proofpoint.com/v2/url?u=http-3A__data.su&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=ozWa4miHVDpIh-nHgX8nrwLvORFX95ipFBmIrxRpE50&e=mmaryText;
+  var summaryText = data.summaryText;
   var speakers = data.speakers || [];
   var speakerMap = data.speakerMap || {};
-  var keyPoints =https://urldefense.proofpoint.com/v2/url?u=http-3A__data.ke&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=a7B4Qy083QJRefE0wYEIOleFseYXrCmXVfRuNGaD_gc&e=yPoints || [];
+  var keyPoints = data.keyPoints || [];
   var tasks = data.tasks || [];
   var hasSpeakers = data.hasSpeakers;
 
-  var res =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('summary-results');
- https://urldefense.proofpoint.com/v2/url?u=http-3A__res.classList.ad&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=ux8XcjrAaBan_b3L-DOsUv635TPuEHtFTi6vhYfTQuE&e=d('on');
+  var res = document.getElementById('summary-results');
+  res.classList.add('on');
 
   // ── Summary text ──
- https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('res-sum-body').textContent = summaryText;
+  document.getElementById('res-sum-body').textContent = summaryText;
 
   // ── Speakers with stats ──
-  var partCard =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('res-participants');
+  var partCard = document.getElementById('res-participants');
   if (speakers.length) {
-   https://urldefense.proofpoint.com/v2/url?u=http-3A__partCard.st&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=cb_TpVh2LwuHYvMbRyiVFDibj0nnsABzW-INCvtklyw&e=yle.display = '';
-   https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('res-part-count').textContent = speakers.length;
-    var totalWords =https://urldefense.proofpoint.com/v2/url?u=http-3A__speakers.red&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=t9mHIMdWZ5GjrVEknjyW76Hx800aXB4UR3dIKqSDOnY&e=uce(function(acc, s){ return acc + (speakerMap[s]||{wordCount:0}).wordCount; }, 0);
-   https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('res-part-body').innerHTML =https://urldefense.proofpoint.com/v2/url?u=http-3A__speakers.ma&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=k_BUGM1eSkfcEE5NIbhpsp53Zy3oWZwfofxXXkPxa4I&e=p(function(s) {
+    partCard.style.display = '';
+    document.getElementById('res-part-count').textContent = speakers.length;
+    var totalWords = speakers.reduce(function(acc, s){ return acc + (speakerMap[s]||{wordCount:0}).wordCount; }, 0);
+    document.getElementById('res-part-body').innerHTML = speakers.map(function(s) {
       var sp = speakerMap[s];
       var pct = totalWords > 0 ? Math.round(sp.wordCount / totalWords * 100) : 0;
       var msgs = sp.lines.length;
@@ -1701,7 +1846,7 @@ function renderSummaryResults(data) {
   if (!timelineCard) {
     timelineCard = document.createElement('div');
     timelineCard.className = 'result-card';
-    https://urldefense.proofpoint.com/v2/url?u=http-3A__timelineCard.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=7XsOu0qBTLydE33E1ZMsko-rYD0icYKut98TYUqL3mM&e= = 'res-timeline';
+    timelineCard.id = 'res-timeline';
     document.getElementById('summary-results').insertBefore(timelineCard, document.getElementById('res-points'));
   }
   if (data.segments && data.segments.length && hasSpeakers) {
@@ -1821,7 +1966,16 @@ function startSumVoice() {
   sumRecognition.onstart = () => { sumListening = true; updateSumMicUI(true); };
   sumRecognition.onresult = (e) => {
     let final = '';
-    for (let i = e.resultIndex; i <https://urldefense.proofpoint.com/v2/url?u=http-3A__e.results.length-3Bi-2B-2B-29-7Bif-28e.results-5Bi-5D.isFinal-29final-2B-3De.results-5Bi-5D-5B0-5D.transcript-2B-27-27-3B-7Dif-28final.trim-28-29-29-7Bconstta-3Ddocument.getElementById-28-27sum-2Dtextarea-27-29-3Bta.value-2B-3D-28ta.value-26-26-21ta.value.endsWith-28-27-27-29-3F-27-27-3A-27-27-29-2Bfinal.trim-28-29-3BupdateCharCount-28ta-29-3B-7D-7D-3BsumRecognition.onerror-3D-28-29-3D&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=U1U3VS8nb7spBX3cCbHQQS24RQg1MYbWdeLBEyMmZZ0&e=> stopSumVoice();
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+    }
+    if (final.trim()) {
+      const ta = document.getElementById('sum-textarea');
+      ta.value += (ta.value && !ta.value.endsWith(' ') ? ' ' : '') + final.trim();
+      updateCharCount(ta);
+    }
+  };
+  sumRecognition.onerror = () => stopSumVoice();
   sumRecognition.onend = () => { if (sumListening) try { sumRecognition.start(); } catch(e){} };
   try { sumRecognition.start(); } catch(e) {}
 }
@@ -1881,7 +2035,7 @@ function updateBackupStatus() {
     statusText = (lang==='he' ? '🔴 גיבוי לפני ' : '🔴 Last backup ') + diffDays + (lang==='he' ? ' ימים! מומלץ לגבות' : ' days ago!');
   }
 
- https://urldefense.proofpoint.com/v2/url?u=http-3A__el.cl&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=Wa0Zy21yMhDFJ-_Jp7pMys9rcdyPZAdl8aZtynD5sgM&e=assName = statusClass;
+  el.className = statusClass;
   el.textContent = statusText;
 }
 
@@ -1891,29 +2045,29 @@ function manualBackup() {
 
 function doBackup(type) {
   var data = { items: items, tags: tags, exportedAt: new Date().toISOString(), version: 2 };
-  var json =https://urldefense.proofpoint.com/v2/url?u=http-3A__JSON.st&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=f0ludPp8jh2J-W0UnpewYn6wRorL9p7rwv1Bs0icO6w&e=ringify(data, null, 2);
+  var json = JSON.stringify(data, null, 2);
   var blob = new Blob([json], { type: 'application/json' });
-  var url =https://urldefense.proofpoint.com/v2/url?u=http-3A__URL.cr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=wsx6-ybTTr-U-icsX8TdEXDpExzwBokGaFQO2ij05JA&e=eateObjectURL(blob);
-  var a =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.cr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4Vz4w7Zr5CTJJuuFFqRMBEjFAHRsCMh4VERuIXMgLsI&e=eateElement('a');
- https://urldefense.proofpoint.com/v2/url?u=http-3A__a.hr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=9RImpgLjifmX3-uBs8yjlv76Aa_UCmxqqwUuAKhm2cc&e=ef = url;
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
   var dateStr = new Date().toISOString().slice(0,16).replace('T','-').replace(':','');
- https://urldefense.proofpoint.com/v2/url?u=http-3A__a.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=2c867T1HX_t3UrjPE3RxVdxm8TIX0WlOUpWK630EG6Q&e=wnload = 'smart-reminders-backup-' + dateStr + '.json';
- https://urldefense.proofpoint.com/v2/url?u=http-3A__document.bo&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=YP4eCAq_0RFfD5bQF3Q8QXIqunNAwSYZpikhJeS3hE4&e=dy.appendChild(a);
- https://urldefense.proofpoint.com/v2/url?u=http-3A__a.cl&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=MKXA2T1jRrJT7-CES7GZYdJiztJh5BoVCGenmNOLNfg&e=ick();
- https://urldefense.proofpoint.com/v2/url?u=http-3A__document.body.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=5Wb81PT_Vrs9AEz2AsiGNA7aLgTSj8e2_Xt-3eSdw4k&e=moveChild(a);
- https://urldefense.proofpoint.com/v2/url?u=http-3A__URL.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=X9qZ2mUNryy-JgWsRYE6yxsac3lnCzSZ3bFR8f3ZUfk&e=vokeObjectURL(url);
+  a.download = 'smart-reminders-backup-' + dateStr + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 
-  lastBackupTime =https://urldefense.proofpoint.com/v2/url?u=http-3A__Date.no&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=9tkOMHx-4XwalbfS0RmUsnPvJXS9bKZAyy81M3CMynA&e=w();
- https://urldefense.proofpoint.com/v2/url?u=http-3A__localStorage.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=1YkajxEdvVeLH0SYJx0dj7cBBe4bR9fri3smh8WkGJM&e=tItem('lastBackupTime', lastBackupTime);
+  lastBackupTime = Date.now();
+  localStorage.setItem('lastBackupTime', lastBackupTime);
   updateBackupStatus();
   showBanner(lang==='he' ? '💾 גיבוי נשמר!' : '💾 Backup saved!');
 }
 
 function toggleAutoBackup() {
   autoBackupEnabled = !autoBackupEnabled;
- https://urldefense.proofpoint.com/v2/url?u=http-3A__localStorage.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=1YkajxEdvVeLH0SYJx0dj7cBBe4bR9fri3smh8WkGJM&e=tItem('autoBackup', autoBackupEnabled);
-  var tog =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('auto-backup-toggle');
-  if (tog)https://urldefense.proofpoint.com/v2/url?u=http-3A__tog.classList.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=IPHAQS-m-t9P0x2XNMWHB5qfP9enVOBupHc2CzD7MmQ&e=ggle('on', autoBackupEnabled);
+  localStorage.setItem('autoBackup', autoBackupEnabled);
+  var tog = document.getElementById('auto-backup-toggle');
+  if (tog) tog.classList.toggle('on', autoBackupEnabled);
   if (autoBackupEnabled) {
     showBanner(lang==='he' ? '✅ גיבוי אוטומטי יומי פעיל' : '✅ Daily auto-backup enabled');
     checkAutoBackup();
@@ -1924,7 +2078,7 @@ function toggleAutoBackup() {
 
 function checkAutoBackup() {
   if (!autoBackupEnabled) return;
-  var now =https://urldefense.proofpoint.com/v2/url?u=http-3A__Date.no&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=9tkOMHx-4XwalbfS0RmUsnPvJXS9bKZAyy81M3CMynA&e=w();
+  var now = Date.now();
   var diffMs = now - lastBackupTime;
   if (diffMs > 86400000) { // more than 24h since last backup
     doBackup('auto');
@@ -1997,7 +2151,7 @@ function toggleTagManager() {
 function saveNewTag() {
   const inp = document.getElementById('new-tag-input');
   const name = inp.value.trim();
-  if (!name || tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=2SEHBaIHFEvvMwZRyHHEKjCWv3JQARl9iwMjS97MZXE&e= === name)) return;
+  if (!name || tags.find(t => t.name === name)) return;
   tags.push({ id: Date.now(), name, color: currentTagColor });
   localStorage.setItem('smartTags_v1', JSON.stringify(tags));
   inp.value = '';
@@ -2006,7 +2160,7 @@ function saveNewTag() {
 }
 
 function deleteTag(id) {
-  tags = tags.filter(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=yS4t2v3c25dNhBbNR8z5camxcERDA5haoZ3OeBOmtqk&e= !== id);
+  tags = tags.filter(t => t.id !== id);
   // remove from items
   items.forEach(item => { if (item.tags) item.tags = item.tags.filter(tid => tid !== id); });
   localStorage.setItem('smartTags_v1', JSON.stringify(tags));
@@ -2021,9 +2175,9 @@ function renderTagList() {
   if (!el) return;
   if (!tags.length) { el.innerHTML = '<span style="font-size:12px;color:var(--text-soft)">'+(lang==='he'?'אין תגיות עדיין':'No tags yet')+'</span>'; return; }
   el.innerHTML = tags.map(t =>
-    `<span class="t-chip" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor}">
-      ${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=2SEHBaIHFEvvMwZRyHHEKjCWv3JQARl9iwMjS97MZXE&e=}
-      <span class="td" onclick="deleteTag($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=hLsyt0Zen_QSHKpCT4ylR0HejX7DRH7h7g8sT4OjtJY&e=})">✕</span>
+    `<span class="t-chip" style="background:${t.color}22;border-color:${t.color};color:${t.color}">
+      ${t.name}
+      <span class="td" onclick="deleteTag(${t.id})">✕</span>
     </span>`
   ).join('');
 }
@@ -2036,8 +2190,8 @@ function renderTagFilterRow() {
   row.innerHTML = '<span style="font-size:12px;color:var(--text-soft);font-weight:600">'+(lang==='he'?'תגיות:':'Tags:')+'</span>' +
     tags.map(t =>
       `<span class="tag-filter-chip${selectedTagFilter===t.id?' selected':''}"
-        style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor}22;border-color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor};color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor}"
-        onclick="toggleTagFilter($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=hLsyt0Zen_QSHKpCT4ylR0HejX7DRH7h7g8sT4OjtJY&e=})">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=2SEHBaIHFEvvMwZRyHHEKjCWv3JQARl9iwMjS97MZXE&e=}</span>`
+        style="background:${t.color}22;border-color:${t.color};color:${t.color}"
+        onclick="toggleTagFilter(${t.id})">${t.name}</span>`
     ).join('');
 }
 
@@ -2048,7 +2202,7 @@ function toggleTagFilter(id) {
 }
 
 function addTagToItem(itemId, tagId) {
-  const item = items.find(i => https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VlcHYde4I2tgyaecN73GlboJ8QKdHMXArNo_risoQcE&e= === itemId);
+  const item = items.find(i => i.id === itemId);
   if (!item) return;
   if (!item.tags) item.tags = [];
   if (!item.tags.includes(tagId)) item.tags.push(tagId);
@@ -2058,15 +2212,15 @@ function addTagToItem(itemId, tagId) {
 // Patch cardHTML to show tags + tag selector
 function tagsHTML(item) {
   if (!tags.length) return '';
-  const itemTags = (item.tags || []).map(tid => tags.find(t => https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=yS4t2v3c25dNhBbNR8z5camxcERDA5haoZ3OeBOmtqk&e= === tid)).filter(Boolean);
-  const available = tags.filter(t => !(item.tags || []).includes(https://urldefense.proofpoint.com/v2/url?u=http-3A__t.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=yS4t2v3c25dNhBbNR8z5camxcERDA5haoZ3OeBOmtqk&e=));
+  const itemTags = (item.tags || []).map(tid => tags.find(t => t.id === tid)).filter(Boolean);
+  const available = tags.filter(t => !(item.tags || []).includes(t.id));
   const chips = itemTags.map(t =>
-    `<span class="c-tag" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor}22;color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor};border:1px solid $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4TLVTHfBb6WfGX3evkEkYkHEulLjYyune5PRwPk4rfQ&e=lor}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=2SEHBaIHFEvvMwZRyHHEKjCWv3JQARl9iwMjS97MZXE&e=}</span>`
+    `<span class="c-tag" style="background:${t.color}22;color:${t.color};border:1px solid ${t.color}">${t.name}</span>`
   ).join('');
   const addSelect = available.length
-    ? `<select onchange="addTagToItem($https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=Pzr7rUsjMSldA7XmyBTy1nWc6szf5obEhCGm8YyHmZc&e=},parseInthttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28this.va&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0flNXOmAnEcdV8Gz6dy4PK6zkkodDZQtAfi-eWV-yPY&e=lue))" style="font-size:11px;border:1px solid var(--blue-pale);border-radius:20px;padding:1px 6px;background:var(--blue-ghost);color:var(--text-soft);cursor:pointer;max-width:90px;">
+    ? `<select onchange="addTagToItem(${item.id},parseInt(this.value))" style="font-size:11px;border:1px solid var(--blue-pale);border-radius:20px;padding:1px 6px;background:var(--blue-ghost);color:var(--text-soft);cursor:pointer;max-width:90px;">
         <option value="">'+(lang==='he'?'+ תגית':'+ Tag')+'</option>
-        ${available.map(t=>`<option value="$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bt.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=hLsyt0Zen_QSHKpCT4ylR0HejX7DRH7h7g8sT4OjtJY&e=}">${https://urldefense.proofpoint.com/v2/url?u=http-3A__t.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=2SEHBaIHFEvvMwZRyHHEKjCWv3JQARl9iwMjS97MZXE&e=}</option>`).join('')}
+        ${available.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}
        </select>`
     : '';
   return chips || addSelect ? `<div class="card-tags">${chips}${addSelect}</div>` : '';
@@ -2150,13 +2304,13 @@ function exportPDF() {
   const priorityLabel = { urgent: t('priorities','urgent'), high: t('priorities','high'), normal: t('priorities','normal'), low: t('priorities','low') };
 
   const itemsHTML = [...active, ...done].map(item => `
-    <div class="pitem $https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=LKhjj0UR9zkIjGJSbBUSnW1y1ssmizfPwQzOQXQVCMo&e=ne?'pdone':''}">
-      <div class="pbadge" style="background:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Bitem.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=LKhjj0UR9zkIjGJSbBUSnW1y1ssmizfPwQzOQXQVCMo&e=ne?'#9ca3af':priorityColorhttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bitem.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=DTobDll2JAFoilS_v0N4B66oedp3b88JzsEB-S-RuV0&e=iority]}">${item.done ? t('priorities','done') : priorityLabel[item.priority]}</div>
+    <div class="pitem ${item.done?'pdone':''}">
+      <div class="pbadge" style="background:${item.done?'#9ca3af':priorityColor[item.priority]}">${item.done ? t('priorities','done') : priorityLabel[item.priority]}</div>
       <div class="ptext">${item.text}</div>
       <div class="pmeta">
         ${item.dueDate ? '📅 ' + new Date(item.dueDate).toLocaleString() : ''}
         · ${new Date(item.createdAt).toLocaleDateString()}
-        ${(item.tags||[]).map(tid=>{ const tag=tags.find(t=>t.id===tid); return tag?`<span style="color:$https://urldefense.proofpoint.com/v2/url?u=http-3A__-7Btag.co&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=vJWd08YGFoxBpNzmAmtG4S63Jw6xSZqV0oc2mWdR8-8&e=lor}">#${https://urldefense.proofpoint.com/v2/url?u=http-3A__tag.name&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=-4oMHlAlSdSt5Ul0lUNPKgKBSA21hiXL6UsU-PP3wqw&e=}</span>`:''; }).join(' ')}
+        ${(item.tags||[]).map(tid=>{ const tag=tags.find(t=>t.id===tid); return tag?`<span style="color:${tag.color}">#${tag.name}</span>`:''; }).join(' ')}
       </div>
     </div>`).join('');
 
@@ -2278,14 +2432,14 @@ function initParallax() {
       if (dist < 0.4) {
         var rx = dy * 4;
         var ry = -dx * 4;
-       https://urldefense.proofpoint.com/v2/url?u=http-3A__card.style.tr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=st7pONMlcEjJBm9c5c-7NgeCrxgt74dfmIqnq7cDk_0&e=ansform = 'perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-2px)';
+        card.style.transform = 'perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-2px)';
       } else {
-       https://urldefense.proofpoint.com/v2/url?u=http-3A__card.style.tr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=st7pONMlcEjJBm9c5c-7NgeCrxgt74dfmIqnq7cDk_0&e=ansform = '';
+        card.style.transform = '';
       }
     });
   });
- https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ad&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=jLZG9QM3qX8EH3-PLCyGY0_-gfuY44p30iS1e_8nSAI&e=dEventListener('mouseleave', function() {
-    document.querySelectorAll('.card').forEach(function(c){https://urldefense.proofpoint.com/v2/url?u=http-3A__c.style.tr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=zPFlELTdXDYpXZfFKpMa4RbBt5M7PLR9wlEGo-pffRQ&e=ansform = ''; });
+  document.addEventListener('mouseleave', function() {
+    document.querySelectorAll('.card').forEach(function(c){ c.style.transform = ''; });
   });
 }
 
@@ -2294,22 +2448,22 @@ function initParallax() {
 // SPATIAL STATUS CAPSULE
 // ══════════════════════════════════════════
 function updateCapsule() {
-  var active  =https://urldefense.proofpoint.com/v2/url?u=http-3A__items.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=588v5zWuYcujO9R2xdPzQBP4vk-MlhtvwUgljlgibRg&e=lter(function(i){ return !i.done; }).length;
-  var urgent  =https://urldefense.proofpoint.com/v2/url?u=http-3A__items.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=588v5zWuYcujO9R2xdPzQBP4vk-MlhtvwUgljlgibRg&e=lter(function(i){ return !i.done &&https://urldefense.proofpoint.com/v2/url?u=http-3A__i.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=yQAwJiEEfq9lQq81cBfmeKqfQCB5_A85YCulv_AQcjg&e=iority==='urgent'; }).length;
-  var done    =https://urldefense.proofpoint.com/v2/url?u=http-3A__items.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=588v5zWuYcujO9R2xdPzQBP4vk-MlhtvwUgljlgibRg&e=lter(function(i){ returnhttps://urldefense.proofpoint.com/v2/url?u=http-3A__i.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4eQ1H304f1UHspHuIYdR_TMbLuhSxYm7RkYinRQys1I&e=ne; }).length;
+  var active  = items.filter(function(i){ return !i.done; }).length;
+  var urgent  = items.filter(function(i){ return !i.done && i.priority==='urgent'; }).length;
+  var done    = items.filter(function(i){ return i.done; }).length;
   var total   = items.length;
-  var today   =https://urldefense.proofpoint.com/v2/url?u=http-3A__items.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=588v5zWuYcujO9R2xdPzQBP4vk-MlhtvwUgljlgibRg&e=lter(function(i){
-    if (!i.dueDate ||https://urldefense.proofpoint.com/v2/url?u=http-3A__i.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4eQ1H304f1UHspHuIYdR_TMbLuhSxYm7RkYinRQys1I&e=ne) return false;
+  var today   = items.filter(function(i){
+    if (!i.dueDate || i.done) return false;
     var d = new Date(i.dueDate);
     var n = new Date();
-    returnhttps://urldefense.proofpoint.com/v2/url?u=http-3A__d.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=TK_Bn_g6oppnxgryH75Cgg6SOt559325yfWkKU3-OI0&e=DateString() ===https://urldefense.proofpoint.com/v2/url?u=http-3A__n.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=AoqG1lW2N-lIdkbsVIxm1RQ8hX1k-Vd9lpGERhFaQzU&e=DateString();
+    return d.toDateString() === n.toDateString();
   }).length;
 
   // Update values
-  var elActive =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('cap-val-active');
-  var elUrgent =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('cap-val-urgent');
-  var elDone   =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('cap-val-done');
-  var elToday  =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('cap-val-today');
+  var elActive = document.getElementById('cap-val-active');
+  var elUrgent = document.getElementById('cap-val-urgent');
+  var elDone   = document.getElementById('cap-val-done');
+  var elToday  = document.getElementById('cap-val-today');
   if (elActive) elActive.textContent = active;
   if (elUrgent) elUrgent.textContent = urgent;
   if (elDone)   elDone.textContent   = done;
@@ -2418,7 +2572,7 @@ function handleSwipeMove(e) {
 
   if (swipeState.isHorizontal === null) {
     if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
-   https://urldefense.proofpoint.com/v2/url?u=http-3A__swipeState.is&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=xZyQ7FdTXpPxGuq8ewHrU4yQoCGEcSgagJ_0hIkui34&e=Horizontal = Math.abs(dx) > Math.abs(dy);
+    swipeState.isHorizontal = Math.abs(dx) > Math.abs(dy);
   }
   if (!swipeState.isHorizontal) { swipeState = null; return; }
 
@@ -2443,38 +2597,38 @@ function handleSwipeMove(e) {
 function handleSwipeEnd() {
   if (!swipeState) return;
   var dx   = swipeState.dx;
-  var card =https://urldefense.proofpoint.com/v2/url?u=http-3A__swipeState.ca&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=aPPWXryvsDeS0_U-TNmJEIk8WxMnRYMZXEnJHJJGoVs&e=rd;
-  var id   = parseInthttps://urldefense.proofpoint.com/v2/url?u=http-3A__-28card.id.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=n1Z43miSsQy6_FU1oGtHmQSOEykATUJlEYvlAfW8Gtc&e=place('card-', ''));
+  var card = swipeState.card;
+  var id   = parseInt(card.id.replace('card-', ''));
 
- https://urldefense.proofpoint.com/v2/url?u=http-3A__card.classList.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=WFncpeKHUBzwmrT0I7oKKQW8OVhGkRlSW1HvpU0kW3I&e=move('swiping');
- https://urldefense.proofpoint.com/v2/url?u=http-3A__card.classList.ad&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=XjRDtBeecHZc1iJnZvRoGQ4yID8gbr9WoS2Ao-g5haQ&e=d('snap-back');
- https://urldefense.proofpoint.com/v2/url?u=http-3A__card.style.tr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=st7pONMlcEjJBm9c5c-7NgeCrxgt74dfmIqnq7cDk_0&e=ansform = '';
+  card.classList.remove('swiping');
+  card.classList.add('snap-back');
+  card.style.transform = '';
 
   if (dx > SWIPE_THRESHOLD) {
     // Complete
-    var item = items.find(function(i){ return https://urldefense.proofpoint.com/v2/url?u=http-3A__i.id&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VlcHYde4I2tgyaecN73GlboJ8QKdHMXArNo_risoQcE&e= === id; });
+    var item = items.find(function(i){ return i.id === id; });
     if (item && !item.done) toggleDone(id);
   } else if (dx < -SWIPE_THRESHOLD) {
     // Delete
     deleteItem(id);
   }
 
-  var wrapper =https://urldefense.proofpoint.com/v2/url?u=http-3A__card.cl&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=OTTXS_7-0v21kIbjKgAxKPmTcPKM9Oux7veE-jZ68XA&e=osest('.swipe-wrapper');
+  var wrapper = card.closest('.swipe-wrapper');
   if (wrapper) {
     var els = wrapper.querySelectorAll('.swipe-complete, .swipe-delete');
-   https://urldefense.proofpoint.com/v2/url?u=http-3A__els.fo&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=ohDNLboCPxR84Sct7gPAgVd3i_otwnK0gMO8ezIM0eA&e=rEach(function(el){https://urldefense.proofpoint.com/v2/url?u=http-3A__el.st&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=_Y36P9LOyI8g0ZSMIuTbn64P4ZF7UYDfoPLlGZCYvZs&e=yle.opacity = 0; });
+    els.forEach(function(el){ el.style.opacity = 0; });
   }
 
-  setTimeout(function(){https://urldefense.proofpoint.com/v2/url?u=http-3A__card.classList.re&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=WFncpeKHUBzwmrT0I7oKKQW8OVhGkRlSW1HvpU0kW3I&e=move('snap-back'); }, 400);
+  setTimeout(function(){ card.classList.remove('snap-back'); }, 400);
   swipeState = null;
 }
 
 // ── DYNAMIC ACCENT BAR ──
 function updateDynamicAccent() {
-  var hasUrgent =https://urldefense.proofpoint.com/v2/url?u=http-3A__items.so&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=pgKStlac633DNC5GKFOkqVFfi0RD8os0bHGrYYGTnTA&e=me(function(i){ return !i.done &&https://urldefense.proofpoint.com/v2/url?u=http-3A__i.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=yQAwJiEEfq9lQq81cBfmeKqfQCB5_A85YCulv_AQcjg&e=iority === 'urgent'; });
-  var hasHigh   =https://urldefense.proofpoint.com/v2/url?u=http-3A__items.so&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=pgKStlac633DNC5GKFOkqVFfi0RD8os0bHGrYYGTnTA&e=me(function(i){ return !i.done &&https://urldefense.proofpoint.com/v2/url?u=http-3A__i.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=yQAwJiEEfq9lQq81cBfmeKqfQCB5_A85YCulv_AQcjg&e=iority === 'high'; });
- https://urldefense.proofpoint.com/v2/url?u=http-3A__document.body.classList.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=geBjCBWW4wLHmroTT0_EHxfXnjds3mJlUPwKzmHk1P4&e=ggle('state-urgent', hasUrgent);
- https://urldefense.proofpoint.com/v2/url?u=http-3A__document.body.classList.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=geBjCBWW4wLHmroTT0_EHxfXnjds3mJlUPwKzmHk1P4&e=ggle('state-high',   hasHigh && !hasUrgent);
+  var hasUrgent = items.some(function(i){ return !i.done && i.priority === 'urgent'; });
+  var hasHigh   = items.some(function(i){ return !i.done && i.priority === 'high'; });
+  document.body.classList.toggle('state-urgent', hasUrgent);
+  document.body.classList.toggle('state-high',   hasHigh && !hasUrgent);
 }
 
 
@@ -2483,17 +2637,17 @@ function updateDynamicAccent() {
 // ══════════════════════════════════════════
 
 // User profile
-var userFirst =https://urldefense.proofpoint.com/v2/url?u=http-3A__localStorage.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=7yFBMaj1WdbyTCLuA-b4RP1t4oVFXqvP0PCT1KP0hBs&e=tItem('userFirst') || '';
-var userLast  =https://urldefense.proofpoint.com/v2/url?u=http-3A__localStorage.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=7yFBMaj1WdbyTCLuA-b4RP1t4oVFXqvP0PCT1KP0hBs&e=tItem('userLast')  || '';
+var userFirst = localStorage.getItem('userFirst') || '';
+var userLast  = localStorage.getItem('userLast')  || '';
 
 function finishSetup() {
-  var f =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('setup-first').value.trim();
-  var l =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('setup-last').value.trim();
-  if (!f) {https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('setup-first').focus(); return; }
+  var f = document.getElementById('setup-first').value.trim();
+  var l = document.getElementById('setup-last').value.trim();
+  if (!f) { document.getElementById('setup-first').focus(); return; }
   userFirst = f; userLast = l;
- https://urldefense.proofpoint.com/v2/url?u=http-3A__localStorage.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=1YkajxEdvVeLH0SYJx0dj7cBBe4bR9fri3smh8WkGJM&e=tItem('userFirst', f);
- https://urldefense.proofpoint.com/v2/url?u=http-3A__localStorage.se&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=1YkajxEdvVeLH0SYJx0dj7cBBe4bR9fri3smh8WkGJM&e=tItem('userLast',  l);
- https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('setup-overlay').style.display = 'none';
+  localStorage.setItem('userFirst', f);
+  localStorage.setItem('userLast',  l);
+  document.getElementById('setup-overlay').style.display = 'none';
   updateHero();
   updateDashboard();
 }
@@ -2501,7 +2655,7 @@ function finishSetup() {
 function updateHero() {
   var name = userFirst || (lang==='he'?'שלום':'Hello');
   var now = new Date();
-  var h =https://urldefense.proofpoint.com/v2/url?u=http-3A__now.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=f0HgXjnvUAvt4CpW62_Zg7MTk29de5qRgXEYY0R7n2w&e=tHours();
+  var h = now.getHours();
   var greet = lang==='he'
     ? (h<12?'בוקר טוב, ':h<17?'צהריים טובים, ':'ערב טוב, ')
     : (h<12?'Good morning, ':h<17?'Good afternoon, ':'Good evening, ');
@@ -2513,8 +2667,8 @@ function updateHero() {
     ? ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר']
     : ['January','February','March','April','May','June','July','August','September','October','November','December'];
   var dateStr = lang==='he'
-    ? 'היום יום '+dayshttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bnow.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0Z-lnd6pmC7Jj5dhkE1XqFRxyd9VZTRWFGB4ywnZh9A&e=tDay()]+', '+now.getDate()+' ב'+monthshttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bnow.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0Z-lnd6pmC7Jj5dhkE1XqFRxyd9VZTRWFGB4ywnZh9A&e=tMonth()]+' '+now.getFullYear()
-    : dayshttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bnow.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0Z-lnd6pmC7Jj5dhkE1XqFRxyd9VZTRWFGB4ywnZh9A&e=tDay()]+', '+monthshttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bnow.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=0Z-lnd6pmC7Jj5dhkE1XqFRxyd9VZTRWFGB4ywnZh9A&e=tMonth()]+' '+now.getDate()+', '+now.getFullYear();
+    ? 'היום יום '+days[now.getDay()]+', '+now.getDate()+' ב'+months[now.getMonth()]+' '+now.getFullYear()
+    : days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
   safeText('hero-date', dateStr);
 }
 
@@ -2526,21 +2680,21 @@ function updateDashboard() {
 }
 
 function updateTodayList() {
-  var el =https://urldefense.proofpoint.com/v2/url?u=http-3A__document.ge&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=VQj1d908lfMFqFHP3GgazHaK48QUTpCicb5gSLlm_5o&e=tElementById('today-list');
+  var el = document.getElementById('today-list');
   if (!el) return;
   var now = new Date();
-  var todayItems =https://urldefense.proofpoint.com/v2/url?u=http-3A__items.fi&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=588v5zWuYcujO9R2xdPzQBP4vk-MlhtvwUgljlgibRg&e=lter(function(i) {
-    if https://urldefense.proofpoint.com/v2/url?u=http-3A__-28i.do&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=Yk3H5a7ATLEqXIx-d6zy6eSRMz2Pn2Ywr6Vt8e-YTog&e=ne) return false;
+  var todayItems = items.filter(function(i) {
+    if (i.done) return false;
     if (!i.dueDate) return false;
     var d = new Date(i.dueDate);
-    returnhttps://urldefense.proofpoint.com/v2/url?u=http-3A__d.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=TK_Bn_g6oppnxgryH75Cgg6SOt559325yfWkKU3-OI0&e=DateString() ===https://urldefense.proofpoint.com/v2/url?u=http-3A__now.to&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=dmEEPvN60ux2pS77Nc95fMu5RDcY4rHIgrJ-hORCOVE&e=DateString() || d < now;
+    return d.toDateString() === now.toDateString() || d < now;
   }).sort(function(a,b){
     var pa={urgent:0,high:1,normal:2,low:3};
-    return (pahttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Ba.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=mgodqft7OVIXYJCkkpohnE31Vy1X3XTgVQeTjeTkRdo&e=iority]||2)-(pahttps://urldefense.proofpoint.com/v2/url?u=http-3A__-5Bb.pr&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=4ZXADn-rUNKRtA2kcJ7ypVp7RWvQxFhqGC6dgHru_0I&e=iority]||2);
+    return (pa[a.priority]||2)-(pa[b.priority]||2);
   }).slice(0,5);
 
   if (!todayItems.length) {
-   https://urldefense.proofpoint.com/v2/url?u=http-3A__el.in&d=DwIFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=_6GXZDOfPJruzd9AjolORpoDz8iqZ4kg8nQupGcOKvE&m=9rxKFMLq15qBebkelKHmJ7ys_GtE6NzMEaZ0uyO6aYUygWEDdr3Bq6tKpZqPmn2g&s=OP-V1azd-uTXWVWcYjKOEysXoQIrl8RPS545lwB1TLg&e=nerHTML = '<div class="today-empty">'+(lang==='he'?'אין משימות להיום 🎉':'No tasks for today 🎉')+'</div>';
+    el.innerHTML = '<div class="today-empty">'+(lang==='he'?'אין משימות להיום 🎉':'No tasks for today 🎉')+'</div>';
     return;
   }
   var pClass = {urgent:'ur',high:'hi',normal:'ac',low:'lo'};
@@ -2710,4 +2864,3 @@ if('serviceWorker' in navigator){
 </script>
 </body>
 </html>
-
