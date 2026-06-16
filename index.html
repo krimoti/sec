@@ -759,14 +759,14 @@ if ('serviceWorker' in navigator) {
 
 
 // ── STATE ──
-let items = JSON.parse(localStorage.getItem('smartReminders_v2') || '[]');
-let lang = localStorage.getItem('smartReminders_lang') || 'he';
-let currentFilter = 'all';
-let notifEnabled = false;
-let analysisResult = { priority: 'normal', category: 'general', dueText: '' };
+var items = JSON.parse(localStorage.getItem('smartReminders_v2') || '[]');
+var lang = localStorage.getItem('smartReminders_lang') || 'he';
+var currentFilter = 'all';
+var notifEnabled = false;
+var analysisResult = { priority: 'normal', category: 'general', dueText: '' };
 
 // ── TRANSLATIONS ──
-const T = {
+var T = {
   he: {
     appTitle: 'מזכיר חכם', appSub: 'Smart Reminder · offline',
     inputLbl: 'הכתב תזכורת, הערה או משימה',
@@ -868,27 +868,27 @@ const T = {
 };
 
 function t(key, sub) {
-  const tr = T[lang];
+  var tr = T[lang];
   if (sub) return (tr[key] || {})[sub] || key;
   return tr[key] || key;
 }
 
 // ── PRIORITY KEYWORDS ──
-const URGENT_PATTERNS = [
+var URGENT_PATTERNS = [
   /דחוף/i, /מיידי/i, /עכשיו/i, /הכי חשוב/i, /חייב לעשות/i,
   /urgent/i, /asap/i, /immediately/i, /critical/i, /emergency/i,
   /must do/i, /right now/i, /time.?sensitive/i
 ];
-const HIGH_PATTERNS = [
+var HIGH_PATTERNS = [
   /חשוב/i, /בהקדם/i, /לא לשכוח/i, /don.?t forget/i, /important/i,
   /high priority/i, /soon/i, /במהרה/i, /היום/i, /today/i
 ];
-const LOW_PATTERNS = [
+var LOW_PATTERNS = [
   /לא דחוף/i, /כשיהיה זמן/i, /בזמן פנוי/i, /not urgent/i, /whenever/i,
   /someday/i, /low priority/i, /נמוך/i
 ];
 
-const CATEGORY_PATTERNS = {
+var CATEGORY_PATTERNS = {
   task:     [/לעשות/i, /לסיים/i, /לשלוח/i, /לכתוב/i, /do/i, /send/i, /finish/i, /complete/i, /task/i, /משימה/i],
   reminder: [/לא לשכוח/i, /לזכור/i, /תזכורת/i, /don.?t forget/i, /remember/i, /remind/i],
   meeting:  [/פגישה/i, /שיחה/i, /זום/i, /meeting/i, /call/i, /zoom/i, /teams/i],
@@ -897,20 +897,20 @@ const CATEGORY_PATTERNS = {
 
 // ── DATE EXTRACTION ──
 function extractDate(text) {
-  const now = new Date();
+  var now = new Date();
 
   // patterns
-  const patterns = [
-    { re: /מחר/i,     fn: () => { const d = new Date(now); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; } },
-    { re: /tomorrow/i,fn: () => { const d = new Date(now); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; } },
-    { re: /היום/i,    fn: () => { const d = new Date(now); d.setHours(17,0,0,0); return d; } },
-    { re: /today/i,   fn: () => { const d = new Date(now); d.setHours(17,0,0,0); return d; } },
-    { re: /בעוד\s+(\d+)\s*ימ/i, fn: (m) => { const d = new Date(now); d.setDate(d.getDate()+parseInt(m[1])); d.setHours(9,0,0,0); return d; } },
-    { re: /in\s+(\d+)\s*day/i,  fn: (m) => { const d = new Date(now); d.setDate(d.getDate()+parseInt(m[1])); d.setHours(9,0,0,0); return d; } },
-    { re: /בשבוע הבא/i, fn: () => { const d = new Date(now); d.setDate(d.getDate()+7); d.setHours(9,0,0,0); return d; } },
-    { re: /next week/i, fn: () => { const d = new Date(now); d.setDate(d.getDate()+7); d.setHours(9,0,0,0); return d; } },
-    { re: /(\d{1,2})[\/\-\.](\d{1,2})(?:[\/\-\.](\d{2,4}))?/, fn: (m) => {
-        const d = new Date();
+  var patterns = [
+    { re: /מחר/i,     fn: function() { var d = new Date(now); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; } },
+    { re: /tomorrow/i,fn: function() { var d = new Date(now); d.setDate(d.getDate()+1); d.setHours(9,0,0,0); return d; } },
+    { re: /היום/i,    fn: function() { var d = new Date(now); d.setHours(17,0,0,0); return d; } },
+    { re: /today/i,   fn: function() { var d = new Date(now); d.setHours(17,0,0,0); return d; } },
+    { re: /בעוד\s+(\d+)\s*ימ/i, fn: function(m) { var d = new Date(now); d.setDate(d.getDate()+parseInt(m[1])); d.setHours(9,0,0,0); return d; } },
+    { re: /in\s+(\d+)\s*day/i,  fn: function(m) { var d = new Date(now); d.setDate(d.getDate()+parseInt(m[1])); d.setHours(9,0,0,0); return d; } },
+    { re: /בשבוע הבא/i, fn: function() { var d = new Date(now); d.setDate(d.getDate()+7); d.setHours(9,0,0,0); return d; } },
+    { re: /next week/i, fn: function() { var d = new Date(now); d.setDate(d.getDate()+7); d.setHours(9,0,0,0); return d; } },
+    { re: /(\d{1,2})[\/\-\.](\d{1,2})(?:[\/\-\.](\d{2,4}))?/, fn: function(m) {
+        var d = new Date();
         d.setMonth(parseInt(m[2])-1); d.setDate(parseInt(m[1]));
         if (m[3]) d.setFullYear(parseInt(m[3].length===2 ? '20'+m[3] : m[3]));
         d.setHours(9,0,0,0); return d;
@@ -918,18 +918,18 @@ function extractDate(text) {
   ];
 
   // time patterns
-  const timeRe = /(\d{1,2})[:\.](\d{2})/;
-  const timeSuffix = /(\d{1,2})\s*(בבוקר|בצהריים|אחה"צ|בערב|AM|PM)/i;
+  var timeRe = /(\d{1,2})[:\.](\d{2})/;
+  var timeSuffix = /(\d{1,2})\s*(בבוקר|בצהריים|אחה"צ|בערב|AM|PM)/i;
 
-  for (const p of patterns) {
-    const m = text.match(p.re);
+  for (var p of patterns) {
+    var m = text.match(p.re);
     if (m) {
-      const d = p.fn(m);
-      const tm = text.match(timeRe);
+      var d = p.fn(m);
+      var tm = text.match(timeRe);
       if (tm) { d.setHours(parseInt(tm[1]), parseInt(tm[2]), 0, 0); }
-      const ts = text.match(timeSuffix);
+      var ts = text.match(timeSuffix);
       if (ts && !tm) {
-        const h = parseInt(ts[1]);
+        var h = parseInt(ts[1]);
         if (/בבוקר|AM/i.test(ts[2])) d.setHours(h,0,0,0);
         else if (/בצהריים/i.test(ts[2])) d.setHours(12,0,0,0);
         else if (/אחה"צ|PM/i.test(ts[2])) d.setHours(h<12?h+12:h,0,0,0);
@@ -945,7 +945,7 @@ function analyzeInput(text) {
   if (!text.trim()) { hidePrev(); return; }
 
   // ── SMART PRIORITY: score-based ──
-  let scores = { urgent: 0, high: 0, normal: 0, low: 0 };
+  var scores = { urgent: 0, high: 0, normal: 0, low: 0 };
 
   // keyword scoring
   URGENT_PATTERNS.forEach(r => { if (r.test(text)) scores.urgent += 3; });
@@ -964,8 +964,8 @@ function analyzeInput(text) {
   if (/כשיהיה זמן|someday|whenever|אחרי/i.test(text)) scores.low += 2;
 
   // pick highest score
-  let priority = 'normal';
-  const maxScore = Math.max(scores.urgent, scores.high, scores.low);
+  var priority = 'normal';
+  var maxScore = Math.max(scores.urgent, scores.high, scores.low);
   if (maxScore > 0) {
     if (scores.urgent === maxScore) priority = 'urgent';
     else if (scores.high === maxScore) priority = 'high';
@@ -973,15 +973,15 @@ function analyzeInput(text) {
   }
 
   // confidence: 0–100
-  const totalSignals = Object.values(scores).reduce((a,b)=>a+b,0);
-  const confidence = Math.min(100, Math.round((maxScore / Math.max(1, totalSignals)) * 100 + (maxScore * 10)));
+  var totalSignals = Object.values(scores).reduce((a,b)=>a+b,0);
+  var confidence = Math.min(100, Math.round((maxScore / Math.max(1, totalSignals)) * 100 + (maxScore * 10)));
 
-  let category = 'general';
-  for (const [cat, pats] of Object.entries(CATEGORY_PATTERNS)) {
-    if (pats.some(r => r.test(text))) { category = cat; break; }
+  var category = 'general';
+  for (var [cat, pats] of Object.entries(CATEGORY_PATTERNS)) {
+    if (pats.some(function(r){return r.test(text);})) { category = cat; break; }
   }
 
-  const date = extractDate(text);
+  var date = extractDate(text);
   analysisResult = { priority, category, date, confidence };
 
   if (date && !document.getElementById('due-date').value) {
@@ -992,49 +992,49 @@ function analyzeInput(text) {
 }
 
 function toLocalInputDate(d) {
-  const pad = n => String(n).padStart(2,'0');
+  var pad = function(n){return String(n)+'';}.padStart(2,'0');
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 function showPrev(priority, category, date, confidence) {
-  const bar = document.getElementById('preview-bar');
+  var bar = document.getElementById('preview-bar');
   bar.style.display = 'flex';
-  const pColor = priority==='urgent'?'var(--urgent-badge)':priority==='high'?'var(--high-badge)':priority==='low'?'var(--low-badge)':'var(--normal-badge)';
+  var pColor = priority==='urgent'?'var(--urgent-badge)':priority==='high'?'var(--high-badge)':priority==='low'?'var(--low-badge)':'var(--normal-badge)';
   document.getElementById('prev-priority-badge').textContent = t('priorities', priority);
   document.getElementById('prev-priority-badge').style.background = pColor;
   document.getElementById('prev-category-badge').textContent = t('categories', category);
   document.getElementById('prev-date-badge').textContent = date ? '📅 '+formatDate(date) : '';
   document.getElementById('prev-icon').textContent = priority==='urgent'?'🚨':priority==='high'?'⚠️':priority==='low'?'🟢':'🔍';
   // confidence bar
-  let confEl = document.getElementById('prev-confidence');
+  var confEl = document.getElementById('prev-confidence');
   if (!confEl) {
-    const extra = document.createElement('div');
+    var extra = document.createElement('div');
     extra.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:2px;';
     extra.innerHTML = '<div class="confidence-bar"><div class="confidence-fill" id="prev-confidence"></div></div><span id="prev-conf-label" class="conf-label"></span>';
     bar.appendChild(extra);
     confEl = document.getElementById('prev-confidence');
   }
-  const pct = confidence || 0;
-  const fillColor = priority==='urgent'?'#e11d48':priority==='high'?'#ea580c':priority==='low'?'#16a34a':'#0284c7';
+  var pct = confidence || 0;
+  var fillColor = priority==='urgent'?'#e11d48':priority==='high'?'#ea580c':priority==='low'?'#16a34a':'#0284c7';
   confEl.style.width = pct + '%';
   confEl.style.background = fillColor;
-  const confLabel = document.getElementById('prev-conf-label');
+  var confLabel = document.getElementById('prev-conf-label');
   if (confLabel) confLabel.textContent = (lang==='he'?(lang==='he'?'ביטחון: ':'Confidence: '):'Confidence: ') + pct + '%';
 }
 function hidePrev() { document.getElementById('preview-bar').style.display = 'none'; }
 
 // ── ADD ITEM ──
 function addItem() {
-  const inp = document.getElementById('main-input');
-  const text = inp.value.trim();
+  var inp = document.getElementById('main-input');
+  var text = inp.value.trim();
   if (!text) { shakeInput(); return; }
 
   analyzeInput(text);
 
-  const dueDateVal = document.getElementById('due-date').value;
-  const dueDate = dueDateVal ? new Date(dueDateVal) : (analysisResult.date || null);
+  var dueDateVal = document.getElementById('due-date').value;
+  var dueDate = dueDateVal ? new Date(dueDateVal) : (analysisResult.date || null);
 
-  const item = {
+  var item = {
     id: Date.now(),
     text,
     priority: analysisResult.priority,
@@ -1059,7 +1059,7 @@ function addItem() {
 }
 
 function shakeInput() {
-  const inp = document.getElementById('main-input');
+  var inp = document.getElementById('main-input');
   inp.style.animation = 'none';
   inp.style.borderColor = 'var(--urgent-badge)';
   setTimeout(() => { inp.style.borderColor = ''; }, 1000);
@@ -1072,7 +1072,7 @@ function handleKey(e) {
 // ── NOTIFICATIONS ──
 function toggleNotif() {
   notifEnabled = !notifEnabled;
-  const el = document.getElementById('notif-toggle');
+  var el = document.getElementById('notif-toggle');
   el.classList.toggle('on', notifEnabled);
   if (notifEnabled && 'Notification' in window) {
     Notification.requestPermission().then(p => {
@@ -1084,7 +1084,7 @@ function toggleNotif() {
 
 function scheduleNotif(item) {
   if (!item.dueDate || Notification.permission !== 'granted') return;
-  const ms = new Date(item.dueDate) - Date.now() - 15*60*1000; // 15 min before
+  var ms = new Date(item.dueDate) - Date.now() - 15*60*1000; // 15 min before
   if (ms > 0) {
     setTimeout(() => {
       new Notification('⏰ ' + (lang==='he'?'תזכורת':'Reminder'), {
@@ -1097,28 +1097,28 @@ function scheduleNotif(item) {
 
 // ── RENDER ──
 function render() {
-  const container = document.getElementById('list');
-  const emptyState = document.getElementById('empty');
-  const sortBy = document.getElementById('sort-sel').value;
+  var container = document.getElementById('list');
+  var emptyState = document.getElementById('empty');
+  var sortBy = document.getElementById('sort-sel').value;
 
-  let filtered = [...items];
-  if (currentFilter === 'done') filtered = filtered.filter(i => i.done);
-  else if (currentFilter !== 'all') filtered = filtered.filter(i => !i.done && i.priority === currentFilter);
-  else filtered = filtered.filter(i => !i.done);
+  var filtered = [...items];
+  if (currentFilter === 'done') filtered = filtered.filter(function(i){return i.done;});
+  else if (currentFilter !== 'all') filtered = filtered.filter(function(i){return !i.done && i.priority === currentFilter;});
+  else filtered = filtered.filter(function(i){return !i.done;});
   // search filter
-  if (searchQuery) filtered = filtered.filter(i => i.text.toLowerCase().includes(searchQuery));
+  if (searchQuery) filtered = filtered.filter(function(i){return i.text.toLowerCase().includes(searchQuery);});
   // tag filter
-  if (selectedTagFilter) filtered = filtered.filter(i => (i.tags||[]).includes(selectedTagFilter));
+  if (selectedTagFilter) filtered = filtered.filter(function(i){return (i.tags||[]).includes(selectedTagFilter);});
 
   // sort
-  const PMAP = { urgent:0, high:1, normal:2, low:3 };
-  if (sortBy === 'priority') filtered.sort((a,b) => (PMAP[a.priority]||2)-(PMAP[b.priority]||2));
-  else if (sortBy === 'date') filtered.sort((a,b) => {
+  var PMAP = { urgent:0, high:1, normal:2, low:3 };
+  if (sortBy === 'priority') filtered.sort(function(a,b){return (PMAP[a.priority]||2)-(PMAP[b.priority]||2);});
+  else if (sortBy === 'date') filtered.sort(function(a,b){
     if (!a.dueDate && !b.dueDate) return 0;
     if (!a.dueDate) return 1; if (!b.dueDate) return -1;
     return new Date(a.dueDate)-new Date(b.dueDate);
   });
-  else filtered.sort((a,b) => b.id-a.id);
+  else filtered.sort(function(a,b){return b.id-a.id;});
 
   if (!filtered.length) {
     container.innerHTML = '';
@@ -1130,14 +1130,14 @@ function render() {
 
   updateCapsule();
   updateDynamicAccent();
-  safeText('stat-total',items.filter(function(i){return !i.done;}).length);
+  safeText('stat-total', items.filter(function(i){return !i.done;}).length);
   safeText('stat-urgent',items.filter(function(i){return !i.done&&i.priority==='urgent';}).length);
-  safeText('stat-done-count',items.filter(function(i){return i.done;}).length);
+  safeText('stat-done-count', items.filter(function(i){return i.done;}).length);
   var todayCnt=items.filter(function(i){if(!i.dueDate||i.done)return false;var d=new Date(i.dueDate),n=new Date();return d.toDateString()===n.toDateString();}).length;safeText('stat-today',todayCnt||'—');
   if(currentView==='home')updateDashboard();
   // stats
-  document.getElementById('stat-urgent').textContent = items.filter(i=>!i.done&&i.priority==='urgent').length;
-  document.getElementById('stat-total').textContent = items.filter(i=>!i.done).length;
+  // handled by safeText in render
+  // handled by safeText in render
   document.getElementById('count-pill').textContent = filtered.length;
 }
 
@@ -1201,14 +1201,14 @@ function escHtml(s) {
 
 // ── INLINE EDIT ──
 function editItem(id) {
-  const item = items.find(i => i.id === id);
+  var item = items.find(function(i){return i.id === id;});
   if (!item) return;
-  const card = document.getElementById('card-' + id);
+  var card = document.getElementById('card-' + id);
   if (!card) return;
 
   card.classList.add('editing');
-  const body = card.querySelector('.item-body');
-  const dueVal = item.dueDate ? toLocalInputDate(new Date(item.dueDate)) : '';
+  var body = card.querySelector('.item-body');
+  var dueVal = item.dueDate ? toLocalInputDate(new Date(item.dueDate)) : '';
 
   body.innerHTML = `
     <textarea class="edit-ta" id="edit-ta-${id}" onkeydown="editKey(event,${id})">${item.text.replace(/</g,'&lt;')}</textarea>
@@ -1224,7 +1224,7 @@ function editItem(id) {
       <input type="datetime-local" class="e-due" id="edit-due-${id}" value="${dueVal}">
     </div>`;
 
-  const ta = document.getElementById('edit-ta-' + id);
+  var ta = document.getElementById('edit-ta-' + id);
   if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
 }
 
@@ -1234,13 +1234,13 @@ function editKey(e, id) {
 }
 
 function saveEdit(id) {
-  const item = items.find(i => i.id === id);
+  var item = items.find(function(i){return i.id === id;});
   if (!item) return;
-  const ta = document.getElementById('edit-ta-' + id);
-  const pr = document.getElementById('edit-pr-' + id);
-  const due = document.getElementById('edit-due-' + id);
+  var ta = document.getElementById('edit-ta-' + id);
+  var pr = document.getElementById('edit-pr-' + id);
+  var due = document.getElementById('edit-due-' + id);
   if (!ta) return;
-  const newText = ta.value.trim();
+  var newText = ta.value.trim();
   if (!newText) return;
   item.text = newText;
   if (pr) item.priority = pr.value;
@@ -1258,44 +1258,44 @@ function cancelEdit(id) {
 
 // ── ACTIONS ──
 function toggleDone(id) {
-  const item = items.find(i=>i.id===id);
+  var item = items.find(function(i){return i.id===id;});
   if (!item) return;
   item.done = !item.done;
   save();
   if (item.done) {
-    const card = document.getElementById('card-' + id);
+    var card = document.getElementById('card-' + id);
     if (card) { card.classList.add('done-flash'); setTimeout(render, 350); }
     else render();
   } else { render(); }
 }
 
 function deleteItem(id) {
-  const card = document.getElementById('card-' + id);
+  var card = document.getElementById('card-' + id);
   if (card) {
     card.classList.add('removing');
-    setTimeout(() => { items = items.filter(i=>i.id!==id); save(); render(); }, 260);
+    setTimeout(() => { items = items.filter(function(i){return i.id!==id;}); save(); render(); }, 260);
   } else {
-    items = items.filter(i=>i.id!==id); save(); render();
+    items = items.filter(function(i){return i.id!==id;}); save(); render();
   }
 }
 
 function changePriority(id) {
-  const item = items.find(i=>i.id===id);
+  var item = items.find(function(i){return i.id===id;});
   if (!item) return;
-  const order = ['urgent','high','normal','low'];
-  const idx = order.indexOf(item.priority);
+  var order = ['urgent','high','normal','low'];
+  var idx = order.indexOf(item.priority);
   item.priority = order[(idx+1)%order.length];
   save(); render();
 }
 
 function clearDone() {
-  items = items.filter(i=>!i.done);
+  items = items.filter(function(i){return !i.done;});
   save(); render();
 }
 
 function setFilter(f, btn) {
   currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.filter-btn').forEach(function(b){return b.classList.remove;}('on'));
   btn.classList.add('on');
   render();
 }
@@ -1309,7 +1309,7 @@ function safeText(id, val) {
 }
 
 function applyLang() {
-  const isHe = lang==='he';
+  var isHe = lang==='he';
   document.documentElement.lang = lang;
   document.documentElement.dir = lang==='he' ? 'rtl' : 'ltr';
   document.body.style.direction = lang==='he' ? 'rtl' : 'ltr';
@@ -1395,7 +1395,7 @@ function applyLang() {
   if (searchInp) searchInp.placeholder = lang==='he' ? 'חיפוש...' : 'Search...';
 
   // hints
-  const hintRow = document.getElementById('hint-row');
+  var hintRow = document.getElementById('hint-row');
   var heHints = ['דחוף!','לא לשכוח','בהקדם','מחר','היום'];
   var enHints = ['urgent!','ASAP','important','tomorrow','deadline'];
   var hintsArr = isHe ? heHints : enHints;
@@ -1410,7 +1410,7 @@ function applyLang() {
 
 // ── HELPERS ──
 function appendHint(txt) {
-  const inp = document.getElementById('main-input');
+  var inp = document.getElementById('main-input');
   inp.value += (inp.value && !inp.value.endsWith(' ') ? ' ' : '') + txt;
   inp.focus();
   analyzeInput(inp.value);
@@ -1420,9 +1420,9 @@ function save() {
   localStorage.setItem('smartReminders_v2', JSON.stringify(items));
 }
 
-let bannerTimer;
+var bannerTimer;
 function showBanner(msg) {
-  const b = document.getElementById('banner');
+  var b = document.getElementById('banner');
   b.textContent = msg;
   b.style.display = 'block';
   clearTimeout(bannerTimer);
@@ -1431,10 +1431,10 @@ function showBanner(msg) {
 
 // ── CHECK OVERDUE PERIODICALLY ──
 function checkOverdue() {
-  const now = new Date();
+  var now = new Date();
   items.forEach(item => {
     if (item.done || !item.dueDate || item._alerted) return;
-    const due = new Date(item.dueDate);
+    var due = new Date(item.dueDate);
     if (due < now && due > new Date(now - 60000)) {
       item._alerted = true;
       showBanner('⏰ ' + item.text.substring(0,40) + (lang==='he'?(lang==='he'?' — הגיע המועד!':' — Due now!'):' — Due now!'));
@@ -1444,18 +1444,18 @@ function checkOverdue() {
 
 
 // ── VOICE DICTATION ──
-let recognition = null;
-let isListening = false;
-let voiceLang = (localStorage.getItem('smartReminders_lang') || 'he') === 'he' ? 'he-IL' : 'en-US';
+var recognition = null;
+var isListening = false;
+var voiceLang = (localStorage.getItem('smartReminders_lang') || 'he') === 'he' ? 'he-IL' : 'en-US';
 
 function initSpeechRecognition() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
     document.getElementById('mic-btn').classList.add('unsupported');
     document.getElementById('mic-btn').title = (lang==='he'?'זיהוי דיבור לא נתמך בדפדפן זה':'Not supported in this browser');
     return null;
   }
-  const rec = new SpeechRecognition();
+  var rec = new SpeechRecognition();
   rec.lang = voiceLang;
   rec.continuous = true;
   rec.interimResults = true;
@@ -1467,10 +1467,10 @@ function initSpeechRecognition() {
   };
 
   rec.onresult = function(e) {
-    let interim = '';
-    let final = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      const transcript = e.results[i][0].transcript;
+    var interim = '';
+    var final = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      var transcript = e.results[i][0].transcript;
       if (e.results[i].isFinal) final += transcript + ' ';
       else interim += transcript;
     }
@@ -1478,7 +1478,7 @@ function initSpeechRecognition() {
     document.getElementById('vi').textContent = interim;
     // append final to textarea
     if (final.trim()) {
-      const inp = document.getElementById('main-input');
+      var inp = document.getElementById('main-input');
       inp.value += (inp.value && !inp.value.endsWith(' ') ? ' ' : '') + final.trim();
       analyzeInput(inp.value);
       document.getElementById('vi').textContent = '';
@@ -1508,7 +1508,7 @@ function initSpeechRecognition() {
 }
 
 function toggleVoice() {
-  const btn = document.getElementById('mic-btn');
+  var btn = document.getElementById('mic-btn');
   if (btn.classList.contains('unsupported')) return;
   if (isListening) stopVoice();
   else startVoice();
@@ -1534,9 +1534,9 @@ function stopVoice() {
 }
 
 function updateMicUI(listening) {
-  const btn = document.getElementById('mic-btn');
-  const icon = document.getElementById('mic-icon');
-  const lbl  = document.getElementById('mic-lbl');
+  var btn = document.getElementById('mic-btn');
+  var icon = document.getElementById('mic-icon');
+  var lbl  = document.getElementById('mic-lbl');
   if (listening) {
     btn.classList.add('on');
     icon.textContent = '⏹️';
@@ -1550,14 +1550,14 @@ function updateMicUI(listening) {
 
 function switchVoiceLang() {
   voiceLang = voiceLang === 'he-IL' ? 'en-US' : 'he-IL';
-  const btn = document.getElementById('voice-lang-btn');
+  var btn = document.getElementById('voice-lang-btn');
   btn.textContent = voiceLang === 'he-IL' ? 'עב' : 'EN';
   if (recognition) recognition.lang = voiceLang;
   updateVoiceStatusLabel();
 }
 
 function updateVoiceStatusLabel() {
-  const lbl = document.getElementById('voice-status-lbl');
+  var lbl = document.getElementById('voice-status-lbl');
   lbl.textContent = voiceLang === 'he-IL'
     ? (lang==='he' ? 'מאזין בעברית...' : 'Listening in Hebrew...')
     : (lang==='he' ? 'מאזין באנגלית...' : 'Listening in English...');
@@ -1574,12 +1574,12 @@ function checkMicSupport() {
 
 
 // ── SUMMARY ENGINE ──
-let summaryTasks = [];
-let sumListening = false;
-let sumRecognition = null;
+var summaryTasks = [];
+var sumListening = false;
+var sumRecognition = null;
 
 function switchTab(tab) {
-  const isRem = tab === 'reminders';
+  var isRem = tab === 'reminders';
   document.getElementById('tab-reminders').classList.toggle('on', isRem);
   document.getElementById('tab-summary').classList.toggle('on', !isRem);
   document.getElementById('reminders-panel').classList.toggle('off', !isRem);
@@ -1588,7 +1588,7 @@ function switchTab(tab) {
 }
 
 function updateCharCount(el) {
-  const n = el.value.length;
+  var n = el.value.length;
   document.getElementById('char-count').textContent = n.toLocaleString() + (lang==='he' ? (lang==='he'?(lang==='he'?' תווים':' chars'):' chars') : ' chars');
 }
 
@@ -1819,7 +1819,7 @@ function renderSummaryResults(data) {
   if (speakers.length) {
     partCard.style.display = '';
     document.getElementById('res-part-count').textContent = speakers.length;
-    var totalWords = speakers.reduce(function(acc, s){ return acc + (speakerMap[s]||{wordCount:0}).wordCount; }, 0);
+    var totalWords = speakers.reduce(function(acc,s){return acc+(speakerMap[s]||{wordCount:0}).wordCount;},0);
     document.getElementById('res-part-body').innerHTML = speakers.map(function(s) {
       var sp = speakerMap[s];
       var pct = totalWords > 0 ? Math.round(sp.wordCount / totalWords * 100) : 0;
@@ -1910,9 +1910,9 @@ function renderSummaryResults(data) {
 }
 
 function addSummaryTask(idx) {
-  const t = summaryTasks[idx];
+  var t = summaryTasks[idx];
   if (!t) return;
-  const item = {
+  var item = {
     id: Date.now() + idx,
     text: (t.who ? t.who + ': ' : '') + t.text,
     priority: t.priority || 'normal',
@@ -1924,7 +1924,7 @@ function addSummaryTask(idx) {
   };
   items.unshift(item);
   save();
-  const btn = document.getElementById('stask-btn-' + idx);
+  var btn = document.getElementById('stask-btn-' + idx);
   if (btn) { btn.textContent = lang==='he' ? '✓ נוסף' : '✓ Added'; btn.classList.add('done'); btn.disabled = true; }
   showBanner(lang==='he' ? '✅ משימה נוספה לרשימה!' : '✅ Task added to list!');
 }
@@ -1933,7 +1933,7 @@ function exportAllTasks() {
   if (!summaryTasks.length) return;
   summaryTasks.forEach((t, i) => {
     if (document.getElementById('stask-btn-'+i)?.classList.contains('added')) return;
-    const item = {
+    var item = {
       id: Date.now() + i + Math.random(),
       text: (t.who ? t.who + ': ' : '') + t.text,
       priority: t.priority || 'normal',
@@ -1944,7 +1944,7 @@ function exportAllTasks() {
       notify: false
     };
     items.unshift(item);
-    const btn = document.getElementById('stask-btn-'+i);
+    var btn = document.getElementById('stask-btn-'+i);
     if (btn) { btn.textContent = lang==='he'?'✓ נוסף':'✓ Added'; btn.classList.add('done'); btn.disabled=true; }
   });
   save();
@@ -1957,7 +1957,7 @@ function toggleSumVoice() {
 }
 
 function startSumVoice() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) { showBanner(lang==='he'?'❌ לא נתמך בדפדפן':'❌ Not supported'); return; }
   sumRecognition = new SpeechRecognition();
   sumRecognition.lang = voiceLang;
@@ -1965,12 +1965,12 @@ function startSumVoice() {
   sumRecognition.interimResults = true;
   sumRecognition.onstart = () => { sumListening = true; updateSumMicUI(true); };
   sumRecognition.onresult = (e) => {
-    let final = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
+    var final = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
       if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
     }
     if (final.trim()) {
-      const ta = document.getElementById('sum-textarea');
+      var ta = document.getElementById('sum-textarea');
       ta.value += (ta.value && !ta.value.endsWith(' ') ? ' ' : '') + final.trim();
       updateCharCount(ta);
     }
@@ -1987,7 +1987,7 @@ function stopSumVoice() {
 }
 
 function updateSumMicUI(on) {
-  const btn = document.getElementById('sum-mic-btn');
+  var btn = document.getElementById('sum-mic-btn');
   document.getElementById('sum-mic-icon').textContent = on ? '⏹️' : '🎤';
   document.getElementById('sum-mic-lbl').textContent = on
     ? (lang==='he' ? 'עצור' : 'Stop')
@@ -2095,7 +2095,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ══════════════════════════════════════════
 // FEATURE 1: SEARCH
 // ══════════════════════════════════════════
-let searchQuery = '';
+var searchQuery = '';
 
 function onSearch(val) {
   searchQuery = val.trim().toLowerCase();
@@ -2110,27 +2110,30 @@ function clearSearch() {
 
 function highlight(text, query) {
   if (!query) return escHtml(text);
-  const escaped = escHtml(text);
-  const re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  var escaped = escHtml(text);
+  var re = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
   return escaped.replace(re, '<mark>$1</mark>');
 }
 
 // ══════════════════════════════════════════
 // FEATURE 2: CUSTOM TAGS
 // ══════════════════════════════════════════
-let tags = JSON.parse(localStorage.getItem('smartTags_v1') || '[]');
-let selectedTagFilter = null;
-let currentTagColor = '#3b82f6';
+var tags = JSON.parse(localStorage.getItem('smartTags_v1') || '[]');
+var selectedTagFilter = null;
+var currentTagColor = '#3b82f6';
 
-const TAG_COLORS = [
+var TAG_COLORS = [
   '#3b82f6','#e11d48','#ea580c','#16a34a','#9333ea','#0891b2','#b45309','#64748b'
 ];
 
 function initTagUI() {
-  const pick = document.getElementById('color-pick');
-  pick.innerHTML = TAG_COLORS.map(c =>
-    `<div class="color-dot${c===currentTagColor?' selected':''}" style="background:${c}" onclick="selectColor('${c}')"></div>`
-  ).join('');
+  var pick = document.getElementById('color-pick');
+  if (pick) {
+    pick.innerHTML = TAG_COLORS.map(function(c) {
+      var sel = c === selectedColor ? ' sel' : '';
+      return '<div class="cdot' + sel + '" onclick="selectColor(\"' + c + '\")" style="background:' + c + '"></div>';
+    }).join('');
+  }
   renderTagList();
   renderTagFilterRow();
 }
@@ -2143,15 +2146,15 @@ function selectColor(c) {
 }
 
 function toggleTagManager() {
-  const el = document.getElementById('tag-manager');
+  var el = document.getElementById('tag-manager');
   el.classList.toggle('open');
   if (el.classList.contains('open')) initTagUI();
 }
 
 function saveNewTag() {
-  const inp = document.getElementById('new-tag-input');
-  const name = inp.value.trim();
-  if (!name || tags.find(t => t.name === name)) return;
+  var inp = document.getElementById('new-tag-input');
+  var name = inp.value.trim();
+  if (!name || tags.find(function(t){return t.name === name;})) return;
   tags.push({ id: Date.now(), name, color: currentTagColor });
   localStorage.setItem('smartTags_v1', JSON.stringify(tags));
   inp.value = '';
@@ -2160,9 +2163,9 @@ function saveNewTag() {
 }
 
 function deleteTag(id) {
-  tags = tags.filter(t => t.id !== id);
+  tags = tags.filter(function(t){return t.id !== id;});
   // remove from items
-  items.forEach(item => { if (item.tags) item.tags = item.tags.filter(tid => tid !== id); });
+  items.forEach(item => { if (item.tags) item.tags = item.tags.filter(function(tid){return tid !== id;}); });
   localStorage.setItem('smartTags_v1', JSON.stringify(tags));
   save();
   renderTagList();
@@ -2171,59 +2174,48 @@ function deleteTag(id) {
 }
 
 function renderTagList() {
-  const el = document.getElementById('tag-list-display');
+  var el = document.getElementById('tag-list-display');
   if (!el) return;
-  if (!tags.length) { el.innerHTML = '<span style="font-size:12px;color:var(--text-soft)">'+(lang==='he'?'אין תגיות עדיין':'No tags yet')+'</span>'; return; }
-  el.innerHTML = tags.map(t =>
-    `<span class="t-chip" style="background:${t.color}22;border-color:${t.color};color:${t.color}">
-      ${t.name}
-      <span class="td" onclick="deleteTag(${t.id})">✕</span>
-    </span>`
-  ).join('');
+  if (!tags.length) {
+    el.innerHTML = '<span style="font-size:12px;color:var(--t3)">' + (lang==='he'?'אין תגיות עדיין':'No tags yet') + '</span>';
+    return;
+  }
+  el.innerHTML = tags.map(function(tag) {
+    return '<span class="tc" style="background:' + tag.color + '22;color:' + tag.color + '">' +
+      tag.name +
+      '<span class="tdel" onclick="deleteTag(' + tag.id + ')">✕</span>' +
+    '</span>';
+  }).join('');
 }
 
 function renderTagFilterRow() {
-  const row = document.getElementById('tag-filter-row');
+  var row = document.getElementById('tag-filter-row');
   if (!row) return;
-  if (!tags.length) { row.style.display = 'none'; return; }
+  if (!tags.length) { row.style.display='none'; return; }
   row.style.display = 'flex';
-  row.innerHTML = '<span style="font-size:12px;color:var(--text-soft);font-weight:600">'+(lang==='he'?'תגיות:':'Tags:')+'</span>' +
-    tags.map(t =>
-      `<span class="tag-filter-chip${selectedTagFilter===t.id?' selected':''}"
-        style="background:${t.color}22;border-color:${t.color};color:${t.color}"
-        onclick="toggleTagFilter(${t.id})">${t.name}</span>`
-    ).join('');
+  row.innerHTML = tags.map(function(t) {
+    var sel = selectedTagFilter === t.id ? ' sel' : '';
+    return '<span class="tfc' + sel + '" style="background:' + t.color + '22;color:' + t.color + '" onclick="toggleTagFilter(' + t.id + ')">' + t.name + '</span>';
+  }).join('');
 }
-
-function toggleTagFilter(id) {
-  selectedTagFilter = (selectedTagFilter === id) ? null : id;
-  renderTagFilterRow();
-  render();
-}
-
-function addTagToItem(itemId, tagId) {
-  const item = items.find(i => i.id === itemId);
-  if (!item) return;
   if (!item.tags) item.tags = [];
   if (!item.tags.includes(tagId)) item.tags.push(tagId);
   save(); render();
-}
+
 
 // Patch cardHTML to show tags + tag selector
 function tagsHTML(item) {
   if (!tags.length) return '';
-  const itemTags = (item.tags || []).map(tid => tags.find(t => t.id === tid)).filter(Boolean);
-  const available = tags.filter(t => !(item.tags || []).includes(t.id));
-  const chips = itemTags.map(t =>
-    `<span class="c-tag" style="background:${t.color}22;color:${t.color};border:1px solid ${t.color}">${t.name}</span>`
-  ).join('');
-  const addSelect = available.length
-    ? `<select onchange="addTagToItem(${item.id},parseInt(this.value))" style="font-size:11px;border:1px solid var(--blue-pale);border-radius:20px;padding:1px 6px;background:var(--blue-ghost);color:var(--text-soft);cursor:pointer;max-width:90px;">
-        <option value="">'+(lang==='he'?'+ תגית':'+ Tag')+'</option>
-        ${available.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}
-       </select>`
-    : '';
-  return chips || addSelect ? `<div class="card-tags">${chips}${addSelect}</div>` : '';
+  var itemTags = (item.tags||[]).map(function(tid){return tags.find(function(t){return t.id===tid;});}).filter(Boolean);
+  var available = tags.filter(function(t){return !(item.tags||[]).includes(t.id);});
+  var chips = itemTags.map(function(t){
+    return '<span class="itag" style="background:'+t.color+'22;color:'+t.color+'">'+t.name+'</span>';
+  }).join('');
+  var addSel = available.length ?
+    '<select onchange="addTagToItem('+item.id+',parseInt(this.value))" style="font-size:10px;border:none;border-radius:20px;padding:1px 5px;background:var(--card2);color:var(--t3);cursor:pointer;"><option value="">+tag</option>' +
+    available.map(function(t){return '<option value="'+t.id+'">'+t.name+'</option>';}).join('') +
+    '</select>' : '';
+  return (chips || addSel) ? '<div class="itags">'+chips+addSel+'</div>' : '';
 }
 
 // ══════════════════════════════════════════
@@ -2238,10 +2230,10 @@ function closeExportModal(e) {
 }
 
 function exportJSON() {
-  const data = { items, tags, exportedAt: new Date().toISOString(), version: 2 };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url;
+  var data = { items, tags, exportedAt: new Date().toISOString(), version: 2 };
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href = url;
   a.download = 'smart-reminders-' + new Date().toISOString().slice(0,10) + '.json';
   a.click(); URL.revokeObjectURL(url);
   closeExportModal();
@@ -2255,11 +2247,11 @@ function importJSON() {
   document.getElementById('import-file-input').click();
 }
 function handleImport(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
+  var file = e.target.files[0]; if (!file) return;
+  var reader = new FileReader();
   reader.onload = ev => {
     try {
-      const data = JSON.parse(ev.target.result);
+      var data = JSON.parse(ev.target.result);
       if (data.items) { items = data.items; save(); }
       if (data.tags) { tags = data.tags; localStorage.setItem('smartTags_v1', JSON.stringify(tags)); }
       render(); renderTagFilterRow();
@@ -2272,137 +2264,55 @@ function handleImport(e) {
 }
 
 function exportCSV() {
-  const headers = lang==='he'
+  var headers = lang==='he'
     ? ['טקסט','עדיפות','קטגוריה','תאריך יעד','סטטוס','נוצר']
     : ['Text','Priority','Category','Due Date','Status','Created'];
-  const rows = items.map(i => [
-    '"' + i.text.replace(/"/g,'""') + '"',
-    i.priority, i.category,
-    i.dueDate ? new Date(i.dueDate).toLocaleString() : '',
-    i.done ? (lang==='he'?'הושלם':'Done') : (lang==='he'?'פעיל':'Active'),
-    new Date(i.createdAt).toLocaleString()
-  ]);
-  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-  const bom = '\uFEFF'; // UTF-8 BOM for Excel
-  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url;
+  var rows = items.map(function(i) {
+    return [
+      '"' + i.text.replace(/"/g,'""') + '"',
+      i.priority,
+      i.category,
+      i.dueDate ? new Date(i.dueDate).toLocaleString() : '',
+      i.done ? (lang==='he'?'הושלם':'Done') : (lang==='he'?'פעיל':'Active'),
+      new Date(i.createdAt).toLocaleString()
+    ];
+  });
+  var csv = '\uFEFF' + [headers].concat(rows).map(function(r){return r.join(',');}).join('\n');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
   a.download = 'smart-reminders-' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click(); URL.revokeObjectURL(url);
-  closeExportModal();
-  showBanner(lang==='he' ? '📊 CSV יוצא!' : '📊 CSV exported!');
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showBanner(lang==='he'?'📊 CSV יוצא!':'📊 CSV exported!');
 }
 
 function exportPDF() {
-  closeExportModal();
-  const active = items.filter(i => !i.done);
-  const done = items.filter(i => i.done);
-  const PMAP = { urgent:0, high:1, normal:2, low:3 };
-  active.sort((a,b) => (PMAP[a.priority]||2) - (PMAP[b.priority]||2));
-
-  const priorityColor = { urgent:'#e11d48', high:'#ea580c', normal:'#0284c7', low:'#16a34a' };
-  const priorityLabel = { urgent: t('priorities','urgent'), high: t('priorities','high'), normal: t('priorities','normal'), low: t('priorities','low') };
-
-  const itemsHTML = [...active, ...done].map(item => `
-    <div class="pitem ${item.done?'pdone':''}">
-      <div class="pbadge" style="background:${item.done?'#9ca3af':priorityColor[item.priority]}">${item.done ? t('priorities','done') : priorityLabel[item.priority]}</div>
-      <div class="ptext">${item.text}</div>
-      <div class="pmeta">
-        ${item.dueDate ? '📅 ' + new Date(item.dueDate).toLocaleString() : ''}
-        · ${new Date(item.createdAt).toLocaleDateString()}
-        ${(item.tags||[]).map(tid=>{ const tag=tags.find(t=>t.id===tid); return tag?`<span style="color:${tag.color}">#${tag.name}</span>`:''; }).join(' ')}
-      </div>
-    </div>`).join('');
-
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html dir="rtl" lang="${lang}"><head>
-    <meta charset="UTF-8">
-    <title>${t('appTitle')} - ${new Date().toLocaleDateString()}</title>
-    
-    <style>
-      body { font-family: 'Arial Hebrew', Arial, 'Helvetica Neue', Helvetica, sans-serif; background:#fff; color:#0f1f3d; margin:0; padding:28px 32px; direction:rtl; }
-      h1 { font-size:22px; font-weight:800; color:#0a1628; border-bottom:3px solid #3b82f6; padding-bottom:10px; margin-bottom:6px; }
-      .meta { font-size:12px; color:#6b8ab5; margin-bottom:24px; }
-      .pitem { border:1px solid #e2eaf8; border-radius:10px; padding:12px 16px; margin-bottom:10px; display:flex; flex-direction:column; gap:4px; break-inside:avoid; }
-      .pitem.pdone { opacity:0.5; }
-      .pbadge { display:inline-block; color:#fff; border-radius:20px; padding:2px 10px; font-size:10px; font-weight:800; width:fit-content; font-family:monospace; }
-      .ptext { font-size:14px; font-weight:600; margin-top:4px; }
-      .pitem.pdone .ptext { text-decoration:line-through; }
-      .pmeta { font-size:11px; color:#6b8ab5; }
-      .stats { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
-      .stat { background:#eff6ff; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:700; color:#1a3a6e; }
-      @media print { body { padding:16px; } button { display:none; } }
-    </style>
-  </head><body>
-    <h1>📋 ${t('appTitle')}</h1>
-    <div class="meta">${new Date().toLocaleString()} · ${items.length} ${lang==='he'?'פריטים':'items'}</div>
-    <div class="stats">
-      <div class="stat">🔴 ${lang==='he'?'דחוף':'Urgent'}: ${items.filter(i=>i.priority==='urgent'&&!i.done).length}</div>
-      <div class="stat">🟠 ${lang==='he'?'גבוה':'High'}: ${items.filter(i=>i.priority==='high'&&!i.done).length}</div>
-      <div class="stat">✅ ${lang==='he'?'הושלמו':'Done'}: ${done.length}</div>
-      <div class="stat">📋 ${lang==='he'?'סה"כ':'Total'}: ${items.length}</div>
-    </div>
-    ${itemsHTML}
-    <script>window.onload=()=>window.print()<\/script>
-  
-<!-- ══ SPATIAL STATUS CAPSULE ══ -->
-<div class="cap-wrap" id="spatialWrapper">
-  <div class="cap" id="spatialCapsule">
-    <div class="cap-glow" id="capsuleGlow"></div>
-    <div class="cap-content">
-
-      <!-- Progress ring -->
-      <div class="cap-ring">
-        <svg width="22" height="22" viewBox="0 0 24 24">
-          <circle class="rg-bg"   cx="12" cy="12" r="9"></circle>
-          <circle class="rg-fill" cx="12" cy="12" r="9" id="capsuleRing"></circle>
-        </svg>
-      </div>
-
-      <div class="cap-div"></div>
-
-      <!-- Live pulse -->
-      <div class="cap-dot"></div>
-
-      <div class="cap-div"></div>
-
-      <!-- Expanded stats -->
-      <div class="cap-stats" id="capsuleStats">
-        <div class="cs">
-          <span class="cs-l" id="cap-lbl-active">פעיל</span>
-          <span class="cs-v acc" id="cap-val-active">0</span>
-        </div>
-        <div class="cs">
-          <span class="cs-l" id="cap-lbl-urgent">דחוף</span>
-          <span class="cs-v urg" id="cap-val-urgent">0</span>
-        </div>
-        <div class="cs">
-          <span class="cs-l" id="cap-lbl-done">הושלם</span>
-          <span class="cs-v ok" id="cap-val-done">0</span>
-        </div>
-        <div class="cs">
-          <span class="cs-l" id="cap-lbl-today">היום</span>
-          <span class="cs-v" id="cap-val-today">—</span>
-        </div>
-      </div>
-
-      <!-- Quick add button -->
-      <button class="cap-add" id="capsule-quick-add" onclick="document.getElementById('main-input').focus();switchTab('reminders')">
-        <span id="cap-btn-lbl">+ הוסף</span>
-      </button>
-
-    </div>
-  </div>
-</div>
-
-</body></html>`);
-  win.document.close();
+  var PMAP = {urgent:0,high:1,normal:2,low:3};
+  var active = items.filter(function(i){return !i.done;})
+    .sort(function(a,b){return (PMAP[a.priority]||2)-(PMAP[b.priority]||2);});
+  var done = items.filter(function(i){return i.done;});
+  var w = window.open('','_blank');
+  if (!w) return;
+  var pItems = active.concat(done).map(function(i){
+    var p = i.priority==='urgent'?'🔴':i.priority==='high'?'🟠':i.priority==='low'?'🟢':'🔵';
+    var due = i.dueDate ? ' — '+new Date(i.dueDate).toLocaleDateString() : '';
+    var status = i.done ? ' ✅' : '';
+    return '<div style="padding:6px 0;border-bottom:1px solid #eee;font-size:13px;">'+p+' '+escHtml(i.text)+due+status+'</div>';
+  }).join('');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+
+    (lang==='he'?'מזכיר חכם — ייצוא':'Smart Reminder — Export')+
+    '</title><style>body{font-family:Arial,sans-serif;padding:20px;direction:'+(lang==='he'?'rtl':'ltr')+';}h1{font-size:20px;}p{font-size:12px;color:#666;}</style></head><body>'+
+    '<h1>'+(lang==='he'?'מזכיר חכם':'Smart Reminder')+'</h1>'+
+    '<p>'+new Date().toLocaleString()+'</p>'+
+    pItems+
+    '</body></html>');
+  w.document.close();
+  w.print();
 }
-
-
-
-// ── THEME SYSTEM ──
-var currentTheme = localStorage.getItem('appTheme') || 'auto';
 
 function setTheme(theme) {
   currentTheme = theme;
