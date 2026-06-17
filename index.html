@@ -747,7 +747,9 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px;}
 <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="handleImport(event)">
 <div id="banner"></div>
 
-<script>
+<script>(function(){
+try {
+
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
@@ -921,7 +923,7 @@ function extractDate(text) {
   var timeRe = /(\d{1,2})[:\.](\d{2})/;
   var timeSuffix = /(\d{1,2})\s*(בבוקר|בצהריים|אחה"צ|בערב|AM|PM)/i;
 
-  for (var p of patterns) {
+  for(var __i=0,p;p=patterns[__i],__i<patterns.length;__i++) {
     var m = text.match(p.re);
     if (m) {
       var d = p.fn(m);
@@ -948,9 +950,9 @@ function analyzeInput(text) {
   var scores = { urgent: 0, high: 0, normal: 0, low: 0 };
 
   // keyword scoring
-  URGENT_PATTERNS.forEach(r => { if (r.test(text)) scores.urgent += 3; });
-  HIGH_PATTERNS.forEach(r => { if (r.test(text)) scores.high += 2; });
-  LOW_PATTERNS.forEach(r => { if (r.test(text)) scores.low += 2; });
+  URGENT_PATTERNS.forEach(function(r) { if (r.test(text)) scores.urgent += 3; });
+  HIGH_PATTERNS.forEach(function(r) { if (r.test(text)) scores.high += 2; });
+  LOW_PATTERNS.forEach(function(r) { if (r.test(text)) scores.low += 2; });
 
   // context boosters
   if (/[!]{2,}/.test(text)) scores.urgent += 2;           // multiple exclamation marks
@@ -973,11 +975,11 @@ function analyzeInput(text) {
   }
 
   // confidence: 0–100
-  var totalSignals = Object.values(scores).reduce((a,b)=>a+b,0);
+  var totalSignals = Object.values(scores).reduce(function(a,b){return a+b;},0);
   var confidence = Math.min(100, Math.round((maxScore / Math.max(1, totalSignals)) * 100 + (maxScore * 10)));
 
   var category = 'general';
-  for (var [cat, pats] of Object.entries(CATEGORY_PATTERNS)) {
+  var __keys=Object.keys(CATEGORY_PATTERNS); for(var __ki=0;__ki<__keys.length;__ki++){var cat=__keys[__ki]; var pats=CATEGORY_PATTERNS[cat]; {
     if (pats.some(function(r){return r.test(text);})) { category = cat; break; }
   }
 
@@ -991,9 +993,16 @@ function analyzeInput(text) {
   showPrev(priority, category, date, confidence);
 }
 
-function toLocalInputDate(d) {
-  var pad = function(n){return String(n)+'';}.padStart(2,'0');
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function toLocalInputDate(date) {
+  if (!date) return '';
+  var d = new Date(date);
+  if (isNaN(d.getTime())) return '';
+  var yr  = d.getFullYear();
+  var mo  = ('0' + (d.getMonth()+1)).slice(-2);
+  var dy  = ('0' + d.getDate()).slice(-2);
+  var hr  = ('0' + d.getHours()).slice(-2);
+  var mn  = ('0' + d.getMinutes()).slice(-2);
+  return yr + '-' + mo + '-' + dy + 'T' + hr + ':' + mn;
 }
 
 function showPrev(priority, category, date, confidence) {
@@ -1062,7 +1071,7 @@ function shakeInput() {
   var inp = document.getElementById('main-input');
   inp.style.animation = 'none';
   inp.style.borderColor = 'var(--urgent-badge)';
-  setTimeout(() => { inp.style.borderColor = ''; }, 1000);
+  setTimeout(function() { inp.style.borderColor = ''; }, 1000);
 }
 
 function handleKey(e) {
@@ -1075,7 +1084,7 @@ function toggleNotif() {
   var el = document.getElementById('notif-toggle');
   el.classList.toggle('on', notifEnabled);
   if (notifEnabled && 'Notification' in window) {
-    Notification.requestPermission().then(p => {
+    Notification.requestPermission().then(function(p) {
       if (p === 'granted') showBanner(t('notifGranted'));
       else { showBanner(t('notifDenied')); notifEnabled = false; el.classList.remove('on'); }
     });
@@ -1086,7 +1095,7 @@ function scheduleNotif(item) {
   if (!item.dueDate || Notification.permission !== 'granted') return;
   var ms = new Date(item.dueDate) - Date.now() - 15*60*1000; // 15 min before
   if (ms > 0) {
-    setTimeout(() => {
+    setTimeout(function() {
       new Notification('⏰ ' + (lang==='he'?'תזכורת':'Reminder'), {
         body: item.text.substring(0,80),
         icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text y="26" font-size="28">📋</text></svg>'
@@ -1101,7 +1110,7 @@ function render() {
   var emptyState = document.getElementById('empty');
   var sortBy = document.getElementById('sort-sel').value;
 
-  var filtered = [...items];
+  var filtered = [];
   if (currentFilter === 'done') filtered = filtered.filter(function(i){return i.done;});
   else if (currentFilter !== 'all') filtered = filtered.filter(function(i){return !i.done && i.priority === currentFilter;});
   else filtered = filtered.filter(function(i){return !i.done;});
@@ -1201,32 +1210,33 @@ function escHtml(s) {
 
 // ── INLINE EDIT ──
 function editItem(id) {
-  var item = items.find(function(i){return i.id === id;});
+  var item = items.find(function(i){return i.id===id;});
   if (!item) return;
-  var card = document.getElementById('card-' + id);
+  var card = document.getElementById('card-'+id);
   if (!card) return;
-
   card.classList.add('editing');
-  var body = card.querySelector('.item-body');
-  var dueVal = item.dueDate ? toLocalInputDate(new Date(item.dueDate)) : '';
+  var body = card.querySelector('.ibdy');
+  if (!body) return;
 
-  body.innerHTML = `
-    <textarea class="edit-ta" id="edit-ta-${id}" onkeydown="editKey(event,${id})">${item.text.replace(/</g,'&lt;')}</textarea>
-    <div class="edit-row">
-      <button class="e-save" onclick="saveEdit(${id})">${lang==='he'?'💾 שמור':'💾 Save'}</button>
-      <button class="e-cancel" onclick="cancelEdit(${id})">${lang==='he'?'ביטול':'Cancel'}</button>
-      <select class="e-pri" id="edit-pr-${id}">
-        <option value="urgent" ${item.priority==='urgent'?'selected':''}>${t('priorities','urgent')}</option>
-        <option value="high"   ${item.priority==='high'?'selected':''}>${t('priorities','high')}</option>
-        <option value="normal" ${item.priority==='normal'?'selected':''}>${t('priorities','normal')}</option>
-        <option value="low"    ${item.priority==='low'?'selected':''}>${t('priorities','low')}</option>
-      </select>
-      <input type="datetime-local" class="e-due" id="edit-due-${id}" value="${dueVal}">
-    </div>`;
+  var prOpts = ['urgent','high','normal','low'].map(function(p){
+    return '<option value="'+p+'"'+(item.priority===p?' selected':'')+'>'+t('priorities',p)+'</option>';
+  }).join('');
 
-  var ta = document.getElementById('edit-ta-' + id);
+  var dueVal = item.dueDate ? toLocalInputDate(item.dueDate) : '';
+
+  body.innerHTML =
+    '<textarea class="eta" id="eta-'+id+'" rows="3">'+escHtml(item.text)+'</textarea>' +
+    '<div class="erow">' +
+      '<button class="esave" onclick="saveEdit('+id+')">💾 '+(lang==='he'?'שמור':'Save')+'</button>' +
+      '<button class="ecancel" onclick="cancelEdit('+id+')">✕ '+(lang==='he'?'ביטול':'Cancel')+'</button>' +
+      '<select class="epri" id="epri-'+id+'">' + prOpts + '</select>' +
+      '<input type="datetime-local" class="edue" id="edue-'+id+'" value="'+dueVal+'">' +
+    '</div>';
+
+  var ta = document.getElementById('eta-'+id);
   if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
 }
+
 
 function editKey(e, id) {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveEdit(id); }
@@ -1234,29 +1244,27 @@ function editKey(e, id) {
 }
 
 function saveEdit(id) {
-  var item = items.find(function(i){return i.id === id;});
+  var item = items.find(function(i){return i.id===id;});
   if (!item) return;
-  var ta = document.getElementById('edit-ta-' + id);
-  var pr = document.getElementById('edit-pr-' + id);
-  var due = document.getElementById('edit-due-' + id);
-  if (!ta) return;
-  var newText = ta.value.trim();
-  if (!newText) return;
-  item.text = newText;
-  if (pr) item.priority = pr.value;
-  if (due) item.dueDate = due.value ? new Date(due.value).toISOString() : null;
-  item.editedAt = new Date().toISOString();
+  var ta   = document.getElementById('eta-'+id);
+  var pri  = document.getElementById('epri-'+id);
+  var due  = document.getElementById('edue-'+id);
+  if (ta && ta.value.trim()) item.text = ta.value.trim();
+  if (pri) item.priority = pri.value;
+  if (due) item.dueDate  = due.value ? new Date(due.value).toISOString() : null;
   save();
   render();
-  showBanner(lang==='he' ? '✅ נשמר!' : '✅ Saved!');
+  showBanner(lang==='he'?'✅ נשמר!':'✅ Saved!');
 }
+
 
 function cancelEdit(id) {
-  render(); // just re-render to restore original card
+  var card = document.getElementById('card-'+id);
+  if (card) card.classList.remove('editing');
+  render();
 }
 
 
-// ── ACTIONS ──
 function toggleDone(id) {
   var item = items.find(function(i){return i.id===id;});
   if (!item) return;
@@ -1273,7 +1281,7 @@ function deleteItem(id) {
   var card = document.getElementById('card-' + id);
   if (card) {
     card.classList.add('removing');
-    setTimeout(() => { items = items.filter(function(i){return i.id!==id;}); save(); render(); }, 260);
+    setTimeout(function() { items = items.filter(function(i){return i.id!==id;}); save(); render(); }, 260);
   } else {
     items = items.filter(function(i){return i.id!==id;}); save(); render();
   }
@@ -1426,13 +1434,13 @@ function showBanner(msg) {
   b.textContent = msg;
   b.style.display = 'block';
   clearTimeout(bannerTimer);
-  bannerTimer = setTimeout(() => { b.style.display='none'; }, 2200);
+  bannerTimer = setTimeout(function() { b.style.display='none'; }, 2200);
 }
 
 // ── CHECK OVERDUE PERIODICALLY ──
 function checkOverdue() {
   var now = new Date();
-  items.forEach(item => {
+  items.forEach(function(item) {
     if (item.done || !item.dueDate || item._alerted) return;
     var due = new Date(item.dueDate);
     if (due < now && due > new Date(now - 60000)) {
@@ -1931,8 +1939,8 @@ function addSummaryTask(idx) {
 
 function exportAllTasks() {
   if (!summaryTasks.length) return;
-  summaryTasks.forEach((t, i) => {
-    if (document.getElementById('stask-btn-'+i)?.classList.contains('added')) return;
+  summaryTasks.forEach(function(t, i) {
+    var __btn=document.getElementById('stask-btn-'+i); if (__btn && __btn.classList.contains('added')) return;
     var item = {
       id: Date.now() + i + Math.random(),
       text: (t.who ? t.who + ': ' : '') + t.text,
@@ -1948,7 +1956,7 @@ function exportAllTasks() {
     if (btn) { btn.textContent = lang==='he'?'✓ נוסף':'✓ Added'; btn.classList.add('done'); btn.disabled=true; }
   });
   save();
-  showBanner(lang==='he' ? (lang==='he'?'✅ '+summaryTasks.length+' משימות נוספו!':'✅ '+summaryTasks.length+' tasks added!') : `✅ ${summaryTasks.length} tasks added!`);
+  showBanner(lang==='he' ? (lang==='he'?'✅ '+summaryTasks.length+' משימות נוספו!':'✅ '+summaryTasks.length+' tasks added!') : '✅ ' + summaryTasks.length + ' tasks added!');
 }
 
 // ── SUMMARY VOICE ──
@@ -1963,8 +1971,8 @@ function startSumVoice() {
   sumRecognition.lang = voiceLang;
   sumRecognition.continuous = true;
   sumRecognition.interimResults = true;
-  sumRecognition.onstart = () => { sumListening = true; updateSumMicUI(true); };
-  sumRecognition.onresult = (e) => {
+  sumRecognition.onstart = function() { sumListening = true; updateSumMicUI(true); };
+  sumRecognition.onresult = function(e) {
     var final = '';
     for (var i = e.resultIndex; i < e.results.length; i++) {
       if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
@@ -1975,8 +1983,8 @@ function startSumVoice() {
       updateCharCount(ta);
     }
   };
-  sumRecognition.onerror = () => stopSumVoice();
-  sumRecognition.onend = () => { if (sumListening) try { sumRecognition.start(); } catch(e){} };
+  sumRecognition.onerror = function() { stopSumVoice(); };
+  sumRecognition.onend = function() { if (sumListening) try { sumRecognition.start(); } catch(e){} };
   try { sumRecognition.start(); } catch(e) {}
 }
 
@@ -2004,6 +2012,7 @@ var autoBackupEnabled = localStorage.getItem('autoBackup') === 'true';
 var lastBackupTime = parseInt(localStorage.getItem('lastBackupTime') || '0');
 
 function initBackupUI() {
+  if (!document.getElementById("backup-bar")) return;
   var tog = document.getElementById('auto-backup-toggle');
   if (tog) tog.classList.toggle('on', autoBackupEnabled);
   updateBackupStatus();
@@ -2140,7 +2149,7 @@ function initTagUI() {
 
 function selectColor(c) {
   currentTagColor = c;
-  document.querySelectorAll('.color-dot').forEach(d => {
+  document.querySelectorAll('.color-dot').forEach(function(d) {
     d.classList.toggle('sel', d.style.background === c || d.style.backgroundColor === c);
   });
 }
@@ -2165,7 +2174,7 @@ function saveNewTag() {
 function deleteTag(id) {
   tags = tags.filter(function(t){return t.id !== id;});
   // remove from items
-  items.forEach(item => { if (item.tags) item.tags = item.tags.filter(function(tid){return tid !== id;}); });
+  items.forEach(function(item) { if (item.tags) item.tags = item.tags.filter(function(tid){return tid !== id;}); });
   localStorage.setItem('smartTags_v1', JSON.stringify(tags));
   save();
   renderTagList();
@@ -2249,7 +2258,7 @@ function importJSON() {
 function handleImport(e) {
   var file = e.target.files[0]; if (!file) return;
   var reader = new FileReader();
-  reader.onload = ev => {
+  reader.onload = function(ev) {
     try {
       var data = JSON.parse(ev.target.result);
       if (data.items) { items = data.items; save(); }
@@ -2696,15 +2705,19 @@ function quickAdd() {
   }
   var text = inp.value.trim();
   analyzeInput(text);
-  var item = {
+  var priority = 'normal', category = 'general', dueDate = null;
+  try {
+    if (analysisResult && analysisResult.priority) priority = analysisResult.priority;
+    if (analysisResult && analysisResult.category) category = analysisResult.category;
+    if (analysisResult && analysisResult.date) dueDate = analysisResult.date.toISOString();
+  } catch(e) {}
+  var newItem = {
     id: Date.now(), text: text,
-    priority: analysisResult.priority || 'normal',
-    category: analysisResult.category || 'general',
+    priority: priority, category: category,
     done: false, createdAt: new Date().toISOString(),
-    dueDate: analysisResult.date ? analysisResult.date.toISOString() : null,
-    notify: false
+    dueDate: dueDate, notify: false
   };
-  items.unshift(item);
+  items.unshift(newItem);
   save();
   inp.value = '';
   showBanner(lang==='he'?'✅ נוסף!':'✅ Added!');
@@ -2760,6 +2773,7 @@ function initApp() {
   try { checkOverdue(); } catch(e){}
 }
 
+}
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
 } else {
@@ -2771,6 +2785,11 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('SW:',e);});
   });
 }
-</script>
+
+} catch(e) {
+  console.error("SCRIPT ERR: " + e.message);
+  document.title = "ERR:" + e.message;
+}
+})();</script>
 </body>
 </html>
