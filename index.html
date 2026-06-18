@@ -499,7 +499,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px;}
       <button class="ttab" id="tab-list" onclick="switchView('list')">
         <span id="tab-list-lbl">משימות</span>
       </button>
-      <button class="ttab" id="tab-summary" onclick="switchTab('summary');switchView('list')">
+      <button class="ttab" id="tab-summary" onclick="switchView('summary')">
         <span id="tab-sum-lbl">סיכום</span>
       </button>
     </div>
@@ -1323,7 +1323,7 @@ function applyLang() {
   safeText('app-title', t('appTitle'));
   safeText('app-sub', t('appSub'));
   safeText('input-lbl', t('inputLbl'));
-  safeText('add-lbl', t('addLbl'));
+  safeText('add-lbl', t('addLbl') || (lang==='he'?'הוסף':'Add'));
   safeText('due-lbl', t('dueLbl'));
   safeText('notif-lbl', t('notifLbl'));
   safeText('filter-lbl', t('filterLbl'));
@@ -1372,6 +1372,38 @@ function applyLang() {
   safeText('voice-status-lbl', t('voiceStatusLbl'));
   document.getElementById('main-input').placeholder = t('placeholder');
   checkMicSupport();
+  safeText('add-lbl',     lang==='he'?'הוסף':'Add');
+  safeText('mic-lbl',     lang==='he'?'דיבור':'Speak');
+  safeText('due-lbl',     lang==='he'?'מועד אחרון':'Due date');
+  safeText('notif-lbl',   lang==='he'?'תזכורת':'Remind me');
+  safeText('section-title', lang==='he'?'משימות פעילות':'Active Items');
+  safeText('clear-done-lbl', lang==='he'?'נקה הושלם':'Clear Done');
+  safeText('tags-lbl',    lang==='he'?'תגיות':'Tags');
+  safeText('export-lbl',  lang==='he'?'ייצוא':'Export');
+  safeText('filter-lbl',  lang==='he'?'סינון:':'Filter:');
+  safeText('f-all-lbl',   lang==='he'?'הכל':'All');
+  safeText('f-urgent-lbl',lang==='he'?'דחוף':'Urgent');
+  safeText('f-high-lbl',  lang==='he'?'גבוה':'High');
+  safeText('f-normal-lbl',lang==='he'?'רגיל':'Normal');
+  safeText('f-low-lbl',   lang==='he'?'נמוך':'Low');
+  safeText('f-done-lbl',  lang==='he'?'הושלם':'Done');
+  var si=document.getElementById('search-input'); if(si) si.placeholder=lang==='he'?'חיפוש...':'Search...';
+  var so=document.getElementById('sort-sel'); if(so){so.options[0].text=lang==='he'?'עדיפות':'Priority';so.options[1].text=lang==='he'?'תאריך':'Date';so.options[2].text=lang==='he'?'חדש':'Newest';}
+  safeText('input-lbl',   lang==='he'?'הכתב תזכורת, הערה או משימה':'Type a reminder, note or task');
+  safeText('backup-now-btn', lang==='he'?'גיבוי עכשיו':'Backup Now');
+  safeText('auto-backup-lbl', lang==='he'?'אוטו':'Auto');
+  safeText('export-modal-title', lang==='he'?'ייצוא נתונים':'Export Data');
+  safeText('exp-pdf-title', lang==='he'?'PDF / הדפסה':'PDF / Print');
+  safeText('exp-json-title', lang==='he'?'ייצוא JSON':'Export JSON');
+  safeText('exp-import-title', lang==='he'?'ייבוא JSON':'Import JSON');
+  safeText('exp-csv-title', lang==='he'?'ייצוא CSV':'Export CSV');
+  safeText('modal-close-lbl', lang==='he'?'סגור':'Close');
+  safeText('sum-analyze-lbl', lang==='he'?'נתח שיחה':'Analyze');
+  safeText('sum-clear-lbl', lang==='he'?'נקה':'Clear');
+  safeText('sum-mic-lbl', lang==='he'?'הכתבה בדיבור':'Dictate');
+  safeText('sum-input-lbl', lang==='he'?'הדבק תמליל שיחה או הכתב בדיבור':'Paste transcript or dictate');
+  var sta=document.getElementById('sum-textarea'); if(sta) sta.placeholder=lang==='he'?'הדבק כאן את תמליל השיחה...':'Paste conversation transcript here...';
+
   safeText('tab-rem-lbl', t('tabHomeLbl'));
   safeText('tab-list-lbl', t('tabListLbl'));
   safeText('tab-sum-lbl', t('tabSumLbl'));
@@ -1458,8 +1490,9 @@ var voiceLang = (localStorage.getItem('smartReminders_lang') || 'he') === 'he' ?
 function initSpeechRecognition() {
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    document.getElementById('mic-btn').classList.add('unsupported');
-    document.getElementById('mic-btn').title = (lang==='he'?'זיהוי דיבור לא נתמך בדפדפן זה':'Not supported in this browser');
+    var mb = document.getElementById('mic-btn');
+    if (mb) mb.classList.add('off');
+    // title not needed
     return null;
   }
   var rec = new SpeechRecognition();
@@ -1470,49 +1503,47 @@ function initSpeechRecognition() {
 
   rec.onstart = function() {
     isListening = true;
-    updateMicUI(true);
+    var btn = document.getElementById('mic-btn');
+    var icon = document.getElementById('mic-icon');
+    if (btn) btn.classList.add('pulse');
+    if (icon) icon.textContent = '⏹️';
+    var vb = document.getElementById('vbar');
+    if (vb) { vb.style.display = 'flex'; vb.style.alignItems = 'center'; }
   };
 
   rec.onresult = function(e) {
-    var interim = '';
-    var final = '';
+    var finalText = '';
+    var interimText = '';
     for (var i = e.resultIndex; i < e.results.length; i++) {
-      var transcript = e.results[i][0].transcript;
-      if (e.results[i].isFinal) final += transcript + ' ';
-      else interim += transcript;
+      if (e.results[i].isFinal) {
+        finalText += e.results[i][0].transcript;
+      } else {
+        interimText += e.results[i][0].transcript;
+      }
     }
-    // show interim text in preview
-    document.getElementById('vi').textContent = interim;
-    // append final to textarea
-    if (final.trim()) {
-      var inp = document.getElementById('main-input');
-      inp.value += (inp.value && !inp.value.endsWith(' ') ? ' ' : '') + final.trim();
+    var inp = document.getElementById('main-input');
+    if (inp && finalText) {
+      inp.value = (inp.value + ' ' + finalText).trim();
       analyzeInput(inp.value);
-      document.getElementById('vi').textContent = '';
     }
+    var vi = document.getElementById('vi');
+    if (vi) vi.textContent = interimText;
   };
 
   rec.onerror = function(e) {
-    console.warn('Speech error:', e.error);
-    if (e.error === 'not-allowed') {
-      showBanner(lang==='he' ? '❌ גישה למיקרופון נדחתה' : '❌ Microphone access denied');
-    } else if (e.error === 'no-speech') {
-      // just restart silently
-    }
     stopVoice();
+    if (e.error === 'not-allowed') {
+      showBanner(lang === 'he' ? '❌ גישה למיקרופון נדחתה' : '❌ Microphone access denied');
+    }
   };
 
   rec.onend = function() {
-    if (isListening) {
-      // auto-restart if still supposed to be listening
-      try { rec.start(); } catch(e) {}
-    } else {
-      updateMicUI(false);
-    }
+    if (isListening) rec.start(); // keep alive
   };
 
   return rec;
 }
+
 
 function toggleVoice() {
   var btn = document.getElementById('mic-btn');
@@ -2674,27 +2705,43 @@ function updateDonut() {
 var currentView = 'home';
 function switchView(view) {
   currentView = view;
-  var home = document.getElementById('view-home');
-  var list = document.getElementById('view-list');
-  if (!home||!list) return;
-  if (view==='home') {
-    home.classList.add('on');
-    list.classList.remove('on');
-    document.getElementById('tab-reminders').classList.add('on');
-    document.getElementById('tab-list').classList.remove('on');
-    document.getElementById('tab-summary').classList.remove('on');
+  var home    = document.getElementById('view-home');
+  var list    = document.getElementById('view-list');
+  var sumPanel = document.getElementById('summary-panel');
+  var remPanel = document.getElementById('reminders-panel');
+  var tabHome = document.getElementById('tab-reminders');
+  var tabList = document.getElementById('tab-list');
+  var tabSum  = document.getElementById('tab-summary');
+
+  // Reset all tabs
+  if (tabHome) tabHome.classList.remove('on');
+  if (tabList) tabList.classList.remove('on');
+  if (tabSum)  tabSum.classList.remove('on');
+
+  if (view === 'home') {
+    if (home) home.classList.add('on');
+    if (list) list.classList.remove('on');
+    if (tabHome) tabHome.classList.add('on');
     updateDashboard();
-  } else {
-    home.classList.remove('on');
-    list.classList.add('on');
-    document.getElementById('tab-reminders').classList.remove('on');
-    if (!document.getElementById('summary-panel').classList.contains('on')) {
-      document.getElementById('tab-list').classList.add('on');
-    }
+  } else if (view === 'list') {
+    if (home) home.classList.remove('on');
+    if (list) list.classList.add('on');
+    if (tabList) tabList.classList.add('on');
+    // Show reminders panel, hide summary
+    if (sumPanel) sumPanel.classList.remove('on');
+    if (remPanel) remPanel.classList.remove('off');
+    render();
+  } else if (view === 'summary') {
+    if (home) home.classList.remove('on');
+    if (list) list.classList.add('on');
+    if (tabSum) tabSum.classList.add('on');
+    // Show summary panel, hide reminders
+    if (sumPanel) sumPanel.classList.add('on');
+    if (remPanel) remPanel.classList.add('off');
   }
 }
 
-// Quick add from home hero
+
 function quickAdd() {
   var inp = document.getElementById('quick-input');
   if (!inp || !inp.value.trim()) {
