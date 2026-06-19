@@ -589,6 +589,11 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
   <div class="panel-hdr">
     <button class="panel-back" onclick="switchView('home')">←</button>
     <span class="panel-title-txt" id="shop-panel-title">רשימת קניות</span>
+    <div style="margin-right:auto;margin-left:0;display:flex;gap:6px">
+      <button class="tbtn" onclick="shareShopList('copy')" id="shop-copy-btn" style="font-size:11px;padding:5px 10px">📋</button>
+      <button class="tbtn" onclick="shareShopList('whatsapp')" style="font-size:11px;padding:5px 10px">💬</button>
+      <button class="tbtn" onclick="shareShopList('email')" style="font-size:11px;padding:5px 10px">✉️</button>
+    </div>
   </div>
   <div class="inp-card">
     <div class="inp-lbl">🛒 <span id="shop-input-lbl">הוסף פריטים</span></div>
@@ -2192,7 +2197,8 @@ function addShopItems() {
 
 function parseAndAddShopItems(text) {
   // Split by comma, newline, "and"/"ו"
-  var parts = text.split(/[,\n]|ו(?=[א-ת])/);
+  // Split only on comma or newline — never split Hebrew words
+  var parts = text.split(/[,\n]+/);
   for (var i = 0; i < parts.length; i++) {
     var p = parts[i].trim();
     if (!p) continue;
@@ -2474,6 +2480,103 @@ function clearAllSummaries() {
   savedSummaries = [];
   localStorage.setItem('smSummaries', '[]');
   renderSavedSummaries();
+}
+
+
+// ═══════════════════════════════
+// SHARE SHOPPING LIST
+// ═══════════════════════════════
+
+function buildShopText() {
+  var active = shopItems.filter(function(i) { return !i.got; });
+  var done   = shopItems.filter(function(i) { return i.got; });
+  var title  = lang === 'he' ? '🛒 רשימת קניות' : '🛒 Shopping List';
+  var lines  = [title, ''];
+  // Active items by category
+  var cats = {};
+  for (var i = 0; i < active.length; i++) {
+    var item = active[i];
+    var c = item.cat || 'general';
+    if (!cats[c]) cats[c] = [];
+    cats[c].push(item);
+  }
+  var catKeys = Object.keys(cats);
+  for (var ci = 0; ci < catKeys.length; ci++) {
+    var ck = catKeys[ci];
+    if (SHOP_CATS[ck]) {
+      lines.push((lang==='he' ? SHOP_CATS[ck].he : SHOP_CATS[ck].en) + ':');
+    }
+    var catItems = cats[ck];
+    for (var ii = 0; ii < catItems.length; ii++) {
+      var it = catItems[ii];
+      lines.push('  ☐ ' + it.name + (it.qty && it.qty !== '1' ? ' × ' + it.qty : ''));
+    }
+    lines.push('');
+  }
+  if (done.length) {
+    lines.push(lang === 'he' ? '✅ נאסף:' : '✅ Collected:');
+    for (var di = 0; di < done.length; di++) {
+      lines.push('  ✓ ' + done[di].name);
+    }
+  }
+  lines.push('');
+  lines.push(lang === 'he' ? '—מזכיר חכם—' : '—Smart Reminder—');
+  return lines.join('\n');
+}
+
+function shareShopList(method) {
+  if (!shopItems.length) {
+    showBanner(lang === 'he' ? '⚠️ הרשימה ריקה' : '⚠️ List is empty');
+    return;
+  }
+  var text = buildShopText();
+
+  if (method === 'copy') {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        showBanner(lang === 'he' ? '📋 הועתק ללוח!' : '📋 Copied to clipboard!');
+      }).catch(function() {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  } else if (method === 'whatsapp') {
+    var enc = encodeURIComponent(text);
+    // Try native share API first (iOS), fallback to WhatsApp URL
+    if (navigator.share) {
+      navigator.share({ text: text }).catch(function() {
+        window.open('https://api.whatsapp.com/send?text=' + enc, '_blank');
+      });
+    } else {
+      window.open('whatsapp://send?text=' + enc);
+      // Fallback for desktop
+      setTimeout(function() {
+        window.open('https://api.whatsapp.com/send?text=' + enc, '_blank');
+      }, 500);
+    }
+  } else if (method === 'email') {
+    var subj = encodeURIComponent(lang === 'he' ? 'רשימת קניות' : 'Shopping List');
+    var body = encodeURIComponent(text);
+    window.open('mailto:?subject=' + subj + '&body=' + body);
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity  = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showBanner(lang === 'he' ? '📋 הועתק ללוח!' : '📋 Copied to clipboard!');
+  } catch(e) {
+    showBanner(lang === 'he' ? '❌ שגיאה בהעתקה' : '❌ Copy failed');
+  }
+  document.body.removeChild(ta);
 }
 
 if (document.readyState === 'loading') {
