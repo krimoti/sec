@@ -604,10 +604,23 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
         <button class="btn-sq" id="shop-mic-btn" onclick="toggleShopVoice()"><span id="shop-mic-icon">🎤</span></button>
         <button class="btn-sq" onclick="clearShopDone()">✅</button>
       </div>
-      <div id="shop-vbar" style="display:none;align-items:center;gap:7px;background:rgba(239,68,68,.07);border-radius:10px;padding:7px 11px;font-size:12px;color:var(--ur);font-weight:600">
+      <div id="shop-vbar" style="display:none;align-items:center;gap:7px;background:rgba(239,68,68,.07);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--ur);font-weight:600">
         <div class="vw"><b></b><b></b><b></b><b></b><b></b></div>
-        <span id="shop-voice-lbl">מאזין...</span>
-        <span id="shop-interim" style="flex:1;font-style:italic;color:var(--t3);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+        <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+          <span id="shop-voice-lbl" style="font-size:10px;opacity:.8">מאזין...</span>
+          <span id="shop-interim" style="font-size:14px;color:var(--t1);font-weight:600;font-style:italic;direction:auto;min-height:18px"></span>
+          <div style="display:flex;align-items:center;gap:6px;direction:ltr">
+            <span style="font-size:9px;opacity:.6">הפסקה:</span>
+            <input type="range" id="pause-slider" min="500" max="3000" step="100" value="1200"
+              style="flex:1;height:3px;accent-color:var(--ur);cursor:pointer"
+              oninput="updatePauseTime(this.value)">
+            <span id="pause-lbl" style="font-size:9px;font-family:monospace;opacity:.7;min-width:28px">1.2s</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span id="shop-added-count" style="background:var(--lo);color:#fff;border-radius:100px;padding:2px 8px;font-size:11px;font-weight:700;min-width:24px;text-align:center">0</span>
+          <span style="font-size:8px;opacity:.5">פריטים</span>
+        </div>
       </div>
       <div id="shop-hints" style="display:flex;gap:5px;flex-wrap:wrap"></div>
     </div>
@@ -2198,7 +2211,7 @@ function addShopItems() {
 function parseAndAddShopItems(text) {
   // Split by comma, newline, "and"/"ו"
   // Split only on comma or newline — never split Hebrew words
-  var parts = text.split(/[,\n]+/);
+  var parts = text.replace(/\n/g, ',').split(',');
   for (var i = 0; i < parts.length; i++) {
     var p = parts[i].trim();
     if (!p) continue;
@@ -2327,6 +2340,12 @@ function handleShopKey(e) {
 }
 
 // Shop voice
+// Track what was already added during this voice session
+var shopVoiceAdded = [];
+var shopBuffer = '';
+var shopPauseTimer = null;
+var PAUSE_MS = 1200;
+
 function initShopVoice() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { var sb = $('shop-mic-btn'); if (sb) sb.classList.add('off'); return; }
@@ -2335,20 +2354,88 @@ function initShopVoice() {
   shopRecognition.continuous = true;
   shopRecognition.interimResults = true;
 
-  shopRecognition.onresult = function(e) {
-    var final = '', interim = '';
-    for (var i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) final += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
+  // Pause-based commit: buffer interim text and commit after silence
+
+  // Stop words that force commit immediately
+  var STOP_WORDS_HE = ['הוסף','סיום','הבא','נקודה','ועוד','וגם'];
+  var STOP_WORDS_EN = ['add','next','done','period','also','and'];
+
+  function commitShopBuffer(text) {
+    if (!text || !text.trim()) return;
+    var cleaned = text.trim()
+      .replace(/^(הוסף|סיום|הבא|נקודה|add|next|done|period)\s*/i,'')
+      .trim();
+    if (!cleaned) return;
+    // Deduplicate
+    var dup = false;
+    for (var k = 0; k < shopVoiceAdded.length; k++) {
+      if (shopVoiceAdded[k].toLowerCase() === cleaned.toLowerCase()) {
+        dup = true; break;
+      }
     }
-    safeText('shop-interim', interim);
-    if (final) {
-      parseAndAddShopItems(final);
-      showBanner(lang === 'he' ? '✅ פריטים נוספו!' : '✅ Items added!');
+    if (dup) return;
+    shopVoiceAdded.push(cleaned);
+    var cat = detectShopCategory(cleaned);
+    shopItems.push({id: Date.now(), name: cleaned, qty: '1', got: false, cat: cat});
+    saveShop();
+    renderShop();
+    var cnt = $('shop-added-count');
+    if (cnt) cnt.textContent = shopVoiceAdded.length + '';
+    showBanner('✅ ' + cleaned);
+    shopBuffer = '';
+    var si = $('shop-interim');
+    if (si) si.textContent = '';
+  }
+
+  shopRecognition.onresult = function(e) {
+    var interim = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) {
+        var txt = e.results[i][0].transcript.trim();
+        // Check for stop word → commit immediately
+        var stopWords = lang === 'he' ? STOP_WORDS_HE : STOP_WORDS_EN;
+        var hasStop = false;
+        for (var sw = 0; sw < stopWords.length; sw++) {
+          var re2 = new RegExp('(^|\\s)' + stopWords[sw] + '(\\s|$)', 'i');
+          if (re2.test(txt)) { hasStop = true; break; }
+        }
+        if (hasStop) {
+          // Commit current buffer + this word (minus stop word)
+          commitShopBuffer((shopBuffer + ' ' + txt).trim());
+          if (shopPauseTimer) { clearTimeout(shopPauseTimer); shopPauseTimer = null; }
+        } else {
+          // Check for comma → split into multiple items
+          if (txt.indexOf(',') >= 0) {
+            var parts = txt.split(',');
+            for (var pi = 0; pi < parts.length; pi++) {
+              commitShopBuffer(parts[pi].trim());
+            }
+            if (shopPauseTimer) { clearTimeout(shopPauseTimer); shopPauseTimer = null; }
+          } else {
+            // Accumulate in buffer, reset pause timer
+            shopBuffer = (shopBuffer + ' ' + txt).trim();
+            if (shopPauseTimer) clearTimeout(shopPauseTimer);
+            shopPauseTimer = setTimeout(function() {
+              commitShopBuffer(shopBuffer);
+              shopPauseTimer = null;
+            }, PAUSE_MS);
+          }
+        }
+        interim = '';
+      } else {
+        interim += e.results[i][0].transcript;
+      }
+    }
+    var si = $('shop-interim');
+    if (si) si.textContent = interim || shopBuffer || '';
+  };
+
+  shopRecognition.onerror = function() { stopShopVoice(); };
+  shopRecognition.onend   = function() {
+    if (isShopListening) {
+      try { shopRecognition.start(); } catch(e2) {}
     }
   };
-  shopRecognition.onerror  = function() { stopShopVoice(); };
-  shopRecognition.onend    = function() { if (isShopListening) { try { shopRecognition.start(); } catch(e2) {} } };
 }
 
 function toggleShopVoice() {
@@ -2356,10 +2443,15 @@ function toggleShopVoice() {
   else {
     if (!shopRecognition) { showBanner(lang==='he'?'❌ לא נתמך':'❌ Not supported'); return; }
     isShopListening = true;
+    shopVoiceAdded = []; // reset for new session
     var btn  = $('shop-mic-btn');
     var icon = $('shop-mic-icon');
     if (btn)  btn.classList.add('pulse');
     if (icon) icon.textContent = '⏹️';
+    var cnt = $('shop-added-count');
+    if (cnt) cnt.textContent = '0';
+    var lbl = $('shop-voice-lbl');
+    if (lbl) lbl.textContent = lang==='he' ? 'מאזין · עצור 1.2 שנ\' = שורה חדשה · \'הוסף\' = הוסף מיד' : 'Listening · 1.2s pause = new item · say \'add\' to commit';
     var vb = $('shop-vbar');
     if (vb) { vb.style.display = 'flex'; vb.style.alignItems = 'center'; }
     try { shopRecognition.start(); } catch(e) {}
@@ -2368,6 +2460,9 @@ function toggleShopVoice() {
 
 function stopShopVoice() {
   isShopListening = false;
+  shopVoiceAdded = []; // reset for next session
+  shopBuffer = '';
+  if (shopPauseTimer) { clearTimeout(shopPauseTimer); shopPauseTimer = null; }
   var btn  = $('shop-mic-btn');
   var icon = $('shop-mic-icon');
   if (btn)  btn.classList.remove('pulse');
@@ -2486,6 +2581,13 @@ function clearAllSummaries() {
 // ═══════════════════════════════
 // SHARE SHOPPING LIST
 // ═══════════════════════════════
+
+
+function updatePauseTime(val) {
+  PAUSE_MS = parseInt(val);
+  var lbl = $('pause-lbl');
+  if (lbl) lbl.textContent = (PAUSE_MS/1000).toFixed(1) + 's';
+}
 
 function buildShopText() {
   var active = shopItems.filter(function(i) { return !i.got; });
