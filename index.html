@@ -39,7 +39,8 @@
 [data-theme=dark]{--bg:#0a0f1e;--card:#111827;--c2:#1e2a3a;--bd:rgba(59,130,246,.15);--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--ac:#3b82f6;--acs:rgba(59,130,246,.12);--sh:0 2px 8px rgba(0,0,0,.3);--sh2:0 4px 20px rgba(0,0,0,.4);--ur:#f87171;--hi:#fbbf24;--lo:#4ade80}
 @media(prefers-color-scheme:dark){[data-theme=auto]{--bg:#0a0f1e;--card:#111827;--c2:#1e2a3a;--bd:rgba(59,130,246,.15);--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--ac:#3b82f6;--acs:rgba(59,130,246,.12);--sh:0 2px 8px rgba(0,0,0,.3);--sh2:0 4px 20px rgba(0,0,0,.4);--ur:#f87171;--hi:#fbbf24;--lo:#4ade80}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
+html{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--t1);height:100%;-webkit-font-smoothing:antialiased;overflow:hidden;position:fixed;inset:0;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
 /* TOPBAR */
 .tb{background:var(--card);border-bottom:1px solid var(--bd);box-shadow:var(--sh);position:sticky;top:0;z-index:100;padding-top:env(safe-area-inset-top)}
 .tb-in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:10px 14px;direction:ltr}
@@ -52,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-se
 .thb-single{border:none;background:var(--c2);cursor:pointer;width:34px;height:34px;border-radius:50%;font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh);transition:all .25s;flex-shrink:0}
 .thb-single:active{transform:scale(.9)}
 /* MAIN */
-#mn{max-width:640px;margin:0 auto;padding:0 14px 110px}
+#mn{max-width:640px;margin:0 auto;padding:0 14px 110px;height:calc(100% - 60px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
 /* PANELS */
 .pnl{display:none}.pnl.on{display:block}
 /* SETUP */
@@ -409,6 +410,13 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
       <button class="qb" onclick="quickAdd()" id="qbtn">פתק</button>
     </div>
   </div>
+  <div class="bkp" id="bkbar">
+    <span>💾</span><span id="bkst" class="warn">טרם גיבוי</span>
+    <button class="bkbtn" onclick="doBackup()" id="bknow">גיבוי עכשיו</button>
+    <label class="bkauto" onclick="toggleAutoBackup()">
+      <span class="tg" id="autotg"></span><span id="autolbl">אוטו</span>
+    </label>
+  </div>
   <div class="stl" id="tf-title">התמקדות היום</div>
   <div class="tl" id="today-list"></div>
   <div class="stl" id="ov-title" style="margin-top:16px">סקירה</div>
@@ -479,13 +487,6 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
     <div class="stat"><div class="sn or" id="s-tod">—</div><div class="sl" id="s-todl">היום</div></div>
   </div>
   <button id="npb" onclick="reqNotif()">🔔 <span id="npl">הפעל התראות</span></button>
-  <div class="bkp" id="bkbar">
-    <span>💾</span><span id="bkst" class="warn">טרם גיבוי</span>
-    <button class="bkbtn" onclick="doBackup()" id="bknow">גיבוי עכשיו</button>
-    <label class="bkauto" onclick="toggleAutoBackup()">
-      <span class="tg" id="autotg"></span><span id="autolbl">אוטו</span>
-    </label>
-  </div>
   <div class="toolbar">
     <div class="srch">
       <span style="color:var(--t3);font-size:12px">🔍</span>
