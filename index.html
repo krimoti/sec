@@ -1800,7 +1800,17 @@ function exportPDF(){
       '<span class="stat">'+(lang==='he'?'הושלם: ':'Done: ')+totalDone+'</span>'+
     '</div>'+
     rows+
-    '</body></html>';
+    '
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function(e) {
+      console.warn('SW:', e);
+    });
+  });
+}
+</script>
+</body></html>';
   // Create blob and open in new tab (iOS compatible)
   var blob=new Blob([html],{type:'text/html;charset=utf-8'});
   var url=URL.createObjectURL(blob);
