@@ -39,11 +39,8 @@
 [data-theme=dark]{--bg:#0a0f1e;--card:#111827;--c2:#1e2a3a;--bd:rgba(59,130,246,.15);--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--ac:#3b82f6;--acs:rgba(59,130,246,.12);--sh:0 2px 8px rgba(0,0,0,.3);--sh2:0 4px 20px rgba(0,0,0,.4);--ur:#f87171;--hi:#fbbf24;--lo:#4ade80}
 @media(prefers-color-scheme:dark){[data-theme=auto]{--bg:#0a0f1e;--card:#111827;--c2:#1e2a3a;--bd:rgba(59,130,246,.15);--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--ac:#3b82f6;--acs:rgba(59,130,246,.12);--sh:0 2px 8px rgba(0,0,0,.3);--sh2:0 4px 20px rgba(0,0,0,.4);--ur:#f87171;--hi:#fbbf24;--lo:#4ade80}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-button,input,select,textarea{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 html{height:100%;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--t1);height:100%;-webkit-font-smoothing:antialiased;overflow:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--t1);height:100%;-webkit-font-smoothing:antialiased;overflow:hidden;position:fixed;inset:0;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
 /* TOPBAR */
 .tb{background:var(--card);border-bottom:1px solid var(--bd);box-shadow:var(--sh);position:sticky;top:0;z-index:100;padding-top:env(safe-area-inset-top)}
 .tb-in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:10px 14px;direction:ltr}
@@ -56,7 +53,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-se
 .thb-single{border:none;background:var(--c2);cursor:pointer;width:34px;height:34px;border-radius:50%;font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh);transition:all .25s;flex-shrink:0}
 .thb-single:active{transform:scale(.9)}
 /* MAIN */
-#mn{max-width:640px;margin:0 auto;padding:0 14px 110px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;min-height:100vh}
+#mn{max-width:640px;margin:0 auto;padding:0 14px 110px;height:calc(100% - 60px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
 /* PANELS */
 .pnl{display:none}.pnl.on{display:block}
 /* SETUP */
@@ -67,8 +64,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-se
 .ss{font-size:13px;color:var(--t2);margin-bottom:18px}
 .sinp{display:block;width:100%;border:1.5px solid var(--bd);background:var(--c2);border-radius:var(--r2);padding:12px 14px;font-size:15px;color:var(--t1);font-family:inherit;outline:none;text-align:center;margin-bottom:10px}
 .sinp:focus{border-color:var(--ac)}
-.sbtn{width:100%;background:var(--ac);color:#fff;border:none;border-radius:var(--r2);padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.sbtn{width:100%;background:var(--ac);color:#fff;border:none;border-radius:var(--r2);padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
 /* HERO */
 .hero{padding:16px 2px 12px;direction:rtl}
 .hg{font-size:26px;font-weight:800;color:var(--t1);letter-spacing:-.4px;line-height:1.2;margin-bottom:3px}
@@ -1788,38 +1784,213 @@ function exportPDF(){
     return '<div style="padding:8px 10px;border-bottom:1px solid #eee;font-size:13px;background:'+bg+';direction:auto">'+p+' '+escH(i.text)+due+(i.done?' ✅':'')+'</div>';
   }).join('');
   var now=new Date().toLocaleString(lang==='he'?'he-IL':'en-US');
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Smart Reminder</title>'+
+  var totalActive=active.length, totalDone=done.length;
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+    '<title>'+( lang==='he'?'מזכיר חכם':'Smart Reminder')+'</title>'+
     '<style>body{font-family:Arial,sans-serif;padding:24px;direction:'+(lang==='he'?'rtl':'ltr')+';max-width:700px;margin:0 auto}'+
     'h1{font-size:22px;margin-bottom:4px;color:#1e40af}'+
     '.meta{font-size:12px;color:#666;margin-bottom:16px}'+
     '.stats{display:flex;gap:16px;margin-bottom:16px;padding:10px;background:#f0f4ff;border-radius:8px;font-size:13px}'+
     '.stat{font-weight:700}'+
-    '</style></head><body>'+
-    '<h1>📋 '+(lang==='he'?'מזכיר חכם':'Smart Reminder')+'</h1>'+
+    '@media print{body{padding:10px}}</style></head><body>'+
+    '<h1>'+(lang==='he'?'📋 מזכיר חכם':'📋 Smart Reminder')+'</h1>'+
     '<div class="meta">'+now+'</div>'+
     '<div class="stats">'+
-      '<span class="stat">'+(lang==='he'?'פעיל: ':'Active: ')+active.length+'</span>'+
-      '<span class="stat">'+(lang==='he'?'הושלם: ':'Done: ')+done.length+'</span>'+
+      '<span class="stat">'+(lang==='he'?'פעיל: ':'Active: ')+totalActive+'</span>'+
+      '<span class="stat">'+(lang==='he'?'הושלם: ':'Done: ')+totalDone+'</span>'+
     '</div>'+
     rows+
-    '</body></html>';
-  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url; a.target='_blank'; a.rel='noopener';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(function(){URL.revokeObjectURL(url);},5000);
-  closeExp();
-  showBanner(lang==='he'?'📄 נפתח — שתף ← הדפס':'📄 Opened — Share → Print');
-}
-</script>
-
+    '
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js').catch(function(e) {
+      console.warn('SW:', e);
+    });
   });
 }
+</script>
+</body></html>';
+  // Create blob and open in new tab (iOS compatible)
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.target='_blank';
+  a.rel='noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // Note: on iOS, user needs to tap Share → Print from the opened page
+  setTimeout(function(){URL.revokeObjectURL(url);},5000);
+  closeExp();
+  showBanner(lang==='he'?'📄 נפתח — לחץ שתף ← הדפס':'📄 Opened — tap Share → Print');
+}
+function exportJSON(){exportSelected();}
+function importJSON(){importSelected();}
+
+function updateExportCounts(){
+  var ti=$('bk-tasks-count');if(ti)ti.textContent=items.length+(lang==='he'?' פריטים':' items');
+  var si=$('bk-shop-count');if(si)si.textContent=shopItems.length+(lang==='he'?' פריטים':' items');
+  var sui=$('bk-sums-count');if(sui)sui.textContent=savedSummaries.length+(lang==='he'?' סיכומים':' summaries');
+}
+
+function downloadFile(filename, fileContent, mimeType) {
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  // Try 1: navigator.share with File object — REAL file save on iOS 15+
+  // Works best when PWA is added to home screen
+  if (isIOS && navigator.canShare) {
+    try {
+      var file = new File([fileContent], filename, {type: mimeType});
+      if (navigator.canShare({files: [file]})) {
+        navigator.share({files: [file], title: filename}).then(function() {
+          showBanner(lang==='he' ? '✅ נשמר!' : '✅ Saved!');
+        }).catch(function(err) {
+          // User cancelled or error — fall back to viewer
+          if (err && err.name !== 'AbortError') showBKV(filename, fileContent);
+        });
+        return;
+      }
+    } catch(e) { /* fall through to next method */ }
+  }
+
+  // Try 2: blob download (works on Mac Safari, Android, Desktop)
+  if (!isIOS) {
+    try {
+      var blob = new Blob([fileContent], {type: mimeType});
+      var url  = URL.createObjectURL(blob);
+      var a    = document.createElement('a');
+      a.href = url; a.download = filename; a.style.display = 'none';
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 3000);
+      return;
+    } catch(e) { /* fall through */ }
+  }
+
+  // Try 3: iOS fallback — viewer with copy (always works)
+  showBKV(filename, fileContent);
+}
+
+function showBKV(filename, fileContent) {
+  var ta = document.getElementById('bkv-ta');
+  var tl = document.getElementById('bkv-title');
+  if (ta) ta.value = fileContent;
+  if (tl) tl.textContent = '💾 ' + filename;
+  var m = document.getElementById('bkv-modal');
+  if (m) m.classList.add('open');
+  // Auto select all
+  if (ta) { setTimeout(function(){ ta.focus(); ta.select(); }, 200); }
+  closeExp();
+}
+
+function closeBKV() {
+  var m = document.getElementById('bkv-modal');
+  if (m) m.classList.remove('open');
+}
+
+function copyBKV() {
+  var ta = document.getElementById('bkv-ta');
+  if (!ta) return;
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showBanner(lang==='he' ? '📋 הועתק! הדבק ב-Notes/Mail לשמירה' : '📋 Copied! Paste in Notes/Mail to save');
+  } catch(e) {
+    showBanner(lang==='he' ? '⚠️ בחר הכל ← העתק ידנית' : '⚠️ Select all → copy manually');
+  }
+}
+
+function exportSelected(){
+  var incTasks=$('bk-tasks')&&$('bk-tasks').checked;
+  var incShop=$('bk-shop')&&$('bk-shop').checked;
+  var incSums=$('bk-sums')&&$('bk-sums').checked;
+  if(!incTasks&&!incShop&&!incSums){showBanner(lang==='he'?'⚠️ בחר לפחות פריט אחד':'⚠️ Select at least one');return;}
+  var data={exportedAt:new Date().toISOString(),version:3};
+  if(incTasks){data.items=items;data.tags=tags;}
+  if(incShop){data.shopItems=shopItems;}
+  if(incSums){data.savedSummaries=savedSummaries;}
+  var parts=[];
+  if(incTasks)parts.push(lang==='he'?'משימות':'tasks');
+  if(incShop)parts.push(lang==='he'?'קניות':'shop');
+  if(incSums)parts.push(lang==='he'?'סיכומים':'sums');
+  var fname='smart-reminders-'+parts.join('-')+'-'+new Date().toISOString().slice(0,10)+'.json';
+  downloadFile(fname, JSON.stringify(data,null,2), 'application/json');
+  lastBackup=Date.now();localStorage.setItem('SR_backup',lastBackup);updateBackupStatus();
+  showBanner('💾 '+fname);closeExp();
+}
+
+function importSelected(){
+  var inp=$('imp-file');if(inp)inp.click();
+}
+
+function handleImport(e){
+  var file=e.target.files&&e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=JSON.parse(ev.target.result);
+      var doTasks=$('rs-tasks')&&$('rs-tasks').checked;
+      var doShop=$('rs-shop')&&$('rs-shop').checked;
+      var doSums=$('rs-sums')&&$('rs-sums').checked;
+      var doMerge=$('rs-merge')&&$('rs-merge').checked;
+      var imported=[];
+      if(doTasks&&data.items){
+        if(doMerge){
+          // Merge: add items that don't exist by id
+          var existing={};for(var i=0;i<items.length;i++)existing[items[i].id]=true;
+          var newItems=data.items.filter(function(x){return!existing[x.id];});
+          items=items.concat(newItems);
+          if(data.tags){var etags={};for(var j=0;j<tags.length;j++)etags[tags[j].id]=true;var newTags=data.tags.filter(function(t){return!etags[t.id];});tags=tags.concat(newTags);}
+        } else {
+          items=data.items;
+          if(data.tags)tags=data.tags;
+        }
+        save();imported.push(lang==='he'?'משימות':'tasks');
+      }
+      if(doShop&&data.shopItems){
+        if(doMerge){var esh={};for(var k=0;k<shopItems.length;k++)esh[shopItems[k].id]=true;shopItems=shopItems.concat(data.shopItems.filter(function(x){return!esh[x.id];}));}
+        else shopItems=data.shopItems;
+        saveShop();imported.push(lang==='he'?'קניות':'shop');
+      }
+      if(doSums&&data.savedSummaries){
+        if(doMerge){var esu={};for(var l=0;l<savedSummaries.length;l++)esu[savedSummaries[l].id]=true;savedSummaries=savedSummaries.concat(data.savedSummaries.filter(function(x){return!esu[x.id];}));}
+        else savedSummaries=data.savedSummaries;
+        saveSums();imported.push(lang==='he'?'סיכומים':'sums');
+      }
+      if(!imported.length){showBanner(lang==='he'?'⚠️ לא נמצא תוכן מתאים':'⚠️ No matching content');return;}
+      render();renderShop();renderSavedSums();updateCapsule();updateDashboard();
+      showBanner('✅ '+imported.join(' + ')+(lang==='he'?' יובאו!':' imported!'));
+    }catch(err){showBanner(T('badinv'));}
+    var inp=$('imp-file');if(inp)inp.value='';
+  };
+  reader.readAsText(file);closeExp();
+}
+function exportCSV(){
+  var headers=lang==='he'?['טקסט','עדיפות','קטגוריה','תאריך יעד','סטטוס','נוצר']:['Text','Priority','Category','Due Date','Status','Created'];
+  var rows=items.map(function(i){return['"'+i.text.replace(/"/g,'""')+'"',i.priority,i.category,i.dueDate?new Date(i.dueDate).toLocaleString():'',i.done?(lang==='he'?'הושלם':'Done'):(lang==='he'?'פעיל':'Active'),new Date(i.createdAt).toLocaleString()];});
+  var csv='\uFEFF'+[headers].concat(rows).map(function(r){return r.join(',');}).join('\n');
+  downloadFile('smart-reminders-'+new Date().toISOString().slice(0,10)+'.csv', csv, 'text/csv;charset=utf-8');
+  showBanner(T('csvexp'));closeExp();
+}
+
+// INIT
+function initApp(){
+  load(); loadShop(); loadSums(); loadTplsLocal();
+  if(!userFirst){var o=$('so');if(o)o.style.display='flex';}
+  else{var o2=$('so');if(o2)o2.style.display='none';}
+  var savedTheme = localStorage.getItem('SR_theme') || 'auto';
+  setTheme(savedTheme);
+  setLang(lang);
+  render(); renderShop(); renderTpls(); updateCapsule(); updateDashboard();
+  initCapsule(); initVoice(); initSumVoice(); initShopVoice(); initNotifications();
+  checkRecurring(); updateBackupStatus();
+  setInterval(function(){try{checkAutoBackup();}catch(e){}},3600000);
+  setInterval(function(){try{checkRecurring();}catch(e){}},3600000);
+  setInterval(function(){try{checkNotifs();}catch(e){}},60000);
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initApp);}else{initApp();}
 </script>
 </body>
 </html>
