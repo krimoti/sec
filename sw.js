@@ -29,13 +29,21 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Only intercept simple GET requests on http(s) — anything else (POST,
+  // chrome-extension:, data:, blob:, etc.) is not cacheable and the Cache
+  // API throws if you try, which is what was producing the console errors.
+  if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)
         .then((resp) => {
           if (resp && resp.ok) {
             const copy = resp.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+            caches.open(CACHE_NAME)
+              .then((cache) => cache.put(event.request, copy))
+              .catch(() => {}); // never let a caching failure surface as an unhandled rejection
           }
           return resp;
         })
