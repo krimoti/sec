@@ -2,9 +2,10 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>מזכיר חכם</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="מזכיר חכם">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
@@ -179,6 +180,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-se
 @keyframes rng{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.25)}50%{box-shadow:0 0 0 6px transparent}}
 .mr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;direction:ltr;font-size:12px;color:var(--t3)}
 .mi{border:none;background:var(--c2);border-radius:8px;padding:4px 7px;font-size:16px;color:var(--t1);outline:none;font-family:monospace}
+.mi-wrap{position:relative;display:inline-block}
+.mi-wrap .mi{color:transparent}
+.mi-lbl{position:absolute;inset:0;display:flex;align-items:center;padding:4px 7px;pointer-events:none;font-family:monospace;font-size:16px;color:var(--t1);white-space:nowrap;overflow:hidden}
 .tg{width:30px;height:17px;background:var(--t3);border-radius:var(--rp);position:relative;cursor:pointer;flex-shrink:0;display:inline-block;vertical-align:middle;transition:background .2s}
 .tg::after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .tg.on{background:var(--lo)}.tg.on::after{transform:translateX(13px)}
@@ -257,7 +261,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-se
 .esv{background:var(--ac);color:var(--ac-text,#fff);border:none;border-radius:var(--r2);padding:6px 13px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer}
 .ecn{background:var(--c2);border:none;border-radius:var(--r2);padding:6px 11px;font-size:12px;color:var(--t2);cursor:pointer;font-family:inherit}
 .epr{border:none;border-radius:var(--r2);padding:6px 7px;font-size:12px;background:var(--c2);color:var(--t1);outline:none;cursor:pointer}
-.edl{border:none;border-radius:var(--r2);padding:6px 7px;font-size:11px;background:var(--c2);font-family:monospace;color:var(--t1);outline:none}
+.edl{border:none;border-radius:var(--r2);padding:6px 7px;font-size:16px;background:var(--c2);font-family:monospace;color:var(--t1);outline:none}
 .item.df{animation:df .4s ease}
 @keyframes df{0%{background:rgba(34,197,94,.15)}100%{background:var(--card)}}
 .item.rm{animation:rm .24s ease forwards}
@@ -291,7 +295,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
 /* SUMMARY */
 .smc{background:var(--card);border:1px solid var(--bd);border-radius:var(--r1);box-shadow:var(--sh);margin-bottom:9px;overflow:hidden}
 .smc:focus-within{box-shadow:var(--sh2),0 0 0 3px var(--acs)}
-.smta{width:100%;min-height:120px;max-height:280px;resize:vertical;font-family:inherit;font-size:14px;color:var(--t1);background:var(--c2);border:none;padding:12px 13px;outline:none;direction:auto;line-height:1.6}
+.smta{width:100%;min-height:120px;max-height:280px;resize:vertical;font-family:inherit;font-size:16px;color:var(--t1);background:var(--c2);border:none;padding:12px 13px;outline:none;direction:auto;line-height:1.6}
 .smta::placeholder{color:var(--t3);font-size:13px}
 .sma{display:flex;gap:7px;padding:9px 13px;flex-wrap:wrap;align-items:center;direction:ltr;border-top:1px solid var(--bd)}
 .smb{background:var(--ac);color:var(--ac-text,#fff);border:none;border-radius:var(--r2);padding:8px 14px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:5px}
@@ -330,7 +334,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
 .shn{flex:1;font-size:15px;font-weight:500;color:var(--t1);direction:auto}
 .shi.got .shn{text-decoration:line-through;color:var(--t3)}
 .shct{font-size:9px;font-weight:700;border-radius:var(--rp);padding:1px 6px}
-.shq{font-size:12px;color:var(--t3);background:var(--c2);border-radius:var(--rp);padding:2px 9px;border:none;width:50px;outline:none;text-align:center;font-family:monospace}
+.shq{font-size:16px;color:var(--t3);background:var(--c2);border-radius:var(--rp);padding:2px 9px;border:none;width:50px;outline:none;text-align:center;font-family:monospace}
 .shd{background:none;border:none;font-size:15px;cursor:pointer;color:var(--t3);padding:3px;opacity:.5}
 .shd:hover{opacity:1;color:var(--ur)}
 #shop-vbar{display:none;align-items:center;gap:7px;background:rgba(239,68,68,.07);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--ur);font-weight:600;margin-top:6px}
@@ -391,10 +395,10 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
 #brief-title{font-size:16px;font-weight:700}
 .brief-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--t2);background:var(--c2);border-radius:var(--r2);padding:8px 12px}
 .brief-row b{font-size:16px;color:var(--t1)}
-#bkv-box,#supp-box,#en-box{background:var(--card);border-radius:var(--r1) var(--r1) 0 0;padding:16px 16px 40px;width:100%;max-width:640px;max-height:80vh;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+#bkv-box,#supp-box,#en-box{background:var(--card);border-radius:var(--r1) var(--r1) 0 0;padding:16px 16px 40px;width:100%;max-width:640px;max-height:80vh;max-height:80dvh;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
 #bkv-title,#supp-title,#en-title,#theme-title{font-size:15px;font-weight:800;color:var(--t1)}
 #theme-box{background:var(--card);border-radius:var(--r1) var(--r1) 0 0;padding:16px 16px 40px;width:100%;max-width:640px;display:flex;flex-direction:column;gap:12px}
-#help-box{background:var(--card);border-radius:var(--r1) var(--r1) 0 0;padding:16px 16px 40px;width:100%;max-width:640px;max-height:80vh;display:flex;flex-direction:column;gap:4px}
+#help-box{background:var(--card);border-radius:var(--r1) var(--r1) 0 0;padding:16px 16px 40px;width:100%;max-width:640px;max-height:80vh;max-height:80dvh;display:flex;flex-direction:column;gap:4px}
 #help-list{overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;padding-top:4px}
 .help-sec-t{font-size:14px;font-weight:800;color:var(--ac);display:flex;align-items:center;gap:6px}
 .help-sec-b{font-size:13px;color:var(--t2);line-height:1.6}
@@ -404,7 +408,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
 .theme-sw-dot{width:32px;height:32px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(0,0,0,.06)}
 .theme-sw-lbl{font-size:11px;font-weight:700;color:var(--t2)}
 .theme-subtitle{font-size:15px;font-weight:800;color:var(--t1);margin-top:4px}
-#bkv-ta{flex:1;min-height:200px;max-height:40vh;background:var(--c2);border:1px solid var(--bd);border-radius:var(--r2);padding:10px 12px;font-size:11px;font-family:monospace;color:var(--t1);resize:none;outline:none;overflow-y:auto;direction:ltr}
+#bkv-ta{flex:1;min-height:200px;max-height:40vh;max-height:40dvh;background:var(--c2);border:1px solid var(--bd);border-radius:var(--r2);padding:10px 12px;font-size:11px;font-family:monospace;color:var(--t1);resize:none;outline:none;overflow-y:auto;direction:ltr}
 #bkv-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .bkv-btn{border:none;border-radius:var(--r2);padding:11px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
 .bkv-btn.copy{background:var(--ac);color:var(--ac-text,#fff)}
@@ -412,6 +416,8 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
 #bkv-hint{font-size:11px;color:var(--t3);text-align:center;line-height:1.5}
 </style>
 </head>
+
+
 <!-- ══════ Universal offline-cache registration + on-screen verification ══════
      Paste this EXACT block, unedited, right before </body> in every index.html
      on the domain. Nothing here needs per-repo changes. -->
@@ -592,7 +598,10 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
       </div>
       <div class="mr">
         <span>📅 <span id="dl">מועד:</span></span>
-        <input type="datetime-local" id="due-date" class="mi">
+        <span class="mi-wrap">
+          <input type="datetime-local" id="due-date" class="mi" oninput="updateDueLbl()" onchange="updateDueLbl()">
+          <span id="due-date-lbl" class="mi-lbl"></span>
+        </span>
         <span style="display:flex;align-items:center;gap:4px;margin-left:auto;cursor:pointer" onclick="toggleNotif()">
           <span class="tg" id="ntg"></span>
           <span id="nfl">תזכורת</span>
@@ -720,6 +729,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
   <div class="srs" id="sum-res">
     <div class="rcd" id="r-sum"><div class="rch">📝 <span id="rsumt">סיכום</span></div><div class="rcb"><div class="stx" id="rsubb"></div></div></div>
     <div class="rcd" id="r-part" style="display:none"><div class="rch">👥 <span id="rpart">משתתפים</span> <span class="rc" id="rpartc">0</span></div><div class="rcb" id="rpartb"></div></div>
+    <div class="rcd" id="r-summ" style="display:none"><div class="rch">📝 <span id="rsumm">תמצית</span></div><div class="rcb" id="rsummb"></div></div>
     <div class="rcd" id="r-tl" style="display:none"><div class="rch">💬 <span id="rtl">שיחה</span></div><div class="rcb" id="rtlb" style="max-height:180px;overflow-y:auto"></div></div>
     <div class="rcd" id="r-pts" style="display:none"><div class="rch">💡 <span id="rpts">נקודות מפתח</span> <span class="rc" id="rptsc">0</span></div><div class="rcb" id="rptsb"></div></div>
     <div class="rcd" id="r-tasks" style="display:none"><div class="rch">✅ <span id="rtasks">משימות שזוהו</span> <span class="rc" id="rtasksc">0</span></div><div class="rcb" id="rtasksb"></div></div>
@@ -739,7 +749,7 @@ mark{background:rgba(234,179,8,.28);border-radius:2px;padding:0 1px}
 <!-- CAPSULE -->
 <!-- EXPORT MODAL -->
 <div class="ov" id="exp-modal" onclick="closeExp(event)">
-  <div class="sh" style="max-height:85vh;overflow-y:auto">
+  <div class="sh" style="max-height:85vh;max-height:85dvh;overflow-y:auto">
     <div class="shdl"></div>
     <div class="shtl">📦 <span id="exptit">גיבוי וייצוא</span></div>
 
@@ -930,6 +940,9 @@ var TXT = {
     srph:'חיפוש...',tags:'תגיות',exp:'ייצוא',
     all:'הכל',urgent:'דחוף',high:'גבוה',normal:'רגיל',low:'נמוך',done:'הושלם',
     spri:'עדיפות',sdate:'תאריך',snew:'חדש',
+    addnow:'הוסף עכשיו',bkwhat:'💾 מה לגבות',rswhat:'📂 מה לטעון חזרה',
+    tasksTags:'משימות ותגיות',shopList:'רשימת קניות',savedSums:'סיכומים שמורים',mergeOpt:'מיזוג (לא להחליף)',tagph:'שם תגית...',
+    themeTip:'בחר ערכת נושא',habitsTip:'דפוסים מדוכאים',helpTip:'עזרה',
     section:'משימות פעילות',clrd:'נקה הושלם',
     emph:'אין פריטים עדיין',empp:'הוסף תזכורת למעלה',
     wktit:'📊 שבוע נוכחי',wkadd:'נוספו',wkdon:'הושלמו',wkstr:'רצף 🔥',wkdays:'ימים',wkcmp:'אחוז השלמה',
@@ -942,7 +955,7 @@ var TXT = {
     shemph:'רשימה ריקה',shempp:'אמור פריטים או הקלד',
     shlstn:'מאזין — דבר פריט אחד בכל פעם',
     sumtit:'סיכום שיחה',sumil:'הדבק תמליל שיחה',sumanal:'נתח',sumdic:'הכתב',sumsave:'שמור',sumclr:'נקה',
-    rsum:'סיכום',rpart:'משתתפים',rtl:'שיחה',rpts:'נקודות מפתח',rtasks:'משימות שזוהו',
+    rsum:'סיכום',rpart:'משתתפים',rsumm:'תמצית',rtl:'שיחה',rpts:'נקודות מפתח',rtasks:'משימות שזוהו',
     exall:'ייצא את כל המשימות',ssumtit:'סיכומים שמורים',ssumclr:'נקה הכל',
     exptit:'ייצוא נתונים',epdf:'PDF / הדפסה',epdfs:'פתח תצוגת הדפסה',
     ejson:'ייצוא JSON',ejsons:'גיבוי כל הנתונים',eimp:'ייבוא JSON',eimps:'שחזור מגיבוי',
@@ -950,7 +963,7 @@ var TXT = {
     pur:'דחוף',phi:'גבוה',pno:'רגיל',plo:'נמוך',pdo:'הושלם',
     ctask:'משימה',cnote:'הערה',creminder:'תזכורת',cmeeting:'פגישה',cgeneral:'כללי',
     overdue:'באיחור',today:'היום',tomorrow:'מחר',days:'ימים',in_:'בעוד',
-    added:'✅ נוסף!',saved:'✅ נשמר!',deleted:'🗑️ נמחק',
+    added:'✅ נוסף!',saved:'✅ נשמר!',deleted:'🗑️ נמחק',undoBtn:'↩︎ בטל',
     bksaved:'💾 גיבוי נשמר!',bkok:'✓ גובה לפני ',bkwarn:'⚠️ גיבוי לפני ',bkbad:'🔴 לא גובה ',
     hago:' שעות',dago:' ימים',
     listening:'מאזין...',notsupp:'❌ לא נתמך',micdenied:'❌ גישה נדחתה',
@@ -979,6 +992,9 @@ var TXT = {
     srph:'Search...',tags:'Tags',exp:'Export',
     all:'All',urgent:'Urgent',high:'High',normal:'Normal',low:'Low',done:'Done',
     spri:'Priority',sdate:'Date',snew:'Newest',
+    addnow:'Add now',bkwhat:'💾 What to back up',rswhat:'📂 What to restore',
+    tasksTags:'Tasks & Tags',shopList:'Shopping List',savedSums:'Saved Summaries',mergeOpt:"Merge (don't replace)",tagph:'Tag name...',
+    themeTip:'Choose theme',habitsTip:'Suppressed patterns',helpTip:'Help',
     section:'Active Items',clrd:'Clear Done',
     emph:'No items yet',empp:'Add a reminder above',
     wktit:'📊 This Week',wkadd:'Added',wkdon:'Done',wkstr:'Streak 🔥',wkdays:'Days',wkcmp:'Completion rate',
@@ -991,7 +1007,7 @@ var TXT = {
     shemph:'Empty List',shempp:'Say items or type',
     shlstn:'Listening — say one item at a time',
     sumtit:'Meeting Summary',sumil:'Paste transcript or dictate',sumanal:'Analyze',sumdic:'Dictate',sumsave:'Save',sumclr:'Clear',
-    rsum:'Summary',rpart:'Participants',rtl:'Timeline',rpts:'Key Points',rtasks:'Action Items',
+    rsum:'Summary',rpart:'Participants',rsumm:'Highlights',rtl:'Timeline',rpts:'Key Points',rtasks:'Action Items',
     exall:'Export All Tasks',ssumtit:'Saved Summaries',ssumclr:'Clear All',
     exptit:'Export Data',epdf:'PDF / Print',epdfs:'Formatted print view',
     ejson:'Export JSON',ejsons:'Backup all data',eimp:'Import JSON',eimps:'Restore from backup',
@@ -999,7 +1015,7 @@ var TXT = {
     pur:'Urgent',phi:'High',pno:'Normal',plo:'Low',pdo:'Done',
     ctask:'Task',cnote:'Note',creminder:'Reminder',cmeeting:'Meeting',cgeneral:'General',
     overdue:'Overdue',today:'Today',tomorrow:'Tomorrow',days:'days',in_:'in',
-    added:'✅ Added!',saved:'✅ Saved!',deleted:'🗑️ Deleted',
+    added:'✅ Added!',saved:'✅ Saved!',deleted:'🗑️ Deleted',undoBtn:'↩︎ Undo',
     bksaved:'💾 Backup saved!',bkok:'✓ Backed up ',bkwarn:'⚠️ Backup ',bkbad:'🔴 No backup ',
     hago:'h ago',dago:'d ago',
     listening:'Listening...',notsupp:'❌ Not supported',micdenied:'❌ Mic denied',
@@ -1297,6 +1313,15 @@ function applyLang(){
   ST('help-title',T('helpTitle')); ST('help-close',T('closeBtn'));
   ST('hs-today-lbl',T('today')); ST('hs-overdue-lbl',T('overdue'));
   ST('bkv-title',T('bkvTitle')); ST('bkv-hint',T('bkvHint')); ST('bkv-copy-btn',T('bkvCopy')); ST('bkv-close',T('closeBtn'));
+  ST('undo-btn',T('undoBtn'));
+  ST('vsl',T('listening')); ST('habit-add-btn',T('addnow'));
+  ST('bk-sec-title',T('bkwhat')); ST('bk-tasks-lbl',T('tasksTags')); ST('bk-shop-lbl',T('shopList')); ST('bk-sums-lbl',T('savedSums'));
+  ST('rs-sec-title',T('rswhat')); ST('rs-tasks-lbl',T('tasksTags')); ST('rs-shop-lbl',T('shopList')); ST('rs-sums-lbl',T('savedSums')); ST('rs-merge-lbl',T('mergeOpt'));
+  var ntg=$('new-tag'); if(ntg) ntg.placeholder=T('tagph');
+  var thc=$('th-cycle'); if(thc) thc.title=T('themeTip');
+  var thh=$('th-habits'); if(thh) thh.title=T('habitsTip');
+  var thp=$('th-help'); if(thp) thp.title=T('helpTip');
+  updateDueLbl();
   renderThemeGrid(); renderAccentRow(); renderHelp();
   // tasks
   ST('tasks-title',T('tasks')); ST('il-lbl',T('il'));
@@ -1324,7 +1349,7 @@ function applyLang(){
   ST('sumtit',T('sumtit')); ST('sumil',T('sumil')); ST('sumal',T('sumanal'));
   ST('sumdicl',T('sumdic')); ST('sumsavel',T('sumsave')); ST('sumcll',T('sumclr'));
   var sta=$('sum-ta'); if(sta)sta.placeholder=T('sumil')+'...';
-  ST('rsumt',T('rsum')); ST('rpart',T('rpart')); ST('rtl',T('rtl'));
+  ST('rsumt',T('rsum')); ST('rpart',T('rpart')); ST('rsumm',T('rsumm')); ST('rtl',T('rtl'));
   ST('rpts',T('rpts')); ST('rtasks',T('rtasks')); ST('ealll',T('exall'));
   ST('ssumtit',T('ssumtit')); ST('ssumclr',T('ssumclr'));
   // export
@@ -1623,7 +1648,7 @@ function addItem(){
     done:false,createdAt:new Date().toISOString(),dueDate:dueDate,notify:notifEnabled,tags:[],recurring:null};
   items.unshift(ni); save();
   logHabit(ni.text,ni.category);
-  inp.value=''; if(de) de.value='';
+  inp.value=''; if(de) de.value=''; updateDueLbl();
   hidePrev(); buildHints();
   render(); 
   if(currentView==='home') updateDashboard();
@@ -1645,6 +1670,14 @@ function quickAdd(){
 
 function handleKey(e){ if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)) addItem(); }
 function pickDate(){ var d=$('due-date'); if(!d)return; try{if(d.showPicker)d.showPicker();else d.focus();}catch(e){d.focus();} }
+function updateDueLbl(){
+  var de=$('due-date'), lb=$('due-date-lbl');
+  if(!de||!lb) return;
+  if(!de.value){ lb.textContent=''; return; }
+  var d=new Date(de.value);
+  if(isNaN(d.getTime())){ lb.textContent=''; return; }
+  lb.textContent = d.toLocaleString(lang==='he'?'he-IL':'en-US',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
 function toggleNotif(){ notifEnabled=!notifEnabled; SC('ntg','on',notifEnabled); }
 
 // RENDER
@@ -2145,6 +2178,66 @@ function fallbackCopy(text){
 }
 
 // SUMMARY
+var STOP_HE = ['של','את','על','עם','זה','זו','זאת','הוא','היא','הם','הן','אני','אתה','את','אנחנו','אתם','אבל','כי','גם','רק','כן','לא','אם','אז','או','כמו','יש','אין','היה','היתה','יהיה','להיות','כל','כמה','מה','מי','איך','למה','אשר','כאשר','עד','אחרי','לפני','בין','אל','מן','מ','ל','ב','ו','ה','זהו','זוהי','שאני','שהוא','שהיא','להם','לה','לו','אותו','אותה','אותם','שלי','שלו','שלה','שלנו','שלכם','שלהם'];
+var STOP_EN = ['the','a','an','and','or','but','if','then','so','of','to','in','on','at','for','with','by','from','as','is','are','was','were','be','been','being','this','that','these','those','it','its','he','she','they','we','you','i','my','your','his','her','their','our','not','no','do','does','did','have','has','had','will','would','can','could','should','about','into','than','so','just','also'];
+function tokenizeWords(s){ return (s.toLowerCase().match(/[\u0590-\u05FFa-z0-9]+/g))||[]; }
+function splitSentences(s){
+  var parts=s.split(/(?<=[.!?])\s+/).map(function(p){return p.trim();}).filter(function(p){return p.length>3;});
+  return parts.length?parts:[s.trim()];
+}
+var SUMM_KP_RE=/(?:הוחלט|סוכם|חשוב|בעיה|decided|agreed|important|issue|budget|deadline)/i;
+function summarizeSegments(segments){
+  var stop={}; STOP_HE.concat(STOP_EN).forEach(function(w){stop[w]=true;});
+  var freq={};
+  var allSentences=[]; // {speaker, text, idx}
+  var order=0;
+  for(var i=0;i<segments.length;i++){
+    var seg=segments[i];
+    var sents=splitSentences(seg.text);
+    for(var j=0;j<sents.length;j++){
+      allSentences.push({speaker:seg.speaker,text:sents[j],order:order++});
+      var words=tokenizeWords(sents[j]);
+      for(var w=0;w<words.length;w++){ if(!stop[words[w]]) freq[words[w]]=(freq[words[w]]||0)+1; }
+    }
+  }
+  for(var k=0;k<allSentences.length;k++){
+    var s=allSentences[k], words=tokenizeWords(s.text), sig=words.filter(function(w){return !stop[w];});
+    var score=0; for(var m=0;m<sig.length;m++) score+=freq[sig[m]]||0;
+    score = sig.length? score/sig.length : 0;
+    if(SUMM_KP_RE.test(s.text)) score += 2;
+    s.score=score;
+  }
+  var bySpeaker={}, speakerOrder=[];
+  for(var n=0;n<allSentences.length;n++){
+    var sp=allSentences[n].speaker;
+    if(!bySpeaker[sp]){bySpeaker[sp]=[];speakerOrder.push(sp);}
+    bySpeaker[sp].push(allSentences[n]);
+  }
+  var result=[];
+  for(var p=0;p<speakerOrder.length;p++){
+    var sp2=speakerOrder[p], list=bySpeaker[sp2].slice();
+    var n2=Math.max(3,Math.min(6,Math.ceil(list.length*0.25)));
+    var top=list.slice().sort(function(a,b){return b.score-a.score;}).slice(0,n2);
+    top.sort(function(a,b){return a.order-b.order;});
+    result.push({speaker:sp2,sentences:top.map(function(t){return t.text;})});
+  }
+  return result;
+}
+function renderSummarySection(segments){
+  var box=$('r-summ'); if(!box) return;
+  if(!segments||!segments.length){box.style.display='none';return;}
+  var grouped=summarizeSegments(segments);
+  var flat = grouped.length===1 && grouped[0].speaker==='?';
+  var html='';
+  for(var i=0;i<grouped.length;i++){
+    var g=grouped[i];
+    if(!flat && g.speaker!=='?') html+='<div style="font-weight:700;font-size:12px;color:var(--ac);margin:6px 0 2px">'+escH(g.speaker)+'</div>';
+    for(var j=0;j<g.sentences.length;j++){ html+='<div class="pitm">• '+escH(g.sentences[j])+'</div>'; }
+  }
+  var summb=$('rsummb'); if(summb) summb.innerHTML=html;
+  box.style.display='';
+}
+
 function analyzeMeeting(){
   var ta=$('sum-ta');if(!ta||!ta.value.trim()){showBanner(lang==='he'?'⚠️ הכנס טקסט':'⚠️ Enter text');return;}
   var text=ta.value,lines=text.split('\n');
@@ -2182,6 +2275,7 @@ function analyzeMeeting(){
 }
 function renderSumResults(speakers,speakerMap,segments,keyPoints,tasks,text){
   var res=$('sum-res');if(res)res.classList.add('on');
+  renderSummarySection(segments);
   var wc=text.split(/\s+/).length;
   ST('rsubb',(lang==='he'?'זוהה · ':' Detected · ')+(speakers.length?speakers.length+(lang==='he'?' דוברים':' speakers')+' · ':'')+wc+(lang==='he'?' מילים':' words'));
   var pc=$('r-part'); if(pc){if(speakers.length){pc.style.display='';ST('rpartc',speakers.length);var pb=$('rpartb');if(pb){var tw=0;for(var si=0;si<speakers.length;si++)tw+=speakerMap[speakers[si]].wc;pb.innerHTML=speakers.map(function(sp){var p=tw>0?Math.round(speakerMap[sp].wc/tw*100):0;return'<span style="display:inline-flex;align-items:center;background:var(--c2);border-radius:var(--rp);padding:3px 8px;font-size:11px;font-weight:600;color:var(--t2);margin:2px">'+escH(sp)+' '+p+'%</span>';}).join('');}}else{pc.style.display='none';}}
@@ -2206,7 +2300,7 @@ function saveSummary(){
   if(savedSummaries.length>20)savedSummaries=savedSummaries.slice(0,20);
   saveSums();showBanner(T('sumsaved'));renderSavedSums();
 }
-function clearSummary(){var ta=$('sum-ta');if(ta)ta.value='';var res=$('sum-res');if(res)res.classList.remove('on');summaryTasks=[];ST('cc','0');}
+function clearSummary(){var ta=$('sum-ta');if(ta)ta.value='';var res=$('sum-res');if(res)res.classList.remove('on');var rs=$('r-summ');if(rs)rs.style.display='none';summaryTasks=[];ST('cc','0');}
 function renderSavedSums(){
   var sec=$('saved-sums-sec'),el=$('saved-sums');if(!sec||!el)return;
   if(!savedSummaries.length){sec.style.display='none';return;}
